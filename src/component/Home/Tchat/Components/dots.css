@@ -1,0 +1,31 @@
+.dots-container {
+    margin-left: 5px;
+    display: flex;
+    flex-direction: row;
+} 
+
+.dots-container #dot__1 {
+    position: relative;
+    transition: 0.5s infinite;
+    animation: dotsAnimation 1s infinite;
+}
+
+.dots-container #dot__2 {
+    position: relative;
+    transition: 0.5s infinite ease;
+    animation: dotsAnimation 1s infinite;
+    animation-delay: 0.2s;
+}
+
+.dots-container #dot__3 {
+    position: relative;
+    transition: 0.5s infinite ease;
+    animation: dotsAnimation 1s infinite;
+    animation-delay: 0.3s;
+}
+
+@keyframes dotsAnimation {
+    0% { top: 0 }
+    50% { top: -2px }
+    100% { top: 0 }
+}

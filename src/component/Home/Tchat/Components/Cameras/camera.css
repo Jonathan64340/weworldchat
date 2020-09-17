@@ -1,0 +1,26 @@
+.container-cameras {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 176px);
+    justify-content: space-between;
+    margin-right: 20px;
+}
+
+.container-cameras .container-webcam {
+    border: 2px solid rgba(0,0,0,.1);
+    padding: 5px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: #01194614;
+}
+
+.container-cameras .container-webcam #camera-owner-flux {
+    width: 196px;
+    object-fit: cover;
+    height: 196px;
+    border-radius: 3px;
+}

@@ -1,0 +1,204 @@
+/* CALL */
+.incoming-call {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.incoming-call .incoming-call-name {
+    font-size: 21px;
+}
+
+.incoming-call .buttons-call {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 150px;
+}
+
+.incoming-call .buttons-call .on svg {
+    fill: green;
+    font-size: 45px;
+    background-color: whitesmoke;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 0 5px 0px rgba(29, 28, 28, 0.336);
+}
+
+.incoming-call .buttons-call .off svg {
+    fill: red;
+    font-size: 45px;
+    background-color: whitesmoke;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 0 5px 0px rgba(29, 28, 28, 0.336);
+}
+
+/* END CALL */
+
+
+.notification-handle-receive {
+    background: rgb(36,36,0);
+    background: linear-gradient(48deg, rgba(36,36,0,1) 0%, rgba(0,6,162,0.6250875350140056) 0%, rgba(166,191,186,1) 100%);
+}
+
+.notification-handle-receive .ant-notification-notice-content {
+    color: whitesmoke;
+}
+
+.notification-handle-receive .ant-notification-notice-content .ant-notification-notice-message {
+    color: whitesmoke;
+}
+
+.sider-users-connected {
+    height: calc(100vh - 64px);
+    box-shadow: 1px 1px 40px -25px black;
+    padding: 5px 10px;
+    background: rgb(36,36,0);
+    background: linear-gradient(48deg, rgba(36,36,0,1) 0%, rgba(0,6,162,0.6250875350140056) 0%, rgba(166,191,186,1) 100%);
+}
+
+.sider-users-connected > div:first-child {
+    width: 100%;
+    float: right;
+    text-align: end;
+}
+
+.sider-users-connected .item-user {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: .4em 0;
+    justify-content: space-between;
+}
+
+.sider-users-connected .item-user .info-user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sider-users-connected .item-user .info-user .status__online__busy {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #FFA500;
+    border: 2px solid rgba(0,0,0,0.1);
+}
+
+.sider-users-connected .item-user .info-user .status__online__online {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #28e922;
+    border: 2px solid rgba(0,0,0,0.1);
+}
+
+.sider-users-connected .item-user > .info-user p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    margin-left: 5px;
+}
+
+.sider-users-connected .list-users-connected {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+}
+
+.sider-users-connected .flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100vh - 100px);
+}
+
+.sider-users-connected .flex-container .credit {
+    text-align: center;
+    color: #f1f1f1fa;
+    text-shadow: 0 0 5px black;
+    font-size: 10px;
+}
+
+.sider-users-connected .flex-container .credit .hearth-icon-animate {
+    color: red;
+    font-size: 18px;
+    position: absolute;
+    right: 48px;
+    bottom: 10px;
+    animation: hearth-animate 1s infinite;
+}
+
+@keyframes hearth-animate {
+    0% {
+        transform: rotate3d(0,1,0, 0deg);
+    }
+
+    100% {
+        transform: rotate3d(0,1,0, 180deg);
+    }
+}
+
+.sider-users-connected .list-users-connected .search-users {
+    border-radius: 25px;
+    margin-top: 10px;
+    line-break: loose;
+    line-height: 15px;
+    margin-bottom: 10px;
+}
+
+.sider-users-connected .list-users-connected .item__user:not(:first-child, :last-child) {
+    border-bottom: dashed 1px rgba(0,0,0,.25);
+}
+
+.sider-users-connected .list-users-connected .item__user {
+    height: calc(100vh - 200px);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+.sider-users-connected .list-users-connected .item__user::-webkit-scrollbar {
+    width: 0;
+}
+
+.sider-users-connected .list-users-connected .item-user {
+    background: rgb(255 255 255 / 10%);
+    border-radius: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-bottom: 7px;
+    box-shadow: 0 0 5px 0px rgba(0 ,0 ,0 ,.2);
+    transition: all .5s ease;
+}
+
+.sider-users-connected .list-users-connected .item-user.selected {
+    background: rgb(255 255 255 / 50%);
+    transition: all .5s ease;
+}
+
+.sider-users-connected .list-users-connected .item-user button:hover {
+    border: #5d5a5a21 1px solid;
+}
+    
+
+.sider-users-connected .list-users-connected .item-user button {
+    background: transparent;
+    border: none;
+}
+
+.sider-users-connected .list-users-connected .item-user button:hover {
+    border: none;
+}
+
+.sider-users-connected .list-users-connected .item-user button:active {
+    border: none;
+}
+
+.sider-users-connected .list-users-connected .item-user button svg {
+    fill: ghostwhite;
+}

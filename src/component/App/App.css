@@ -1,0 +1,12 @@
+body {
+    background: whitesmoke;
+}
+
+.global-layout.blur {
+    transition: all 1s;
+    filter: blur(2px)
+}
+
+.global-layout {
+    transition: all 1s;
+}

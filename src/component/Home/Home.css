@@ -1,0 +1,16 @@
+.home-layout {
+    background: url('http://localhost:83/wave.svg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+
+.home-layout > .flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-container > section:first-child {
+    flex: unset;
+}

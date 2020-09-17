@@ -1,0 +1,35 @@
+.nav-bar-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-bar-header .user-action > span:hover {
+    cursor: pointer;
+}
+
+.avatar-icon {
+    background: rgb(245, 106, 0) !important;
+}
+
+.avatar-icon > span {
+    text-transform: uppercase;
+}
+
+.dropdown-menu-title {
+    text-align: center !important;
+}
+
+.dropdown-menu-title .option {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.modal__settings .ant-modal-content {
+    background: rgb(229, 247, 250);
+}
+
+.modal__settings .ant-modal-content .ant-modal-header {
+    background: rgb(229, 247, 250);
+}

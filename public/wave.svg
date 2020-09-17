@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgb(241, 242, 243); display: block; z-index: 1; position: relative; shape-rendering: auto;" width="1920" height="937" preserveAspectRatio="xMidYMid" viewBox="0 0 1920 937">
+<g transform=""><linearGradient id="lg-0.3774688302618501" x1="0" x2="1" y1="0" y2="0">
+  <stop stop-color="#292664" offset="0"></stop>
+  <stop stop-color="#667395" offset="1"></stop>
+</linearGradient><path d="" fill="url(#lg-0.3774688302618501)" opacity="0.4">
+  <animate attributeName="d" dur="10s" repeatCount="indefinite" keyTimes="0;0.333;0.667;1" calcmod="spline" keySplines="0.2 0 0.2 1;0.2 0 0.2 1;0.2 0 0.2 1" begin="0s" values="M0 0L 0 808.8736463628632Q 192 776.9805273193159  384 754.9490724773059T 768 635.9194372863259T 1152 651.044542827141T 1536 543.1547185283555T 1920 340.3203386988391L 1920 0 Z;M0 0L 0 847.7362934593169Q 192 781.9131064862096  384 769.806854648835T 768 719.3611227703584T 1152 657.5785633228727T 1536 531.8160238808283T 1920 473.5187131803235L 1920 0 Z;M0 0L 0 828.3972330030209Q 192 756.6905980317398  384 722.9617547904269T 768 756.6194789617541T 1152 518.9023523088431T 1536 472.94454038400914T 1920 497.99592375786705L 1920 0 Z;M0 0L 0 808.8736463628632Q 192 776.9805273193159  384 754.9490724773059T 768 635.9194372863259T 1152 651.044542827141T 1536 543.1547185283555T 1920 340.3203386988391L 1920 0 Z"></animate>
+</path><path d="" fill="url(#lg-0.3774688302618501)" opacity="0.4"> 
+</path></g>
+</svg>
