@@ -2,12 +2,12 @@ import axios from 'axios';
 
 export function doLogin(data) {
     return axios
-        .post(`${process.env.REACT_APP_ENDPOINT}/login`, data)
+        .post(`https://nameless-lowlands-47620.herokuapp.com/login`, data)
         .then(({ data }) => data)
 }
 
 export function checkConnectionRematch(id) {
     return axios
-        .get(`${process.env.REACT_APP_ENDPOINT}/getUser/${id}`)
+        .get(`https://nameless-lowlands-47620.herokuapp.com/getUser/${id}`)
         .then(({ data }) => data)
 }
