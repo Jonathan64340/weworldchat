@@ -10,7 +10,7 @@
 
 .layout-login {
     height: 100vh;
-    background: url('http://localhost:83/wave.svg');
+    background: url('https://weworldchat.netlify.app/wave.svg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;

@@ -60,7 +60,7 @@ const Login = ({ user, ...props }) => {
         </Helmet>
         <Layout className="layout-login">
             <div className="logo">
-                <img src="http://localhost:83/logo.png" alt="logo" />
+                <img src="https://weworldchat.netlify.app/logo.png" alt="logo" />
             </div>
             <Form form={form} name="control-hooks" className="layout-login-form">
                 <Row gutter={16} justify="center" className="layout-login-form-row">

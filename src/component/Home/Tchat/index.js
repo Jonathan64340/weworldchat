@@ -116,10 +116,10 @@ const Tchat = ({ user, tchat, ...props }) => {
                 <div><p><UserOutlined />{' '}{_user?.user?.data?.pseudo}</p>{isTyping && <Dots />}</div>
                 <div className="communication-handle">
                     <Tooltip title="Lancer un appel vocal" placement="leftBottom">
-                        <Button size="small" icon={<PhoneOutlined />} onClick={() => callRequest('call')} />
+                        <Button size="small" icon={<PhoneOutlined />} onClick={() => callRequest('call')} disabled />
                     </Tooltip>
                     <Tooltip title="Lancer un appel vidéo" placement="leftBottom">
-                        <Button size="small" icon={<VideoCameraOutlined />} onClick={() => callRequest('webcam')} />
+                        <Button size="small" icon={<VideoCameraOutlined />} onClick={() => callRequest('webcam')} disabled />
                     </Tooltip>
                 </div>
             </div>

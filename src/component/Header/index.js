@@ -85,7 +85,7 @@ const HeaderLayout = ({ user, ...props }) => {
             </fieldset>
         </Modal>
         <Header className="nav-bar-header">
-            <Link to="#/"><img src={`http://www.localhost:83/logo.png`} alt="logo" style={{ width: 140, position: 'absolute', top: '-10px', left: 0 }} /></Link>
+            <Link to="#/"><img src={`https://weworldchat.netlify.app/logo.png`} alt="logo" style={{ width: 140, position: 'absolute', top: '-10px', left: 0 }} /></Link>
             {user?.data?.isLogged && <div className="user-action">
                 <Dropdown overlay={menu} arrow trigger={['click']}>
                     <Avatar size="large" className="avatar-icon">
