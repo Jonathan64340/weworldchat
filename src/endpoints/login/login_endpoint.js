@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export function doLogin(data) {
     return axios
-        .post(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}`, data)
+        .post(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/login`, data)
         .then(({ data }) => data)
 }
 
