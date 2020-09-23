@@ -64,7 +64,7 @@ const Login = ({ user, ...props }) => {
             </div>
             <Form form={form} name="control-hooks" className="layout-login-form">
                 <Row gutter={16} justify="center" className="layout-login-form-row">
-                    <Col span={8} flex="center">
+                    <Col span={8} sm={10} xs={15} lg={8} flex="center">
                         <Form.Item name="pseudo" rules={[{ required: true, message: "Le pseudo n'est pas valide", pattern: new RegExp("^[0-9a-zA-Z]*$") }]} >
                             <Input type="text" autoFocus placeholder="Entrez un pseudo" />
                         </Form.Item>

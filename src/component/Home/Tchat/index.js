@@ -9,6 +9,7 @@ import _ from 'underscore'
 import Dots from './Components/dots';
 import { store } from '../../..';
 import { withRouter } from 'react-router-dom';
+import Emoji from './Components/Emoji/Emoji';
 
 const Tchat = ({ user, tchat, ...props }) => {
     const [_user, setUser] = useState({})
@@ -86,6 +87,11 @@ const Tchat = ({ user, tchat, ...props }) => {
         return window.socket.emit('send-message', tmpValues);
     }
 
+    const addEmojiOnField = emoji => {
+        let prev = form.getFieldValue('message') || '';
+        form.setFieldsValue({ message: prev += emoji })
+    }
+
     return <>
         {props.privateId && <div className="title-user-private-tchat">
             <div className="container-header-tchat">
@@ -95,12 +101,13 @@ const Tchat = ({ user, tchat, ...props }) => {
             <div>
                 <Form form={form} name="form" onFinish={handleSubmit}>
                     <Row gutter={4} style={{ display: 'flex', margin: 0, padding: "0 20px" }}>
+                        <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
                         <Col className="form-col">
                             <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
                                 <Input type="text" autoFocus placeholder="Ecrire un message ..." onChange={handleTyping} />
                             </Form.Item>
                         </Col>
-                        <Button htmlType="submit" icon={<SendOutlined />} />
+                        <Button htmlType="submit" type="primary" icon={<SendOutlined />} />
                     </Row>
                 </Form>
             </div>

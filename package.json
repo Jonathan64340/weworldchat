@@ -10,6 +10,7 @@
     "antd": "^4.4.3",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
+    "emoji-picker-react": "^3.2.4",
     "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
