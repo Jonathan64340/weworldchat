@@ -97,8 +97,8 @@ const Tchat = ({ user, tchat, ...props }) => {
         props.dispatch(setOpenMenu({ menuOpened: !tchat?.data?.menuOpened }))
         const btnMobile = document.getElementById('button-mobile')
         const iconBtnMobile = document.getElementsByClassName('button-opened-menu')
-        btnMobile.style.marginLeft = tchat?.data?.menuOpened ? "-165px" : 0
-        iconBtnMobile[0].style.transform = !tchat?.data?.menuOpened ? "rotate(180deg)" : "rotate(0deg)"
+        btnMobile.style.marginLeft = tchat?.data?.menuOpened && "-165px"
+        iconBtnMobile[0].style.transform = tchat?.data?.menuOpened && "rotate(0deg)"
     }
 
     return <>
