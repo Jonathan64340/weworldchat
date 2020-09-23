@@ -94,7 +94,7 @@ const Tchat = ({ user, tchat, ...props }) => {
     }
 
     const toggleMobileMenu = () => {
-        props.dispatch(setOpenMenu({ menuOpened: !tchat?.data?.menuOpened }))
+        props.dispatch(setOpenMenu({ menuOpened: tchat?.data?.menuOpened && false }))
         const btnMobile = document.getElementById('button-mobile')
         const iconBtnMobile = document.getElementsByClassName('button-opened-menu')
         btnMobile.style.marginLeft = tchat?.data?.menuOpened && "-165px"
