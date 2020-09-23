@@ -20,8 +20,6 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     let src = `${process.env.PUBLIC_URL}/sound/notif.mp3`
     let audio = new Audio(src);
 
-    const mobileButtonMenu = useRef();
-
     const goToPrivate = (id) => {
         props.dispatch(setEnterPrivateTchat({ userConversation: id }))
         document.title = `tchatez - ${user.data?.name}`
