@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { Layout, Button, Tooltip, notification, Input, Modal } from 'antd'
 import _ from 'underscore'
 import './SiderComponent.css'
 import { getCountUsersConnected } from '../../../endpoints';
-import { MessageOutlined, WechatOutlined, PhoneOutlined } from '@ant-design/icons';
+import { MessageOutlined, WechatOutlined, PhoneOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { setEnterPrivateTchat } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
 
@@ -16,8 +16,11 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     const [listen, setListen] = useState(false)
     const [visible, setVisible] = useState(false)
     const [userCaller, setUserCaller] = useState('')
+    const [mobileMenu, setMobileMenu] = useState(false)
     let src = `${process.env.PUBLIC_URL}/sound/notif.mp3`
     let audio = new Audio(src);
+
+    const mobileButtonMenu = useRef();
 
     const goToPrivate = (id) => {
         props.dispatch(setEnterPrivateTchat({ userConversation: id }))
@@ -92,6 +95,14 @@ const SiderComponent = ({ user, tchat, ...props }) => {
         })
     }
 
+    const toggleMobileMenu = () => {
+        setMobileMenu(!mobileMenu)
+        const btnMobile = document.getElementById('button-mobile')
+        const iconBtnMobile = document.getElementsByClassName('button-opened-menu')
+        btnMobile.style.marginLeft = mobileMenu ? "-175px" : 0
+        iconBtnMobile[0].style.transform = !mobileMenu ? "rotate(180deg)" : "rotate(0deg)"
+    }
+
     return (<Layout>
         <Modal visible={visible} footer={false} centered closable={false}>
             <div className="incoming-call">
@@ -104,7 +115,8 @@ const SiderComponent = ({ user, tchat, ...props }) => {
                 </div>
             </div>
         </Modal>
-        <Layout.Sider className="sider-users-connected">
+        <Layout.Sider className="sider-users-connected" id="button-mobile">
+            <PlayCircleFilled className="button-opened-menu" onClick={() => toggleMobileMenu()} />
             <div style={{ borderBottom: "1px solid #f0f2f585", paddingBottom: 8 }}>Connectés : {onlineUsers <= 0 ? 0 : onlineUsers - 1}</div>
             <div className="flex-container">
                 <ul className="list-users-connected">

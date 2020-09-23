@@ -59,6 +59,34 @@
     background: linear-gradient(48deg, rgba(36,36,0,1) 0%, rgba(0,6,162,0.6250875350140056) 0%, rgba(166,191,186,1) 100%);
 }
 
+@media screen and (max-width: 580px) {
+    .sider-users-connected {
+        margin-left: -172px;
+    }
+    .sider-users-connected .button-opened-menu {
+        display: block !important;
+    }
+}
+
+@media screen and (min-width: 581px) {
+    .sider-users-connected {
+        margin-left: 0 !important;
+    }
+}
+
+.sider-users-connected .button-opened-menu {
+    position: absolute;
+    right: -17px;
+    font-size: 40px;
+    top: calc(100vh / 2 - 50px);
+    color: #f1f2f3;
+    display: none;
+}
+
+.sider-users-connected .button-opened-menu:hover {
+    cursor: pointer;
+}
+
 .sider-users-connected > div:first-child {
     width: 100%;
     float: right;
