@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import { getPrivateTchat } from '../../../endpoints';
 import './Tchat.css';
 import MessageContent from '../MessageContent';
-import { Input, Form, Row, Col, Button, Tooltip } from 'antd';
-import { UserOutlined, SendOutlined, PhoneOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { Input, Form, Row, Col, Button } from 'antd';
+import { UserOutlined, SendOutlined } from '@ant-design/icons';
 import _ from 'underscore'
 import Dots from './Components/dots';
 import { store } from '../../..';
 import { withRouter } from 'react-router-dom';
-import { setEnterPrivateTchat } from '../../../action/tchat/tchat_actions';
 
 const Tchat = ({ user, tchat, ...props }) => {
     const [_user, setUser] = useState({})
@@ -87,41 +86,10 @@ const Tchat = ({ user, tchat, ...props }) => {
         return window.socket.emit('send-message', tmpValues);
     }
 
-    const callRequest = type => {
-        switch (type) {
-            case 'call':
-                return props.dispatch(setEnterPrivateTchat({ ...tchat, enableWebcamCall: false }))
-
-            case 'webcam':
-                const tmpValues = {
-                    usersContaints: `${props.privateId}:${user.data.id}`,
-                    data: {
-                        pseudo: user.data.name,
-                        sender: user.data.id,
-                        timestamp: new Date().getTime(),
-                        destination: props.privateId,
-                        type: 'videoCallRequest'
-                    }
-                }
-                props.dispatch(setEnterPrivateTchat({ ...tchat, enableWebcamCall: true }))
-                return window.socket.emit('send-message', tmpValues);
-            default:
-                return
-        }
-    }
-
     return <>
         {props.privateId && <div className="title-user-private-tchat">
             <div className="container-header-tchat">
                 <div><p><UserOutlined />{' '}{_user?.user?.data?.pseudo}</p>{isTyping && <Dots />}</div>
-                <div className="communication-handle">
-                    <Tooltip title="Lancer un appel vocal" placement="leftBottom">
-                        <Button size="small" icon={<PhoneOutlined />} onClick={() => callRequest('call')} disabled />
-                    </Tooltip>
-                    <Tooltip title="Lancer un appel vidéo" placement="leftBottom">
-                        <Button size="small" icon={<VideoCameraOutlined />} onClick={() => callRequest('webcam')} disabled />
-                    </Tooltip>
-                </div>
             </div>
             <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} />
             <div>

@@ -5,7 +5,6 @@ import { getPrivateTchat } from '../../../endpoints';
 import moment from 'moment';
 import './MessageContent.css'
 import { store } from '../../..';
-import Camera from '../Tchat/Components/Cameras/Camera'
 const MessageContent = ({ sendMessage, usersMatch, user }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
@@ -71,7 +70,6 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                 </div>))}
             </div>
         </Layout.Content>
-        <Camera />
     </div>
 }
 

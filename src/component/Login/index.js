@@ -15,7 +15,7 @@ const Login = ({ user, ...props }) => {
 
     useEffect(() => {
         window.socket.open()
-    })
+    }, [])
 
     const handleCheck = () => {
         form.validateFields()
@@ -60,7 +60,7 @@ const Login = ({ user, ...props }) => {
         </Helmet>
         <Layout className="layout-login">
             <div className="logo">
-                <img src="https://weworldchat.netlify.app/logo.png" alt="logo" />
+                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="logo" />
             </div>
             <Form form={form} name="control-hooks" className="layout-login-form">
                 <Row gutter={16} justify="center" className="layout-login-form-row">
@@ -70,7 +70,7 @@ const Login = ({ user, ...props }) => {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Button disabled={isLoading} className="layout-login-button" onClick={handleCheck}>{isLoading ? <LoadingOutlined /> : "Se connecter"}</Button>
+                <Button disabled={isLoading} className="layout-login-button" type="primary" onClick={handleCheck}>{isLoading ? <LoadingOutlined /> : "Se connecter"}</Button>
             </Form>
         </Layout>
     </>)
