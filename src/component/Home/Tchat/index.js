@@ -10,6 +10,7 @@ import Dots from './Components/dots';
 import { store } from '../../..';
 import { withRouter } from 'react-router-dom';
 import Emoji from './Components/Emoji/Emoji';
+import { setOpenMenu } from '../../../action/tchat/tchat_actions';
 
 const Tchat = ({ user, tchat, ...props }) => {
     const [_user, setUser] = useState({})
@@ -92,6 +93,14 @@ const Tchat = ({ user, tchat, ...props }) => {
         form.setFieldsValue({ message: prev += emoji })
     }
 
+    const toggleMobileMenu = () => {
+        props.dispatch(setOpenMenu({ menuOpened: !tchat?.data?.menuOpened }))
+        const btnMobile = document.getElementById('button-mobile')
+        const iconBtnMobile = document.getElementsByClassName('button-opened-menu')
+        btnMobile.style.marginLeft = tchat?.data?.menuOpened ? "-165px" : 0
+        iconBtnMobile[0].style.transform = !tchat?.data?.menuOpened ? "rotate(180deg)" : "rotate(0deg)"
+    }
+
     return <>
         {props.privateId && <div className="title-user-private-tchat">
             <div className="container-header-tchat">
@@ -104,7 +113,7 @@ const Tchat = ({ user, tchat, ...props }) => {
                         <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
                         <Col className="form-col">
                             <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
-                                <Input type="text" autoFocus placeholder="Ecrire un message ..." onChange={handleTyping} />
+                                <Input type="text" autoFocus placeholder="Ecrire un message ..." onChange={handleTyping} onClick={() => toggleMobileMenu()} />
                             </Form.Item>
                         </Col>
                         <Button htmlType="submit" type="primary" icon={<SendOutlined />} />

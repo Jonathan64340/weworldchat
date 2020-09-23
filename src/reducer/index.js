@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { LOGIN, LOGOUT, UPDATE } from '../action/authentication/authentication_types'
-import { ENTER_PRIVATE_TCHAT, LOAD_FIRST_TIME } from '../action/tchat/tchat_types'
+import { ENTER_PRIVATE_TCHAT, LOAD_FIRST_TIME, OPEN_MENU } from '../action/tchat/tchat_types'
 
 const user = (state = { isAdmin: false }, action) => {
     switch (action.type) {
@@ -50,6 +50,12 @@ const tchat = (state = { data: { userConversation: undefined } }, action) => {
                     userConversation: action.payload.userConversation,
                     enableWebcamCall: action.payload.enableWebcamCall
                 }
+            }
+
+        case OPEN_MENU:
+            return {
+                ...state,
+                data: { menuOpened: action.payload.menuOpened }
             }
 
         case LOAD_FIRST_TIME:

@@ -6,7 +6,7 @@ import _ from 'underscore'
 import './SiderComponent.css'
 import { getCountUsersConnected } from '../../../endpoints';
 import { MessageOutlined, WechatOutlined, PhoneOutlined, PlayCircleFilled } from '@ant-design/icons';
-import { setEnterPrivateTchat } from '../../../action/tchat/tchat_actions';
+import { setEnterPrivateTchat, setOpenMenu } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
 
 const SiderComponent = ({ user, tchat, ...props }) => {
@@ -95,10 +95,11 @@ const SiderComponent = ({ user, tchat, ...props }) => {
 
     const toggleMobileMenu = () => {
         setMobileMenu(!mobileMenu)
+        props.dispatch(setOpenMenu({ menuOpened: !tchat?.data?.menuOpened }))
         const btnMobile = document.getElementById('button-mobile')
         const iconBtnMobile = document.getElementsByClassName('button-opened-menu')
-        btnMobile.style.marginLeft = mobileMenu ? "-175px" : 0
-        iconBtnMobile[0].style.transform = !mobileMenu ? "rotate(180deg)" : "rotate(0deg)"
+        btnMobile.style.marginLeft = tchat?.data?.menuOpened ? "-165px" : 0
+        iconBtnMobile[0].style.transform = !tchat?.data?.menuOpened ? "rotate(180deg)" : "rotate(0deg)"
     }
 
     return (<Layout>

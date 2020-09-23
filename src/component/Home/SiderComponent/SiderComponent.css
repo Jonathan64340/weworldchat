@@ -61,7 +61,7 @@
 
 @media screen and (max-width: 580px) {
     .sider-users-connected {
-        margin-left: -172px;
+        margin-left: -165px;
     }
     .sider-users-connected .button-opened-menu {
         display: block !important;

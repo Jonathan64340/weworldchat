@@ -1,4 +1,4 @@
-import { ENTER_PRIVATE_TCHAT } from './tchat_types';
+import { ENTER_PRIVATE_TCHAT, OPEN_MENU } from './tchat_types';
 
 /** 
  * @param {string} userOneId
@@ -8,5 +8,10 @@ import { ENTER_PRIVATE_TCHAT } from './tchat_types';
 */
 export const setEnterPrivateTchat = payload => ({
     type: ENTER_PRIVATE_TCHAT,
+    payload
+})
+
+export const setOpenMenu = payload => ({
+    type: OPEN_MENU,
     payload
 })
