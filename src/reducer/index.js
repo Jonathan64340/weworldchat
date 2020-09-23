@@ -55,7 +55,7 @@ const tchat = (state = { data: { userConversation: undefined } }, action) => {
         case OPEN_MENU:
             return {
                 ...state,
-                data: { menuOpened: action.payload.menuOpened }
+                data: { ...state.data, menuOpened: action.payload.menuOpened }
             }
 
         case LOAD_FIRST_TIME:
