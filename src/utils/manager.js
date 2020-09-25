@@ -13,7 +13,7 @@ const onConnectionRematch = () => {
                 .catch(() => {
                     isLogged && swal({
                         title: "Vous avez été déconnecté",
-                        text: "Pour continuer, veuillez vous reconnecter en cliquant sur reconnecter",
+                        text: "Pour continuer, veuillez vous reconnecter en cliquant sur reconnexion",
                         icon: "warning",
                         buttons: ['Déconnexion', 'Reconnexion'],
                         closeOnClickOutside: false,
@@ -21,7 +21,6 @@ const onConnectionRematch = () => {
                     })
                         .then((onConnect) => {
                             if (onConnect) {
-                                console.log(store.getState())
                                 store.dispatch(setLogin({ pseudo: name, statusOnline: 'online', id: window.socket.id }))
                                 window.socket.emit('users', {
                                     pseudo: name,
