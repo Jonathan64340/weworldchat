@@ -13,9 +13,6 @@
 
 .layout-tchat {
     scrollbar-width: none;
-}
-
-.layout-tchat {
     height: calc(100vh - 245px);
     margin-right: 20px;
     margin-left: 20px;
@@ -26,6 +23,9 @@
     box-sizing: border-box;
     box-shadow: 1px 1px 40px -25px black;
     background-color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .layout-tchat .item-message.sender {

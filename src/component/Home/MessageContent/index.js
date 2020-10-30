@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Avatar, Tooltip } from 'antd';
 import { connect } from 'react-redux';
 import { getPrivateTchat } from '../../../endpoints';
@@ -8,17 +8,9 @@ import { store } from '../../..';
 const MessageContent = ({ sendMessage, usersMatch, user }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
-    const lastMessage = useRef()
-
-    const scrollToBottom = () => {
-        if (lastMessage.current) {
-            lastMessage.current.scrollIntoView({ behavior: 'smooth' })
-        }
-    }
 
     useEffect(() => {
         setTchat(t => [...t, { data: sendMessage }])
-        setTimeout(() => scrollToBottom(), 0)
     }, [sendMessage])
 
     useEffect(() => {
@@ -26,7 +18,6 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
             .then(data => {
                 console.log(data)
                 setTchat(data.tchat.filter(el => el.data.data.type === 'string'));
-                scrollToBottom()
             })
             .catch(err => console.log(err))
         //eslint-disable-next-line 
@@ -39,7 +30,6 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                     setTchat(t => [...t, { data: data }])
                 }
             }
-            scrollToBottom()
             !listen && setListen(true)
         })
         //eslint-disable-next-line
@@ -66,7 +56,6 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                             {el?.data?.data?.message}
                         </div>
                     </Tooltip>
-                    <div ref={lastMessage} />
                 </div>))}
             </div>
         </Layout.Content>
