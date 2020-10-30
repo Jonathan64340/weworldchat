@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dropdown, Menu } from 'antd';
+import { Button } from 'antd';
 import Picker, { SKIN_TONE_LIGHT } from 'emoji-picker-react';
 import { SmileOutlined } from '@ant-design/icons';
 import './emoji.css';
