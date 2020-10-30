@@ -1,4 +1,4 @@
 aside.emoji-picker-react {
-    position: absolute;
+    position: absolute !important;
     bottom: 150px;
 }
