@@ -70,6 +70,7 @@ const SiderComponent = ({ user, tchat, ...props }) => {
             if (data) {
                 setOnlineUsers(data.usersCount)
                 setUsers(data.users)
+                setFilterUser(data.users)
             }
         })
 
@@ -81,8 +82,8 @@ const SiderComponent = ({ user, tchat, ...props }) => {
         let __users = [];
 
         users.forEach((el, index) => {
-            if (el.data?.pseudo.match(`${value}`) !== null) {
-                if (users.find(u => u.data.pseudo === el.data?.pseudo.match(`${value}`)['input'])) {
+            if (el.data?.pseudo.match(`${value.currentTarget.value}`) !== null) {
+                if (users.find(u => u.data.pseudo === el.data?.pseudo.match(`${value.currentTarget.value}`)['input'])) {
                     __users.push(el)
                 }
             }
@@ -91,9 +92,10 @@ const SiderComponent = ({ user, tchat, ...props }) => {
                 setFilterUser(__users)
             }
 
-            if (!value.length) setFilterUser([])
+            if (!value.currentTarget.value.length) setFilterUser([])
         })
     }
+
 
     const toggleMobileMenu = () => {
         setMobileMenu(!mobileMenu)
@@ -121,10 +123,11 @@ const SiderComponent = ({ user, tchat, ...props }) => {
             <div style={{ borderBottom: "1px solid #f0f2f585", paddingBottom: 8 }}>Connecté(s) : {onlineUsers <= 0 ? 0 : onlineUsers - 1}</div>
             <div className="flex-container">
                 <ul className="list-users-connected">
-                    <Input.Search placeholder="Rechercher un utilisateur"
+                    <Input placeholder="Rechercher un utilisateur"
                         className="search-users"
-                        onSearch={handleSearch}
-                    ></Input.Search>
+                        onChange={handleSearch}
+                        type="text"
+                    ></Input>
                     <div className="item__user">
                         {typeof users !== 'undefined' && (filterUser.length > 0 ? filterUser : users).map((el, index) => (
                             <>{
