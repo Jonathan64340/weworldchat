@@ -1,12 +1,17 @@
 .footer-content {
     position: fixed;
-    bottom: -139px;
+    bottom: -100px;
     transition: .2s;
+    max-height: 130px;
+    width: 100%;
 }
 
 .footer-content.active {
-    position: absolute;
-    bottom: 0px;
+    position: fixed;
+    bottom: 0;
+    transition: .2s;
+    max-height: 130px;
+    width: 100%;
 }
 
 .footer-content > .footer-content-btn {
