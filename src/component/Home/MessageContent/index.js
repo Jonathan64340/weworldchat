@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Layout, Avatar, Tooltip } from 'antd';
 import { connect } from 'react-redux';
 import { getPrivateTchat } from '../../../endpoints';
@@ -8,15 +8,23 @@ import { store } from '../../..';
 const MessageContent = ({ sendMessage, usersMatch, user }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
+    const messages = useRef();
 
     useEffect(() => {
         setTchat(t => [...t, { data: sendMessage }])
     }, [sendMessage])
 
     useEffect(() => {
+        messages.current.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "start"
+        });
+    }, [_tchat])
+
+    useEffect(() => {
         getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
             .then(data => {
-                console.log(data)
                 setTchat(data.tchat.filter(el => el.data.data.type === 'string'));
             })
             .catch(err => console.log(err))
@@ -57,6 +65,7 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                         </div>
                     </Tooltip>
                 </div>))}
+                <div ref={messages} />
             </div>
         </Layout.Content>
     </div>

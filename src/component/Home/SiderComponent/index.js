@@ -17,7 +17,7 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     const [visible, setVisible] = useState(false)
     const [userCaller, setUserCaller] = useState('')
     const [mobileMenu, setMobileMenu] = useState(false)
-    let src = `${process.env.PUBLIC_URL}/sound/notif.mp3`
+    let src = `${process.env.PUBLIC_URL}/sound/notif2.mp3`
     let audio = new Audio(src);
 
     const goToPrivate = (id) => {

@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { getPrivateTchat } from '../../../endpoints';
 import './Tchat.css';
 import MessageContent from '../MessageContent';
-import { Input, Form, Row, Col, Button } from 'antd';
-import { UserOutlined, SendOutlined } from '@ant-design/icons';
+import { Input, Form, Row, Col, Button, Card } from 'antd';
+import { SendOutlined } from '@ant-design/icons';
 import _ from 'underscore'
 import Dots from './Components/dots';
 import { store } from '../../..';
 import { withRouter } from 'react-router-dom';
 import Emoji from './Components/Emoji/Emoji';
-import { setOpenMenu } from '../../../action/tchat/tchat_actions';
+import { setOpenMenu, setEnterPrivateTchat } from '../../../action/tchat/tchat_actions';
 
 const Tchat = ({ user, tchat, ...props }) => {
     const [_user, setUser] = useState({})
@@ -28,6 +28,11 @@ const Tchat = ({ user, tchat, ...props }) => {
                 })
                 .catch(err => console.log(err))
         }
+        let cardTchatContent = document.getElementById('card-tchat-content');
+        if (cardTchatContent) cardTchatContent.classList.toggle('open');
+        setTimeout(() => {
+            if (cardTchatContent) cardTchatContent.classList.toggle('open');
+        }, 1000)
     }, [props.privateId, user.data.id])
 
     useEffect(() => {
@@ -101,25 +106,33 @@ const Tchat = ({ user, tchat, ...props }) => {
         iconBtnMobile[0].style.transform = "rotate(0deg)"
     }
 
+    const handleExit = () => {
+        let cardTchatContent = document.getElementById('card-tchat-content');
+        cardTchatContent.classList.toggle('close');
+        setTimeout(() => {
+            props.dispatch(setEnterPrivateTchat({ ...tchat, userConversation: undefined }));
+            props.history.push('/global');
+        }, 450)
+    }
+
     return <>
-        {props.privateId && <div className="title-user-private-tchat">
-            <div className="container-header-tchat">
-                <div><p><UserOutlined />{' '}{_user?.user?.data?.pseudo}</p>{isTyping && <Dots />}</div>
-            </div>
-            <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} />
-            <div>
-                <Form form={form} name="form" onFinish={handleSubmit}>
-                    <Row gutter={4} style={{ display: 'flex', margin: 0, padding: "0 20px" }}>
-                        <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
-                        <Col className="form-col">
-                            <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
-                                <Input type="text" autoFocus placeholder="Ecrire un message ..." onChange={handleTyping} onClick={() => toggleMobileMenu()} />
-                            </Form.Item>
-                        </Col>
-                        <Button htmlType="submit" type="primary" icon={<SendOutlined />} />
-                    </Row>
-                </Form>
-            </div>
+        {props.privateId && <div className="container-header-tchat">
+            <Card title={<><span>Vous chattez avec {_user?.user?.data?.pseudo}</span><br />{isTyping && <div><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div>}</>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>Quitter la conversation</Button>} >
+                <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} />
+                <div>
+                    <Form form={form} name="form" onFinish={handleSubmit}>
+                        <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
+                            <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
+                            <Col className="form-col">
+                                <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
+                                    <Input type="text" autoFocus placeholder="Ecrire un message ..." onChange={handleTyping} onClick={() => toggleMobileMenu()} />
+                                </Form.Item>
+                            </Col>
+                            <Button htmlType="submit" type="primary" icon={<SendOutlined />} />
+                        </Row>
+                    </Form>
+                </div>
+            </Card>
         </div>}
     </>
 }

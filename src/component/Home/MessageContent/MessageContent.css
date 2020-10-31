@@ -1,10 +1,12 @@
 .container-flex-with__camera {
     display: flex;
     flex-direction: row;
+    margin-bottom: 20px;
 }
 
 .tchat-container {
     word-break:break-all;
+    padding: 10px 5px;
 }
 
 .layout-tchat::-webkit-scrollbar {
@@ -13,19 +15,14 @@
 
 .layout-tchat {
     scrollbar-width: none;
-    height: calc(100vh - 245px);
-    margin-right: 20px;
-    margin-left: 20px;
-    margin-bottom: 20px;
+    height: calc(100vh - 290px);
     overflow: auto;
-    border: 1px solid rgb(2,0,36, .15);
+    border: 1px solid rgb(240 240 240);
     border-radius: 3px;
     box-sizing: border-box;
-    box-shadow: 1px 1px 40px -25px black;
-    background-color: whitesmoke;
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
 }
 
 .layout-tchat .item-message.sender {
