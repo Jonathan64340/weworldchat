@@ -1,8 +1,7 @@
 .footer-content {
-    position: absolute;
-    bottom: -100px;
+    position: fixed;
+    bottom: -139px;
     transition: .2s;
-    width: 100%;
 }
 
 .footer-content.active {

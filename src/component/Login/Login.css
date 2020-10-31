@@ -6,6 +6,7 @@
 
 .logo img {
     border-radius: 25%;
+    max-width: 100%;
 }
 
 .layout-login {
