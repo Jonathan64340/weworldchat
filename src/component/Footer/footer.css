@@ -1,6 +1,6 @@
 .footer-content {
     position: absolute;
-    bottom: -60px;
+    bottom: -100px;
     transition: .2s;
     width: 100%;
 }
@@ -39,5 +39,5 @@
 }
 
 .footer-content-description-info {
-    padding: 10px 30px;
+    padding: 30px 30px;
 }
