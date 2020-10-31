@@ -1,6 +1,5 @@
 import { InfoCircleOutlined, UpOutlined } from '@ant-design/icons';
 import React, { useRef } from 'react';
-import { Link, Icon } from 'react-router-dom';
 import './footer.css';
 
 
