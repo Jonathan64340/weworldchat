@@ -6,6 +6,7 @@ import { setLogin } from '../../action/authentication/authentication_actions';
 import _ from 'underscore';
 import { doLogin } from '../../endpoints';
 import { Helmet } from "react-helmet";
+import Footer from '../Footer'
 import { LoadingOutlined } from '@ant-design/icons';
 import './Login.css'
 
@@ -72,6 +73,7 @@ const Login = ({ user, ...props }) => {
                 </Row>
                 <Button disabled={isLoading} className="layout-login-button" type="primary" onClick={handleCheck}>{isLoading ? <LoadingOutlined /> : "Se connecter"}</Button>
             </Form>
+            <Footer />
         </Layout>
     </>)
 }
