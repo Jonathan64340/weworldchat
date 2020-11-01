@@ -49,12 +49,12 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
         } else {
             if (!listenGlobal && !usersMatch) {
                 window.socket.on('receive-message-global', data => {
-                    console.log(data)
                     setTchat(t => [...t, { data: data }])
                 })
                 setListenGlobal(true);
             }
         }
+        // eslint-disable-next-line 
     }, [usersMatch])
 
     return <div className="container-flex-with__camera">
