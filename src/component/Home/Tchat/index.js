@@ -28,11 +28,6 @@ const Tchat = ({ user, tchat, ...props }) => {
                 })
                 .catch(err => console.log(err))
         }
-        let cardTchatContent = document.getElementById('card-tchat-content');
-        if (cardTchatContent) cardTchatContent.classList.toggle('open');
-        setTimeout(() => {
-            if (cardTchatContent) cardTchatContent.classList.toggle('open');
-        }, 1000)
     }, [props.privateId, user.data.id])
 
     useEffect(() => {
@@ -84,13 +79,13 @@ const Tchat = ({ user, tchat, ...props }) => {
                 sender: user.data.id,
                 timestamp: new Date().getTime(),
                 message: values.message,
-                destination: props.privateId,
+                destination: props.privateId || 'all',
                 type: 'string'
             }
         }
         setSendMessage(tmpValues)
         form.resetFields()
-        return window.socket.emit('send-message', tmpValues);
+        return window.socket.emit(props.privateId ? 'send-message' : 'send-message-global', tmpValues);
     }
 
     const addEmojiOnField = emoji => {
@@ -107,17 +102,13 @@ const Tchat = ({ user, tchat, ...props }) => {
     }
 
     const handleExit = () => {
-        let cardTchatContent = document.getElementById('card-tchat-content');
-        cardTchatContent.classList.toggle('close');
-        setTimeout(() => {
-            props.dispatch(setEnterPrivateTchat({ ...tchat, userConversation: undefined }));
-            props.history.push('/global');
-        }, 450)
+        props.dispatch(setEnterPrivateTchat({ ...tchat, userConversation: undefined }));
+        props.history.push('/global');
     }
 
     return <>
-        {props.privateId && <div className="container-header-tchat">
-            <Card title={<><span>Vous chattez avec {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible'}) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>Quitter la conversation</Button>} >
+        {props.privateId ? <div className="container-header-tchat">
+            <Card title={<><span>Vous chattez avec {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>Fermer la conversation</Button>} >
                 <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} />
                 <div>
                     <Form form={form} name="form" onFinish={handleSubmit}>
@@ -133,7 +124,26 @@ const Tchat = ({ user, tchat, ...props }) => {
                     </Form>
                 </div>
             </Card>
-        </div>}
+        </div> :
+            <div className="container-header-tchat">
+                <Card title="Vous chattez avec tout le monde" id="card-tchat-content-global" className="card-container-header-tchat" extra={<Button style={{ visibility: 'hidden'}} type="primary" danger onClick={() => handleExit()}>Fermer la conversation</Button>}>
+                    <MessageContent sendMessage={sendMessage} myRefs={ref => console.log(ref)} />
+                    <div>
+                        <Form form={form} name="form" onFinish={handleSubmit}>
+                            <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
+                                <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
+                                <Col className="form-col">
+                                    <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
+                                        <Input type="text" autoFocus placeholder="Ecrire un message ..." onClick={() => toggleMobileMenu()} />
+                                    </Form.Item>
+                                </Col>
+                                <Button htmlType="submit" type="primary" icon={<SendOutlined />} />
+                            </Row>
+                        </Form>
+                    </div>
+                </Card>
+            </div>
+        }
     </>
 }
 

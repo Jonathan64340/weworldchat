@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Layout, Avatar, Tooltip } from 'antd';
 import { connect } from 'react-redux';
-import { getPrivateTchat } from '../../../endpoints';
+import { getGlobalTchat, getPrivateTchat } from '../../../endpoints';
 import moment from 'moment';
 import './MessageContent.css'
 import { store } from '../../..';
 const MessageContent = ({ sendMessage, usersMatch, user }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
+    const [listenGlobal, setListenGlobal] = useState(false);
     const messages = useRef();
 
     useEffect(() => {
@@ -23,25 +24,38 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
     }, [_tchat])
 
     useEffect(() => {
-        getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
+        setTchat([]);
+        usersMatch ? getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
             .then(data => {
                 setTchat(data.tchat.filter(el => el.data.data.type === 'string'));
             })
             .catch(err => console.log(err))
+            : getGlobalTchat()
+                .then(data => {
+                    setTchat(data.tchat)
+                })
         //eslint-disable-next-line 
-    }, [usersMatch])
-
-    useEffect(() => {
-        !listen && window.socket.on('receive-message', data => {
-            if ((data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
-                if (store.getState().tchat?.data?.userConversation === data.data.sender) {
-                    setTchat(t => [...t, { data: data }])
+        if (!listen && usersMatch) {
+            window.socket.on('receive-message', data => {
+                if ((data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
+                    if (store.getState().tchat?.data?.userConversation === data.data.sender && data.data.destination !== 'all') {
+                        setTchat(t => [...t, { data: data }])
+                    }
                 }
+            })
+            window.socket.off('receive-message-global');
+            setListen(true)
+            setListenGlobal(false);
+        } else {
+            if (!listenGlobal && !usersMatch) {
+                window.socket.on('receive-message-global', data => {
+                    console.log(data)
+                    setTchat(t => [...t, { data: data }])
+                })
+                setListenGlobal(true);
             }
-            !listen && setListen(true)
-        })
-        //eslint-disable-next-line
-    }, [])
+        }
+    }, [usersMatch])
 
     return <div className="container-flex-with__camera">
         <Layout.Content className="layout-tchat">
@@ -58,7 +72,7 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                             }
                         </>)}
                     <Tooltip title={moment(el?.data?.data?.timestamp).format('HH:mm')} placement="top">
-                        <div className={`content-box-message 
+                        <div style={{ ...(_tchat[index]?.data?.data?.sender === 'SERVER' && { background: '#001529' }) }} className={`content-box-message 
                             ${_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue' : 'stop'} 
                             ${_tchat[index - 1]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
                             {el?.data?.data?.message}

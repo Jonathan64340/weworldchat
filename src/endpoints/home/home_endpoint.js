@@ -11,3 +11,9 @@ export function getPrivateTchat(data) {
         .post(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/getPrivateTchat`, data)
         .then(({ data }) => data)
 }
+
+export function getGlobalTchat() {
+    return axios
+        .get(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/getGlobalTchat`)
+        .then(({ data }) => data)
+}
