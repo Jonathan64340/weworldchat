@@ -117,7 +117,7 @@ const Tchat = ({ user, tchat, ...props }) => {
 
     return <>
         {props.privateId && <div className="container-header-tchat">
-            <Card title={<><span>Vous chattez avec {_user?.user?.data?.pseudo}</span><br />{isTyping && <div><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div>}</>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>Quitter la conversation</Button>} >
+            <Card title={<><span>Vous chattez avec {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible'}) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>Quitter la conversation</Button>} >
                 <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} />
                 <div>
                     <Form form={form} name="form" onFinish={handleSubmit}>
