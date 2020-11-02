@@ -17,9 +17,8 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
 
     useEffect(() => {
         messages.current.scrollIntoView({
-            behavior: "smooth",
             block: "nearest",
-            inline: "start"
+            inline: "end"
         });
     }, [_tchat])
 
