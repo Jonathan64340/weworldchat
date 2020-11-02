@@ -35,6 +35,10 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                     setTchat(data.tchat)
                 })
         //eslint-disable-next-line 
+        if(listen && usersMatch) {
+            window.socket.off('receive-message-global');
+            setListenGlobal(false);
+        }
         if (!listen && usersMatch) {
             window.socket.on('receive-message', data => {
                 if ((data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
