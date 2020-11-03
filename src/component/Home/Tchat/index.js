@@ -126,7 +126,8 @@ const Tchat = ({ user, tchat, ...props }) => {
             </Card>
         </div> :
             <div className="container-header-tchat">
-                <Card title="Vous chattez avec tout le monde" id="card-tchat-content-global" className="card-container-header-tchat" extra={<Button style={{ visibility: 'hidden'}} type="primary" danger onClick={() => handleExit()}>Fermer la conversation</Button>}>
+                {/* eslint-disable-next-line */}
+                <Card title={<><span>Vous chattez avec tout le monde</span><br /><div><small style={{ display: 'flex' }}>N'oubliez pas que vous êtes sur un channel général, restez courtois ! 😀</small></div></>} id="card-tchat-content-global" className="card-container-header-tchat" extra={<Button style={{ visibility: 'hidden'}} type="primary" danger onClick={() => handleExit()}>Fermer la conversation</Button>}>
                     <MessageContent sendMessage={sendMessage} myRefs={ref => console.log(ref)} />
                     <div>
                         <Form form={form} name="form" onFinish={handleSubmit}>

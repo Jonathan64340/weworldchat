@@ -1,80 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Row, Col, Button, Input, Layout } from 'antd';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { setLogin } from '../../action/authentication/authentication_actions';
 import _ from 'underscore';
-import { doLogin } from '../../endpoints';
 import { Helmet } from "react-helmet";
 import Footer from '../Footer'
-import { LoadingOutlined } from '@ant-design/icons';
 import './Login.css'
+import HeaderLayout from '../Header';
 
-const Login = ({ user, ...props }) => {
-    const [form] = Form.useForm();
-    const [isLoading, setIsLoading] = useState(false);
+const Login = () => {
 
     useEffect(() => {
         window.socket.open()
     }, [])
-
-    const handleCheck = () => {
-        form.validateFields()
-            .then(values => {
-                setIsLoading(true);
-                onFinish(values)
-            })
-            .catch(err => setIsLoading(false))
-    }
-
-    const onFinish = values => {
-        doLogin({ pseudo: values.pseudo })
-            .then((data) => {
-                const { error_exception } = data;
-                if (error_exception) {
-                    setIsLoading(false);
-                    form.setFields([
-                        {
-                            name: 'pseudo',
-                            errors: [error_exception]
-                        }
-                    ])
-                }
-                if (!error_exception && !user?.data?.id) {
-                    setIsLoading(false)
-                    props.dispatch(setLogin({ pseudo: values.pseudo, statusOnline: 'online', id: window.socket.id }))
-                    window.socket.emit('users', {
-                        pseudo: values.pseudo,
-                        statusOnline: 'online',
-                        id: window.socket.id
-                    })
-                    props.history.push('/global')
-                }
-            })
-            .catch(err => { setIsLoading(false) })
-    }
 
     return (<>
         <Helmet>
             <meta charSet="utf-8" />
             <title>Connexion</title>
         </Helmet>
-        <Layout className="layout-login">
-            <div className="logo">
-                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="logo" />
-            </div>
-            <Form form={form} name="control-hooks" className="layout-login-form">
-                <Row gutter={16} justify="center" className="layout-login-form-row">
-                    <Col span={8} sm={10} xs={15} lg={8} flex="center">
-                        <Form.Item name="pseudo" rules={[{ required: true, message: "Le pseudo n'est pas valide" }]} >
-                            <Input type="text" autoFocus placeholder="Entrez un pseudo" allowClear={true} />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Button disabled={isLoading} className="layout-login-button" type="primary" onClick={handleCheck}>{isLoading ? <LoadingOutlined /> : "Se connecter"}</Button>
-            </Form>
-            <Footer />
-        </Layout>
+        <HeaderLayout />
+        <video autoPlay="true" muted="true" style={{ objectFit: 'cover' }} loop="true" src="https://storage.coverr.co/videos/9Jd00zdrM4M4kCo01OGVY6nD81BL9MTl001?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjM4Q0MzQTdGQTlGMUVDNDgxQjk3IiwiaWF0IjoxNjA0MzkxNjk0fQ.FIzjdanW9HtLyWIO6V9c1ot9VBWGjR_O6DP6rhxUn08"></video>
+        <Footer />
     </>)
 }
 

@@ -9,6 +9,19 @@
     max-width: 100%;
 }
 
+.ant-carousel {
+    height: calc(100vh - 64px);
+    display: flex;
+}
+
+.carousel-login {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    justify-content: center;
+    margin: auto;
+}
+
 .layout-login {
     height: 100vh;
     background: url('https://weworldchat.netlify.app/wave.svg');
