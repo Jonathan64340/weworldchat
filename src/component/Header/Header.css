@@ -1,11 +1,21 @@
 .nav-bar-header {
     display: flex;
     justify-content: space-between;
+    background:#1a1a2a !important;
 }
 
 .nav-bar-header-login-form {
     margin-top: 10px;
     display: inline-flex;
+    background: #1a1a2a;
+}
+
+.nav-bar-header-login-form .ant-form-item-control-input-content {
+    display: flex;
+}
+
+.nav-bar-header-login-form .ant-form-item-control-input-content .ant-input-affix-wrapper {
+    margin-right: 10px;
 }
 
 .nav-bar-header .user-action > span:hover {

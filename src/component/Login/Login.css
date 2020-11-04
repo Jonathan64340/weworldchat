@@ -1,40 +1,25 @@
-.logo {
-    display: flex;
-    justify-content: center;
-    margin-top: calc(100vh - 85vh);
-}
-
-.logo img {
-    border-radius: 25%;
-    max-width: 100%;
-}
-
-.ant-carousel {
-    height: calc(100vh - 64px);
-    display: flex;
-}
-
-.carousel-login {
-    display: flex;
-    align-items: center;
-    width: 90%;
-    justify-content: center;
-    margin: auto;
-}
-
 .layout-login {
     height: 100vh;
-    background: url('https://weworldchat.netlify.app/wave.svg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
+}
+
+.layout-content .picture-form img {
+    width: 180px;
+}
+
+.layout-login .layout-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 150px;
 }
 
 .layout-login-form {
     display: flex;
     flex-direction: column;
     margin-top: calc(100vh - 90vh);
+    max-width: 60%;
 }
 
 .layout-login-button {

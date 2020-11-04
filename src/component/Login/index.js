@@ -1,25 +1,69 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import _ from 'underscore';
+import { Form, Button, Input } from 'antd';
 import { Helmet } from "react-helmet";
 import Footer from '../Footer'
 import './Login.css'
-import HeaderLayout from '../Header';
+import { setLogin } from '../../action/authentication/authentication_actions';
+import { doLogin } from '../../endpoints';
 
-const Login = () => {
+const Login = ({ user, ...props }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [form] = Form.useForm();
 
     useEffect(() => {
         window.socket.open()
     }, [])
+
+    const onFinish = values => {
+        setIsLoading(true)
+        doLogin({ pseudo: values.pseudo })
+            .then((data) => {
+                const { error_exception } = data;
+                if (error_exception) {
+                    setIsLoading(false);
+                    form.setFields([
+                        {
+                            name: 'pseudo',
+                            errors: [error_exception]
+                        }
+                    ])
+                }
+                if (!error_exception && !user?.data?.id) {
+                    setIsLoading(false)
+                    props.dispatch(setLogin({ pseudo: values.pseudo, statusOnline: 'online', id: window.socket.id }))
+                    window.socket.emit('users', {
+                        pseudo: values.pseudo,
+                        statusOnline: 'online',
+                        id: window.socket.id
+                    })
+                    props.history.push('/global')
+                }
+            })
+            .catch(err => { setIsLoading(false) })
+    }
 
     return (<>
         <Helmet>
             <meta charSet="utf-8" />
             <title>Connexion</title>
         </Helmet>
-        <HeaderLayout />
-        <video autoPlay="true" muted="true" style={{ objectFit: 'cover' }} loop="true" src="https://storage.coverr.co/videos/9Jd00zdrM4M4kCo01OGVY6nD81BL9MTl001?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjM4Q0MzQTdGQTlGMUVDNDgxQjk3IiwiaWF0IjoxNjA0MzkxNjk0fQ.FIzjdanW9HtLyWIO6V9c1ot9VBWGjR_O6DP6rhxUn08"></video>
+        <div className="layout-login">
+            <div className="layout-content">
+                <div class="picture-form">
+                    <img src={`${process.env.PUBLIC_URL}/home-logo.png`} alt=""/>
+                </div>
+                <Form className="layout-login-form" onFinish={onFinish} form={form} style={{ display: 'flex' }}>
+                    <Form.Item name="pseudo" rules={[{ required: true, message: "Le pseudo n'est pas valide" }]} >
+                        <Input type="text" autoFocus placeholder="Entrez un pseudo" allowClear={true} />
+                    </Form.Item>
+                    <Button htmlType="submit" loading={isLoading} type="primary">Connexion</Button>
+                </Form>
+            </div>
+        </div>
+
         <Footer />
     </>)
 }

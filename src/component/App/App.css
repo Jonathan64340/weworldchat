@@ -1,5 +1,6 @@
-body {
-    background: whitesmoke;
+body, section {
+    background: #1a1a2a !important;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 .global-layout.blur {
