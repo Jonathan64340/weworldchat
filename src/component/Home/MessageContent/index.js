@@ -63,24 +63,26 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
     return <div className="container-flex-with__camera">
         <Layout.Content className="layout-tchat">
             <div className="tchat-container">
-                {_tchat.map((el, index) => (<div key={index} className={`item-message ${user.data.id === el?.data?.data?.sender ? 'sender' : 'receiver'}`} senderInfo={_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? '' : `${_tchat[index]?.data?.data?.pseudo !== "Serveur : " ? _tchat[index]?.data?.data?.pseudo : 'message automatique (serveur)'} • ${moment(_tchat[index]?.data?.data?.timestamp).format('HH:mm')}`}>
-                    {el?.data?.data?.sender && user.data.id !== el?.data?.data?.sender && (
-                        <>
-                            {_tchat[index]?.data?.data?.sender !== _tchat[index + 1]?.data?.data?.sender &&
-                                <div className="content-avatar">
-                                    <Avatar size="small" className="avatar-icon">
-                                        {el?.data?.data?.pseudo.length > 1 ? el?.data?.data?.pseudo.substring(0, el?.data?.data?.pseudo.length - (el?.data?.data?.pseudo.length - 1)) : el?.data?.data?.pseudo}
-                                    </Avatar>
-                                </div>
-                            }
-                        </>)}
-                    <Tooltip title={moment(el?.data?.data?.timestamp).format('HH:mm')} placement="top">
-                        <div style={{ ...(_tchat[index]?.data?.data?.sender === 'SERVER' && { background: '#001529' }) }} className={`content-box-message 
+                {_tchat.map((el, index) => (<div className="content-item-tchat" senderinfo={_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? '' : `${_tchat[index]?.data?.data?.pseudo !== "Serveur : " ? _tchat[index]?.data?.data?.pseudo : 'message automatique (serveur)'} • ${moment(_tchat[index]?.data?.data?.timestamp).format('HH:mm')}`}>
+                    <div key={index} className={`item-message ${user.data.id === el?.data?.data?.sender ? 'sender' : 'receiver'}`} >
+                        {el?.data?.data?.sender && user.data.id !== el?.data?.data?.sender && (
+                            <>
+                                {_tchat[index]?.data?.data?.sender !== _tchat[index + 1]?.data?.data?.sender &&
+                                    <div className="content-avatar">
+                                        <Avatar size="small" className="avatar-icon">
+                                            {el?.data?.data?.pseudo.length > 1 ? el?.data?.data?.pseudo.substring(0, el?.data?.data?.pseudo.length - (el?.data?.data?.pseudo.length - 1)) : el?.data?.data?.pseudo}
+                                        </Avatar>
+                                    </div>
+                                }
+                            </>)}
+                        <Tooltip title={moment(el?.data?.data?.timestamp).format('HH:mm')} placement="top">
+                            <div style={{ ...(_tchat[index]?.data?.data?.sender === 'SERVER' && { background: '#001529' }) }} className={`content-box-message 
                             ${_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue' : 'stop'} 
                             ${_tchat[index - 1]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
-                            {el?.data?.data?.message}
-                        </div>
-                    </Tooltip>
+                                {el?.data?.data?.message}
+                            </div>
+                        </Tooltip>
+                    </div>
                 </div>))}
                 <div ref={messages} />
             </div>
