@@ -15,7 +15,7 @@
 
 .layout-tchat {
     scrollbar-width: none;
-    height: calc(100vh - 290px);
+    height: calc(100vh - 277px);
     overflow: auto;
     border: 1px solid rgb(240 240 240);
     border-radius: 3px;

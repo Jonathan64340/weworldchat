@@ -52,9 +52,11 @@ const Login = ({ user, ...props }) => {
         </Helmet>
         <div className="layout-login">
             <div className="layout-content">
-                <div class="picture-form">
+                <div className="picture-form">
                     <img src={`${process.env.PUBLIC_URL}/home-logo.png`} alt=""/>
                 </div>
+                <span className="title-form">WE WORLD TCHAT</span>
+                <small className="title-form">Discutez avec vos amis, et le monde</small>
                 <Form className="layout-login-form" onFinish={onFinish} form={form} style={{ display: 'flex' }}>
                     <Form.Item name="pseudo" rules={[{ required: true, message: "Le pseudo n'est pas valide" }]} >
                         <Input type="text" autoFocus placeholder="Entrez un pseudo" allowClear={true} />

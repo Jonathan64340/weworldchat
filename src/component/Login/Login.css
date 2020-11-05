@@ -15,10 +15,14 @@
     margin-top: 150px;
 }
 
+.layout-login .layout-content .title-form {
+    color: #f2f2f2f2;
+}
+
 .layout-login-form {
     display: flex;
     flex-direction: column;
-    margin-top: calc(100vh - 90vh);
+    margin-top: calc(100vh - 95vh);
     max-width: 60%;
 }
 
