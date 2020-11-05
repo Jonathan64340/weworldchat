@@ -39,11 +39,22 @@
     margin-left: 10px;
     flex-direction: row;
     justify-content: flex-start;
+    position: relative;
+}
+
+.layout-tchat .item-message.receiver::after {
+        content: attr(senderInfo);
+        position: absolute;
+        top: 28px;
+        text-transform: lowercase;
+        font-weight: bold;
+        font-size: small;
+        left: 32px;
 }
 
 .layout-tchat .item-message.receiver .content-avatar {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     flex-direction: column;
 }
 
@@ -97,6 +108,7 @@
 
 .layout-tchat .item-message.receiver .content-box-message.stop {
     border-radius: 5px 15px 15px 15px;
+    margin-bottom: 18px;
 }
 
 .layout-tchat .item-message.sender .content-box-message.stop {

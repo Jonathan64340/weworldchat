@@ -29,6 +29,7 @@ const HeaderLayout = ({ user, ...props }) => {
         window.socket.off('users-online')
         window.socket.off('users-status')
         window.socket.off('receive-message-typing')
+        window.socket.off('receive-message-global')
         props.history.push('/login')
     }
 

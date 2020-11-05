@@ -34,7 +34,7 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                     setTchat(data.tchat)
                 })
         //eslint-disable-next-line 
-        if(listen && usersMatch) {
+        if (listen && usersMatch) {
             window.socket.off('receive-message-global');
             setListenGlobal(false);
         }
@@ -63,7 +63,7 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
     return <div className="container-flex-with__camera">
         <Layout.Content className="layout-tchat">
             <div className="tchat-container">
-                {_tchat.map((el, index) => (<div key={index} className={`item-message ${user.data.id === el?.data?.data?.sender ? 'sender' : 'receiver'}`}>
+                {_tchat.map((el, index) => (<div key={index} className={`item-message ${user.data.id === el?.data?.data?.sender ? 'sender' : 'receiver'}`} senderInfo={_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? '' : `${_tchat[index]?.data?.data?.pseudo !== "Serveur : " ? _tchat[index]?.data?.data?.pseudo : 'message automatique (serveur)'} • ${moment(_tchat[index]?.data?.data?.timestamp).format('HH:mm')}`}>
                     {el?.data?.data?.sender && user.data.id !== el?.data?.data?.sender && (
                         <>
                             {_tchat[index]?.data?.data?.sender !== _tchat[index + 1]?.data?.data?.sender &&
@@ -85,7 +85,7 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                 <div ref={messages} />
             </div>
         </Layout.Content>
-    </div>
+    </div >
 }
 
 const mapStateToProps = ({ user }) => ({ user })

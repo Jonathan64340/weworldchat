@@ -29,7 +29,7 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     useEffect(() => {
         getCountUsersConnected().then(data => {
             if (data) {
-                setOnlineUsers(data.countUsersConnected);
+                setOnlineUsers(data.users.length);
                 setUsers(data.users)
             }
         })
