@@ -63,7 +63,7 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
     return <div className="container-flex-with__camera">
         <Layout.Content className="layout-tchat">
             <div className="tchat-container">
-                {_tchat.map((el, index) => (<div className="content-item-tchat" senderinfo={_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? '' : `${_tchat[index]?.data?.data?.pseudo !== "Serveur : " ? _tchat[index]?.data?.data?.pseudo : 'message automatique (serveur)'} • ${moment(_tchat[index]?.data?.data?.timestamp).format('HH:mm')}`}>
+                {_tchat.map((el, index) => (<div className="content-item-tchat" senderinfo={_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? '' : `${_tchat[index]?.data?.data?.sender === user?.data?.id ? '' : _tchat[index]?.data?.data?.pseudo !== "Serveur : " ? `${_tchat[index]?.data?.data?.pseudo} • ${moment(_tchat[index]?.data?.data?.timestamp).format('HH:mm')}` : `message automatique (serveur) • ${moment(_tchat[index]?.data?.data?.timestamp).format('HH:mm')}`}`}>
                     <div key={index} className={`item-message ${user.data.id === el?.data?.data?.sender ? 'sender' : 'receiver'}`} >
                         {el?.data?.data?.sender && user.data.id !== el?.data?.data?.sender && (
                             <>
