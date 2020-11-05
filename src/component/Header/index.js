@@ -85,7 +85,7 @@ const HeaderLayout = ({ user, ...props }) => {
             </fieldset>
         </Modal>
         <Header className="nav-bar-header">
-            <Link to="#/"><img src={`${process.env.PUBLIC_URL}/home-logo.png`} alt="logo" style={{ width: 45, position: 'absolute', top: '8px' }} /></Link>
+            <Link to="#/"><img src={`${process.env.PUBLIC_URL}/home-logo.png`} alt="logo" style={{ width: 45, position: 'absolute', top: '11px' }} /></Link>
             {user?.data?.isLogged && <div className="user-action">
                 <Dropdown overlay={menu} arrow trigger={['click']}>
                     <Avatar size="large" className="avatar-icon">
