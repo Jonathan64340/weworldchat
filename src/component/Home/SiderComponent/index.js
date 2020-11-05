@@ -10,7 +10,6 @@ import { setEnterPrivateTchat, setOpenMenu } from '../../../action/tchat/tchat_a
 import { store } from '../../../index'
 
 const SiderComponent = ({ user, tchat, ...props }) => {
-    const [onlineUsers, setOnlineUsers] = useState(0)
     const [users, setUsers] = useState([{}])
     const [filterUser, setFilterUser] = useState([])
     const [listen, setListen] = useState(false)
@@ -29,7 +28,6 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     useEffect(() => {
         getCountUsersConnected().then(data => {
             if (data) {
-                setOnlineUsers(data.countUsersConnected);
                 setUsers(data.users)
             }
         })
@@ -68,7 +66,6 @@ const SiderComponent = ({ user, tchat, ...props }) => {
 
         !listen && window.socket.on('users-online', (data) => {
             if (data) {
-                setOnlineUsers(data.usersCount)
                 setUsers(data.users)
                 setFilterUser(data.users)
             }
