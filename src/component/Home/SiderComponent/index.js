@@ -29,7 +29,7 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     useEffect(() => {
         getCountUsersConnected().then(data => {
             if (data) {
-                setOnlineUsers(data.users.length);
+                setOnlineUsers(data.countUsersConnected);
                 setUsers(data.users)
             }
         })
@@ -120,7 +120,6 @@ const SiderComponent = ({ user, tchat, ...props }) => {
         </Modal>
         <Layout.Sider className="sider-users-connected" id="button-mobile">
             <PlayCircleFilled className="button-opened-menu" onClick={() => toggleMobileMenu()} />
-            <div style={{ borderBottom: "1px solid #f0f2f585", paddingBottom: 8 }}>Connecté(s) : {onlineUsers <= 0 ? 0 : onlineUsers - 1}</div>
             <div className="flex-container">
                 <ul className="list-users-connected">
                     <Input placeholder="Rechercher un utilisateur"
