@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import _ from 'underscore';
-import { Form, Button, Input, TimePicker } from 'antd';
+import { Form, Button, Input } from 'antd';
 import { Helmet } from "react-helmet";
 import Footer from '../Footer'
 import './Login.css'
@@ -75,6 +75,7 @@ const Login = ({ user, ...props }) => {
                         <Input type="text" autoFocus placeholder="Entrez un pseudo" allowClear={true} />
                     </Form.Item>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 24 }}>
+                        {/* eslint-disable-next-line */}
                         <span style={{ color: "#f2f2f2f2" }}>Votre couleur préférée : </span><div className="color-preview" onClick={() => setDisplayColor(true)} style={{ background: 'rgba(' + defaultColor.r + ',' + defaultColor.g + ',' + defaultColor.b + ',' + defaultColor.a + ')', border: '3px solid rgba(' + defaultColor.r / 2 + ',' + defaultColor.g / 2 + ',' + defaultColor.b / 2 + ',' + '1' + '' }} />
                     </div>
                     {displayColor && <Form.Item name="color">
