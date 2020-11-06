@@ -36,6 +36,7 @@
 .github-picker {
     position: absolute !important;
     z-index: 1;
+    width: 100% !important;
     top: -15px;
 }
 
