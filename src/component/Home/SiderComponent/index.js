@@ -13,6 +13,8 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     const [users, setUsers] = useState([{}])
     const [filterUser, setFilterUser] = useState([])
     const [listen, setListen] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [listenStatus, setListenStatus] = useState(false)
     const [visible, setVisible] = useState(false)
     const [userCaller, setUserCaller] = useState('')
     const [mobileMenu, setMobileMenu] = useState(false)
@@ -32,11 +34,12 @@ const SiderComponent = ({ user, tchat, ...props }) => {
             }
         })
 
-        window.socket.on('users-status', data => {
+        !listenStatus && window.socket.on('users-status', data => {
             setUsers(data)
             setFilterUser(data)
+            setListenStatus(true)
         })
-    }, [])
+    }, [listenStatus])
 
     useEffect(() => {
         !listen && window.socket.on('receive-message', data => {
@@ -76,21 +79,7 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     }, [tchat, listen, filterUser])
 
     const handleSearch = value => {
-        let __users = [];
-
-        users.forEach((el, index) => {
-            if (el.data?.pseudo.match(`${value.currentTarget.value}`) !== null) {
-                if (users.find(u => u.data.pseudo === el.data?.pseudo.match(`${value.currentTarget.value}`)['input'])) {
-                    __users.push(el)
-                }
-            }
-
-            if (users.length === index + 1) {
-                setFilterUser(__users)
-            }
-
-            if (!value.currentTarget.value.length) setFilterUser([])
-        })
+        setSearchQuery(value?.currentTarget?.value)
     }
 
 
@@ -125,7 +114,7 @@ const SiderComponent = ({ user, tchat, ...props }) => {
                         type="text"
                     ></Input>
                     <div className="item__user">
-                        {typeof users !== 'undefined' && (filterUser.length > 0 ? filterUser : users).map((el, index) => (
+                        {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo === el?.data?.pseudo.match(searchQuery).input) : users).map((el, index) => (
                             <>{
                                 el.id !== user.data?.id && (
                                     <li key={index} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
