@@ -33,9 +33,10 @@
     display: inline-block;
 }
 
-.twitter-picker {
+.github-picker {
     position: absolute !important;
     z-index: 1;
+    top: -15px;
 }
 
 .layout-login-form label[for="color"] {

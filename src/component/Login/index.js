@@ -8,7 +8,7 @@ import Footer from '../Footer'
 import './Login.css'
 import { setLogin } from '../../action/authentication/authentication_actions';
 import { doLogin } from '../../endpoints';
-import { TwitterPicker } from 'react-color'
+import { GithubPicker } from 'react-color'
 
 const Login = ({ user, ...props }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -79,7 +79,7 @@ const Login = ({ user, ...props }) => {
                         <span style={{ color: "#f2f2f2f2" }}>Votre couleur préférée : </span><div className="color-preview" onClick={() => setDisplayColor(true)} style={{ background: 'rgba(' + defaultColor.r + ',' + defaultColor.g + ',' + defaultColor.b + ',' + defaultColor.a + ')', border: '3px solid rgba(' + defaultColor.r / 2 + ',' + defaultColor.g / 2 + ',' + defaultColor.b / 2 + ',' + '1' + '' }} />
                     </div>
                     {displayColor && <Form.Item name="color">
-                        <TwitterPicker onChange={onChange} />
+                        <GithubPicker triangle="top-right" onChange={onChange} />
                     </Form.Item>}
                     <Button htmlType="submit" loading={isLoading} type="primary">Connexion</Button>
                 </Form>
