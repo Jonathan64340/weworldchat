@@ -11,6 +11,7 @@ const user = (state = { isAdmin: false }, action) => {
                     id: action.payload.id,
                     name: action.payload.pseudo,
                     statusOnline: action.payload.statusOnline,
+                    defaultColor: action.payload.defaultColor,
                     isLogged: true
                 }
             }

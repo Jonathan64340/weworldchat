@@ -69,7 +69,7 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                             <>
                                 {_tchat[index]?.data?.data?.sender !== _tchat[index + 1]?.data?.data?.sender &&
                                     <div className="content-avatar">
-                                        <Avatar size="small" className="avatar-icon">
+                                        <Avatar size="small" style={{ background: el?.data?.data?.defaultColor ? 'rgba(' + el?.data?.data?.defaultColor + ')' : 'rgb(0, 21, 41)', textTransform: "uppercase" }}>
                                             {el?.data?.data?.pseudo.length > 1 ? el?.data?.data?.pseudo.substring(0, el?.data?.data?.pseudo.length - (el?.data?.data?.pseudo.length - 1)) : el?.data?.data?.pseudo}
                                         </Avatar>
                                     </div>

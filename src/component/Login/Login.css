@@ -12,7 +12,7 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    margin-top: 150px;
+    margin-top: 110px;
 }
 
 .layout-login .layout-content .title-form {
@@ -24,6 +24,22 @@
     flex-direction: column;
     margin-top: calc(100vh - 95vh);
     max-width: 60%;
+}
+
+.layout-login-form .color-preview {
+    width: 30px;
+    height: 20px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.twitter-picker {
+    position: absolute !important;
+    z-index: 1;
+}
+
+.layout-login-form label[for="color"] {
+    color: #d9d9d9;
 }
 
 .layout-login-button {

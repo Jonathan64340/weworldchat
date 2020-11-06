@@ -49,6 +49,7 @@
         font-size: small;
         position: relative;
         left: 42px;
+        top: -2px;
 }
 
 .layout-tchat .item-message.receiver .content-avatar {

@@ -75,6 +75,7 @@ const Tchat = ({ user, tchat, ...props }) => {
         const tmpValues = {
             usersContaints: `${props.privateId}:${user.data.id}`,
             data: {
+                defaultColor: user.data.defaultColor,
                 pseudo: user.data.name,
                 sender: user.data.id,
                 timestamp: new Date().getTime(),
