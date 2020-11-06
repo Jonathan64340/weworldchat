@@ -68,7 +68,7 @@ const Login = ({ user, ...props }) => {
                 <div className="picture-form">
                     <img src={`${process.env.PUBLIC_URL}/home-logo.png`} alt="" />
                 </div>
-                <span className="title-form">WE WORLD CHAT</span>
+                <span className="title-form">WE WORLD TCHAT</span>
                 <small className="title-form">Discutez avec vos amis, et le monde</small>
                 <Form className="layout-login-form" onFinish={onFinish} form={form} style={{ display: 'flex' }}>
                     <Form.Item name="pseudo" rules={[{ required: true, message: "Le pseudo n'est pas valide" }]} >
