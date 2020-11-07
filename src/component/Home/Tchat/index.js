@@ -109,7 +109,7 @@ const Tchat = ({ user, tchat, ...props }) => {
 
     return <>
         {props.privateId ? <div className="container-header-tchat">
-            <Card title={<><span>Vous chattez avec {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>Fermer la conversation</Button>} >
+            <Card title={<><span>Vous discutez avec {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>Fermer la conversation</Button>} >
                 <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} />
                 <div>
                     <Form form={form} name="form" onFinish={handleSubmit}>
@@ -128,7 +128,7 @@ const Tchat = ({ user, tchat, ...props }) => {
         </div> :
             <div className="container-header-tchat">
                 {/* eslint-disable-next-line */}
-                <Card title={<><span>Vous chattez avec tout le monde</span><br /><div><small style={{ display: 'flex' }}>N'oubliez pas que vous êtes sur un channel général, restez courtois ! 😀</small></div></>} id="card-tchat-content-global" className="card-container-header-tchat">
+                <Card title={<><span>Vous discutez avec tout le monde</span><br /><div><small style={{ display: 'flex' }}>N'oubliez pas que vous êtes sur un channel général, restez courtois ! 😀</small></div></>} id="card-tchat-content-global" className="card-container-header-tchat">
                     <MessageContent sendMessage={sendMessage} myRefs={ref => console.log(ref)} />
                     <div>
                         <Form form={form} name="form" onFinish={handleSubmit}>
