@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, List } from 'antd';
+import { Modal } from 'antd';
 
 const DetailGroupeModal = ({ current, visible, ...props }) => {
     return <Modal centered visible={visible} title={current?.name} onCancel={() => props.onChange(false)} footer={false}>
