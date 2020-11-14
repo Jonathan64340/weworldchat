@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Layout, Avatar, Tooltip } from 'antd';
+import { Layout, Avatar, Tooltip, Button } from 'antd';
 import { connect } from 'react-redux';
 import { getGlobalTchat, getPrivateTchat } from '../../../endpoints';
 import moment from 'moment';
 import './MessageContent.css'
 import { store } from '../../..';
-const MessageContent = ({ sendMessage, usersMatch, user }) => {
+const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
     const [listenGlobal, setListenGlobal] = useState(false);
+    const [listenTchatGroupe, setListenTchatGroupe] = useState(false);
     const messages = useRef();
 
     useEffect(() => {
@@ -40,6 +41,7 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
         }
         if (!listen && usersMatch) {
             window.socket.on('receive-message', data => {
+                console.log(data)
                 if ((data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
                     if (store.getState().tchat?.data?.userConversation === data.data.sender && data.data.destination !== 'all') {
                         setTchat(t => [...t, { data: data }])
@@ -56,9 +58,20 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                 })
                 setListenGlobal(true);
             }
+
         }
         // eslint-disable-next-line 
     }, [usersMatch])
+
+    useEffect(() => {
+        if (!listenTchatGroupe) {
+            window.socket.on('receive-user-add-groupe', data => {
+                typeof store.getState()?.tchat?.data?.userConversation === 'undefined' && typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' && setTchat(t => [...t, { data: data }])
+            })
+            setListenTchatGroupe(true)
+        }
+        // eslint-disable-next-line
+    }, [tchat])
 
     return <div className="container-flex-with__camera">
         <Layout.Content className="layout-tchat">
@@ -79,7 +92,7 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
                             <div style={{ ...(_tchat[index]?.data?.data?.sender === 'SERVER' && { background: '#001529' }) }} className={`content-box-message 
                             ${_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue' : 'stop'} 
                             ${_tchat[index - 1]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
-                                {el?.data?.data?.message}
+                                {el?.data?.data?.message}{' '}{_tchat[index]?.data?.data?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}
                             </div>
                         </Tooltip>
                     </div>
@@ -90,6 +103,6 @@ const MessageContent = ({ sendMessage, usersMatch, user }) => {
     </div >
 }
 
-const mapStateToProps = ({ user }) => ({ user })
+const mapStateToProps = ({ user, tchat }) => ({ user, tchat })
 
 export default connect(mapStateToProps)(MessageContent)

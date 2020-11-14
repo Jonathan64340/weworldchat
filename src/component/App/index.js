@@ -23,6 +23,7 @@ const App = ({ user }) => {
                 {!user?.data?.isLogged && <Redirect to="/login" />}
                 <Route path="/global" exact component={Home} />
                 <Route path="/conversation/:id" exact component={Home} />
+                <Route path="/group/:id" exact component={Home} />
                 <Route path="*" render={() => (<h1>Erreur 404 - Page introuvable</h1>)} />
             </Switch>
         </Router>

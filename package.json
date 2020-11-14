@@ -24,7 +24,7 @@
     "sweetalert": "^2.1.2",
     "sweetalert2": "^9.17.1",
     "underscore": "^1.10.2",
-    "uuid": "^8.2.0"
+    "uuid": "^8.3.1"
   },
   "scripts": {
     "start": "SET PORT=83 && react-scripts start",

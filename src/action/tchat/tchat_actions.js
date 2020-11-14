@@ -1,4 +1,4 @@
-import { ENTER_PRIVATE_TCHAT, OPEN_MENU } from './tchat_types';
+import { ENTER_PRIVATE_TCHAT, OPEN_MENU, ENTER_GROUP_DISCUSSION, QUIT_GROUP_DISCUSSION } from './tchat_types';
 
 /** 
  * @param {string} userOneId
@@ -13,5 +13,15 @@ export const setEnterPrivateTchat = payload => ({
 
 export const setOpenMenu = payload => ({
     type: OPEN_MENU,
+    payload
+})
+
+export const setEnterGroupDiscussion = payload => ({
+    type: ENTER_GROUP_DISCUSSION,
+    payload
+})
+
+export const setQuitGroupDiscussion = payload => ({
+    type: QUIT_GROUP_DISCUSSION,
     payload
 })

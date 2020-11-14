@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { LOGIN, LOGOUT, UPDATE } from '../action/authentication/authentication_types'
-import { ENTER_PRIVATE_TCHAT, LOAD_FIRST_TIME, OPEN_MENU } from '../action/tchat/tchat_types'
+import { ENTER_GROUP_DISCUSSION, ENTER_PRIVATE_TCHAT, LOAD_FIRST_TIME, OPEN_MENU, QUIT_GROUP_DISCUSSION } from '../action/tchat/tchat_types'
 
 const user = (state = { isAdmin: false }, action) => {
     switch (action.type) {
@@ -41,7 +41,7 @@ const user = (state = { isAdmin: false }, action) => {
     }
 }
 
-const tchat = (state = { data: { userConversation: undefined } }, action) => {
+const tchat = (state = { data: { userConversation: undefined, groupeSubscribed: [] } }, action) => {
     switch (action.type) {
         case ENTER_PRIVATE_TCHAT:
             return {
@@ -49,7 +49,8 @@ const tchat = (state = { data: { userConversation: undefined } }, action) => {
                     userOneId: action.payload.userOneId,
                     userTwoId: action.payload.userTwoId,
                     userConversation: action.payload.userConversation,
-                    enableWebcamCall: action.payload.enableWebcamCall
+                    enableWebcamCall: action.payload.enableWebcamCall,
+                    groupeSubscribed: state.data.groupeSubscribed
                 }
             }
 
@@ -64,6 +65,26 @@ const tchat = (state = { data: { userConversation: undefined } }, action) => {
                 data: {
                     notification: false,
                     message: false
+                }
+            }
+
+        case ENTER_GROUP_DISCUSSION:
+            return {
+                ...state,
+                data: {
+                    ...state.data, userConversation: null,
+                    currentGroupDiscussion: action.payload.currentGroupDiscussion,
+                    groupeSubscribed: action.payload.groupeSubscribed
+                }
+            }
+
+        case QUIT_GROUP_DISCUSSION:
+            return {
+                ...state,
+                data: {
+                    userConversation: null,
+                    groupeSubscribed: action.payload.groupeSubscribed,
+                    currentGroupDiscussion: null
                 }
             }
 

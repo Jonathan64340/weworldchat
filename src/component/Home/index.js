@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout } from 'antd';
 import _ from 'underscore';
 import { withRouter } from 'react-router-dom'
@@ -12,6 +12,7 @@ import { onConnectionRematch } from '../../utils/manager';
 
 const Home = ({ user, ...props }) => {
     useEffect(() => onConnectionRematch(), [])
+    const [viewTchat, setViewTchat] = useState('')
 
     return <>
         <Helmet>
@@ -20,8 +21,8 @@ const Home = ({ user, ...props }) => {
         </Helmet>
         <Layout className="home-layout">
             <div className="flex-container">
-                <SiderComponent />
-                <Tchat privateId={props.match.params.id} />
+                <SiderComponent viewTchat={viewTchat} />
+                <Tchat privateId={props.match.params.id} viewTchat={setViewTchat} />
             </div>
         </Layout>
     </>

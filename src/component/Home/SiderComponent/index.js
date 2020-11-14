@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { Layout, Button, Tooltip, notification, Input, Modal } from 'antd'
+import { Layout, Button, Tooltip, notification, Input, Popover } from 'antd'
 import _ from 'underscore'
 import './SiderComponent.css'
-import { getCountUsersConnected } from '../../../endpoints';
-import { MessageOutlined, WechatOutlined, PhoneOutlined, PlayCircleFilled } from '@ant-design/icons';
-import { setEnterPrivateTchat, setOpenMenu } from '../../../action/tchat/tchat_actions';
+import swal from 'sweetalert';
+import { getCountUsersConnected, getListeGroupe } from '../../../endpoints';
+import { MessageOutlined, WechatOutlined, PlayCircleFilled, SettingOutlined, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { setEnterGroupDiscussion, setEnterPrivateTchat, setOpenMenu, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
+import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
+import DetailGroupeModal from './Modal/DetailGroupeModal';
 
-const SiderComponent = ({ user, tchat, ...props }) => {
+const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [users, setUsers] = useState([{}])
+    const [groupes, setGroupes] = useState([{}])
     const [filterUser, setFilterUser] = useState([])
     const [listen, setListen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [listenStatus, setListenStatus] = useState(false)
-    const [visible, setVisible] = useState(false)
-    const [userCaller, setUserCaller] = useState('')
+    const [listGroupes, setListenGroupes] = useState(false)
     const [mobileMenu, setMobileMenu] = useState(false)
+    const [openPopover, setOpenPopover] = useState(false)
+    const [choicePopover, setChoicePopover] = useState('clients');
+    const [visibleCreateGroupe, setVisibleCreateGroupe] = useState(false);
+    const [visibleDetailGroupe, setVisibleDetailGroupe] = useState(false);
+    const [currentGroup, setCurrentGroup] = useState({});
     let src = `${process.env.PUBLIC_URL}/sound/notif2.mp3`
     let audio = new Audio(src);
 
@@ -28,12 +36,36 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     }
 
     useEffect(() => {
+        viewTchat && setChoicePopover(viewTchat)
+    }, [viewTchat])
+
+    useEffect(() => {
         getCountUsersConnected().then(data => {
             if (data) {
                 setUsers(data.users)
             }
         })
 
+        getListeGroupe().then(data => {
+            if (data) {
+                setGroupes(data.groupe)
+            }
+        })
+    }, [])
+
+    useEffect(() => {
+        !listGroupes && window.socket.on('receive-user-add-groupe', data => {
+            setListenGroupes(true)
+            setGroupes(g => [...g, { data: { ...data, id: data?.id } }])
+        })
+
+        !listGroupes && window.socket.on('receive-user-update-groupe', data => {
+            setListenGroupes(true);
+            setGroupes(data)
+        })
+    }, [listGroupes])
+
+    useEffect(() => {
         !listenStatus && window.socket.on('users-status', data => {
             setUsers(data)
             setFilterUser(data)
@@ -44,7 +76,6 @@ const SiderComponent = ({ user, tchat, ...props }) => {
     useEffect(() => {
         !listen && window.socket.on('receive-message', data => {
             const { tchat, user } = store.getState()
-            if (data.data?.type === 'videoCallRequest') { setVisible(true); setUserCaller(data.data.pseudo) }
             if (user.data?.statusOnline === "online" && (data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
                 if (tchat.data?.userConversation !== data.data.sender) {
                     const key = `open${Date.now()}`;
@@ -82,6 +113,22 @@ const SiderComponent = ({ user, tchat, ...props }) => {
         setSearchQuery(value?.currentTarget?.value)
     }
 
+    const handleChange = type => {
+        switch (type) {
+            case 'clients':
+                setOpenPopover(false)
+                setChoicePopover('clients')
+                break;
+
+            case 'groupes':
+                setOpenPopover(false)
+                setChoicePopover('groupes')
+                break;
+
+            default: break
+        }
+    }
+
 
     const toggleMobileMenu = () => {
         setMobileMenu(!mobileMenu)
@@ -92,28 +139,104 @@ const SiderComponent = ({ user, tchat, ...props }) => {
         iconBtnMobile[0].style.transform = !tchat?.data?.menuOpened ? "rotate(180deg)" : "rotate(0deg)"
     }
 
-    return (<Layout>
-        <Modal visible={visible} footer={false} centered closable={false}>
-            <div className="incoming-call">
-                <div className="incoming-call-name">
-                    Appel entrant de {userCaller}
-                </div>
-                <div className="buttons-call">
-                    <div className="on"><PhoneOutlined /></div>
-                    <div className="off"><PhoneOutlined /></div>
-                </div>
+    const onChangeGroupe = data => {
+        setVisibleCreateGroupe(data?.visible)
+        if (!data?.create) return;
+        setGroupes(g => [...g, { data: { dataGroupe: { ...data?.data?.dataGroupe, id: data?.data?.dataGroupe?.id } } }])
+    }
+
+    const content = (
+        <div className="list-option-display">
+            <div onClick={() => handleChange('clients')}>
+                <span><UserOutlined />{' '}Clients</span>
             </div>
-        </Modal>
+            <div onClick={() => handleChange('groupes')}>
+                <span><TeamOutlined />{' '}Groupes</span>
+            </div>
+        </div>
+    );
+
+    const handleEditGroupe = group => {
+        console.log(group)
+    }
+
+    const handleDetailGroupe = group => {
+        setCurrentGroup(group)
+        setVisibleDetailGroupe(true)
+    }
+
+    const handleJoinGroup = (group, create) => {
+        if (!group.id) return;
+        if (create) {
+            if (group.currentParticipants + 1 <= group.maxParticipants) {
+                swal({
+                    title: `Rejoindre un groupe`,
+                    text: `Souhaitez-vous vraiment rejoindre le groupe : ${group?.name} ?`,
+                    buttons: ['Annuler', 'Continuer'],
+                    closeOnClickOutside: false,
+                    closeOnEsc: false
+                }).then(choice => {
+                    if (choice) {
+                        let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
+                        prevGroupSubscribed.push(group?.id)
+                        group.currentParticipants++
+                        props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
+                        props.history.push(`/group/${group?.id}`)
+                        window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+                    }
+                })
+            } else {
+                swal({
+                    title: `Groupe complet`,
+                    icon: 'warning',
+                    text: `Vous ne pouvez pas rejoindre ce groupe car il est complet.`,
+                    closeOnClickOutside: false,
+                    closeOnEsc: false
+                })
+            }
+
+        } else {
+            props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: tchat?.data?.groupeSubscribed || [] }))
+            props.history.push(`/group/${group?.id}`)
+        }
+
+    }
+
+    const handleLeftGroup = group => {
+        if (!group.id) return;
+        swal({
+            title: `Quitter un groupe`,
+            text: `Souhaitez-vous vraiment quitter le groupe ?`,
+            buttons: ['Annuler', 'Continuer'],
+            closeOnClickOutside: false,
+            closeOnEsc: false
+        }).then(choice => {
+            if (choice) {
+                let prevGroupSubscribed = tchat?.data?.groupeSubscribed;
+                group.currentParticipants--;
+                props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: prevGroupSubscribed.filter(e => e !== group.id) }))
+                props.history.push(`/global`)
+                window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'left' });
+            }
+        })
+    }
+
+    return (<Layout>
         <Layout.Sider className="sider-users-connected" id="button-mobile">
             <PlayCircleFilled className="button-opened-menu" onClick={() => toggleMobileMenu()} />
             <div className="flex-container">
                 <ul className="list-users-connected">
-                    <Input placeholder="Rechercher un utilisateur"
-                        className="search-users"
-                        onChange={handleSearch}
-                        type="text"
-                    ></Input>
-                    <div className="item__user">
+                    <div className="search-containter">
+                        <Input placeholder={`${choicePopover === 'clients' ? 'Rechercher un utilisateur' : 'Rechercher un groupe'}`}
+                            className="search-users"
+                            onChange={handleSearch}
+                            type="text"
+                        ></Input>
+                        <Popover placement="bottomRight" title="Affichage" content={content} onClick={() => setOpenPopover(true)} visible={openPopover}>
+                            <Button icon={<SettingOutlined />} />
+                        </Popover>
+                    </div>
+                    {choicePopover === 'clients' ? <div className="item__user">
                         {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo === el?.data?.pseudo.match(searchQuery).input) : users).map((el, index) => (
                             <>{
                                 el.id !== user.data?.id && (
@@ -122,7 +245,7 @@ const SiderComponent = ({ user, tchat, ...props }) => {
                                             <div className="info-user">
                                                 <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
                                             &nbsp;
-                                            {el.data?.pseudo.length >= 15 ? `${el.data?.pseudo.substring(0, 15)}...` : el.data?.pseudo}
+                                            {el.data?.pseudo}
                                             </div>
                                         </Tooltip>
                                         {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id)}><MessageOutlined /></Button>}
@@ -130,7 +253,28 @@ const SiderComponent = ({ user, tchat, ...props }) => {
                                 )
                             }</>
                         ))}
-                    </div>
+                    </div> : <div className="item__groupe">
+                            <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
+                            <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} owner={{ name: user.data?.name, id: user?.data?.id }} />
+                            <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
+                            {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name === el?.data?.dataGroupe.name.match(searchQuery).input) : groupes).map((groupe, index) => (
+                                <li className={`item-groupe groupe-${index}`} >
+                                    <div className="groupe-container">
+                                        <div className="groupe-title">
+                                            <span>{groupe?.data?.dataGroupe?.name}</span>
+                                            <div className="button-action">
+                                                <Button icon={tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? <MessageOutlined /> : groupe?.data?.dataGroupe?.owner === user?.data?.id ? <EditOutlined /> : <EyeOutlined />} onClick={() => tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, false) : groupe?.data?.dataGroupe?.owner === user?.data?.id ? handleEditGroupe(groupe?.data?.dataGroupe) : handleDetailGroupe(groupe?.data?.dataGroupe)} size="small" />
+                                                <Button className={groupe?.data?.dataGroupe?.protected ? "group-secure" : "group-open"} icon={groupe?.data?.dataGroupe?.protected ? <LockOutlined /> : <UnlockOutlined />} size="small" />
+                                            </div>
+                                        </div>
+                                        <div className="groupe-available-space">
+                                            {console.log(groupe)}
+                                            <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Quitter' : 'Rejoindre'}</Button>
+                                            <div><TeamOutlined />{' '}{groupe?.data?.dataGroupe?.currentParticipants}/{groupe?.data?.dataGroupe?.maxParticipants}</div>
+                                        </div>
+                                    </div>
+                                </li>))}
+                        </div>}
                 </ul>
                 <div className="credit">
                     <span>Développé avec </span><br /><b style={{
@@ -141,7 +285,7 @@ const SiderComponent = ({ user, tchat, ...props }) => {
             </div>
 
         </Layout.Sider>
-    </Layout>)
+    </Layout >)
 }
 
 const mapStateToProps = ({ user, tchat }) => ({ user, tchat })

@@ -10,9 +10,9 @@ import Dots from './Components/dots';
 import { store } from '../../..';
 import { withRouter } from 'react-router-dom';
 import Emoji from './Components/Emoji/Emoji';
-import { setOpenMenu, setEnterPrivateTchat } from '../../../action/tchat/tchat_actions';
+import { setOpenMenu, setEnterPrivateTchat, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 
-const Tchat = ({ user, tchat, ...props }) => {
+const Tchat = ({ user, tchat, viewTchat, ...props }) => {
     const [_user, setUser] = useState({})
     const [sendMessage, setSendMessage] = useState({})
     const [messageTyping, setMessageTyping] = useState(false)
@@ -103,14 +103,20 @@ const Tchat = ({ user, tchat, ...props }) => {
     }
 
     const handleExit = () => {
-        props.dispatch(setEnterPrivateTchat({ ...tchat, userConversation: undefined }));
-        props.history.push('/global');
+        if (props.history.location.pathname.match('group') !== null) {
+            let prevGroupSubscribed = tchat?.data?.groupeSubscribed;
+            props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: prevGroupSubscribed }))
+            props.history.push('/global');
+        } else {
+            props.dispatch(setEnterPrivateTchat({ ...tchat, userConversation: undefined }));
+            props.history.push('/global');
+        }
     }
 
     return <>
         {props.privateId ? <div className="container-header-tchat">
-            <Card title={<><span>Vous discutez avec {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>Fermer la conversation</Button>} >
-                <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} />
+            <Card title={<><span>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? `Discussion groupé : ${tchat?.data?.currentGroupDiscussion?.name}` : 'Vous disctuez avec '} {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? 'Quitter le groupe' : 'Fermer la conversation'}</Button>} >
+                <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} viewTchat={e => viewTchat(e)} />
                 <div>
                     <Form form={form} name="form" onFinish={handleSubmit}>
                         <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
@@ -129,7 +135,7 @@ const Tchat = ({ user, tchat, ...props }) => {
             <div className="container-header-tchat">
                 {/* eslint-disable-next-line */}
                 <Card title={<><span>Vous discutez avec tout le monde</span><br /><div><small style={{ display: 'flex' }}>N'oubliez pas que vous êtes sur un channel général, restez courtois ! 😀</small></div></>} id="card-tchat-content-global" className="card-container-header-tchat">
-                    <MessageContent sendMessage={sendMessage} myRefs={ref => console.log(ref)} />
+                    <MessageContent sendMessage={sendMessage} myRefs={ref => console.log(ref)} viewTchat={e => viewTchat(e)} />
                     <div>
                         <Form form={form} name="form" onFinish={handleSubmit}>
                             <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
