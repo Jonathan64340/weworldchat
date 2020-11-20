@@ -20,6 +20,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [searchQuery, setSearchQuery] = useState('')
     const [listenStatus, setListenStatus] = useState(false)
     const [listGroupes, setListenGroupes] = useState(false)
+    const [listGroupesUpdate, setListenGroupesUpdate] = useState(false)
     const [mobileMenu, setMobileMenu] = useState(false)
     const [openPopover, setOpenPopover] = useState(false)
     const [choicePopover, setChoicePopover] = useState('clients');
@@ -59,11 +60,11 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
             setGroupes(g => [...g, { data: { ...data, id: data?.id } }])
         })
 
-        !listGroupes && window.socket.on('receive-user-update-groupe', data => {
-            setListenGroupes(true);
+        !listGroupesUpdate && window.socket.on('receive-user-update-groupe', data => {
+            setListenGroupesUpdate(true);
             setGroupes(data)
         })
-    }, [listGroupes])
+    }, [listGroupes, listGroupesUpdate])
 
     useEffect(() => {
         !listenStatus && window.socket.on('users-status', data => {
@@ -268,7 +269,6 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                                             </div>
                                         </div>
                                         <div className="groupe-available-space">
-                                            {console.log(groupe)}
                                             <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Quitter' : 'Rejoindre'}</Button>
                                             <div><TeamOutlined />{' '}{groupe?.data?.dataGroupe?.currentParticipants}/{groupe?.data?.dataGroupe?.maxParticipants}</div>
                                         </div>

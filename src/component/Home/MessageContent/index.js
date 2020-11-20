@@ -7,7 +7,7 @@ import _ from 'underscore';
 import moment from 'moment';
 import './MessageContent.css'
 import { store } from '../../..';
-const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, props }) => {
+const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...props }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
     const [listenGlobal, setListenGlobal] = useState(false);
@@ -66,21 +66,20 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, props
     }, [usersMatch])
 
     useEffect(() => {
-        if (!listenTchatGroupe) {
-            window.socket.on('receive-user-add-groupe', data => {
-                typeof store.getState()?.tchat?.data?.userConversation === 'undefined' &&
-                    typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' &&
-                    setTchat(t => [...t, { data: data }])
-            })
-            setListenTchatGroupe(true)
-            if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
-                setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
-                window.socket.on(props?.match?.params?.id, data => {
-                    console.log(data)
-                    setTchat(t => [...t, { data: data }])
+            if (!listenTchatGroupe) {
+                window.socket.on('receive-user-add-groupe', data => {
+                    typeof store.getState()?.tchat?.data?.userConversation === 'undefined' &&
+                        typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' &&
+                        setTchat(t => [...t, { data: data }])
                 })
+                setListenTchatGroupe(true)
+                if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
+                    setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
+                    window.socket.on(props?.match?.params?.id, data => {
+                        setTchat(t => [...t, { data: data }])
+                    })
+                }
             }
-        }
         // eslint-disable-next-line
     }, [tchat])
 

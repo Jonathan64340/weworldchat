@@ -86,7 +86,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
         }
         setSendMessage(tmpValues)
         form.resetFields()
-        return window.socket.emit(props.privateId ? 'send-message' : 'send-message-global', tmpValues);
+        return window.socket.emit(props?.match?.params?.groupId ? props?.match?.params?.groupId : props.privateId ? 'send-message' : 'send-message-global', tmpValues);
     }
 
     const addEmojiOnField = emoji => {
