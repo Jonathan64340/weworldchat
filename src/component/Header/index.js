@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom'
 import _ from 'underscore'
 import './Header.css';
 import { SettingFilled } from '@ant-design/icons';
-import { setEnterPrivateTchat } from '../../action/tchat/tchat_actions';
+import { setEnterPrivateTchat, setQuitGroupDiscussion } from '../../action/tchat/tchat_actions';
 import { store } from '../../index';
 import { onStopConnectionRematch } from '../../utils/manager';
 import { setLogout, setUserUpdate } from '../../action/authentication/authentication_actions';
@@ -22,6 +22,7 @@ const HeaderLayout = ({ user, ...props }) => {
         window.socket.emit('user-disconnect')
         props.dispatch(setLogout())
         props.dispatch(setEnterPrivateTchat({ userConversation: undefined }))
+        props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: undefined }))
         window.socket.close()
         onStopConnectionRematch()
         // Supprimer tout les écouteurs à la déconnection

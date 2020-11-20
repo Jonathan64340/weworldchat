@@ -2,14 +2,17 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Layout, Avatar, Tooltip, Button } from 'antd';
 import { connect } from 'react-redux';
 import { getGlobalTchat, getPrivateTchat } from '../../../endpoints';
+import { withRouter } from 'react-router-dom';
+import _ from 'underscore';
 import moment from 'moment';
 import './MessageContent.css'
 import { store } from '../../..';
-const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat }) => {
+const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, props }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
     const [listenGlobal, setListenGlobal] = useState(false);
     const [listenTchatGroupe, setListenTchatGroupe] = useState(false);
+    const [listenListTchatGroup, setListenListTchatGroup] = useState([]);
     const messages = useRef();
 
     useEffect(() => {
@@ -41,7 +44,6 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat }) => 
         }
         if (!listen && usersMatch) {
             window.socket.on('receive-message', data => {
-                console.log(data)
                 if ((data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
                     if (store.getState().tchat?.data?.userConversation === data.data.sender && data.data.destination !== 'all') {
                         setTchat(t => [...t, { data: data }])
@@ -66,9 +68,18 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat }) => 
     useEffect(() => {
         if (!listenTchatGroupe) {
             window.socket.on('receive-user-add-groupe', data => {
-                typeof store.getState()?.tchat?.data?.userConversation === 'undefined' && typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' && setTchat(t => [...t, { data: data }])
+                typeof store.getState()?.tchat?.data?.userConversation === 'undefined' &&
+                    typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' &&
+                    setTchat(t => [...t, { data: data }])
             })
             setListenTchatGroupe(true)
+            if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
+                setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
+                window.socket.on(props?.match?.params?.id, data => {
+                    console.log(data)
+                    setTchat(t => [...t, { data: data }])
+                })
+            }
         }
         // eslint-disable-next-line
     }, [tchat])
@@ -105,4 +116,4 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat }) => 
 
 const mapStateToProps = ({ user, tchat }) => ({ user, tchat })
 
-export default connect(mapStateToProps)(MessageContent)
+export default _.compose(connect(mapStateToProps), withRouter)(MessageContent)
