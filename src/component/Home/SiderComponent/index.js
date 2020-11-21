@@ -64,7 +64,8 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
             setListenGroupesUpdate(true);
             setGroupes(data)
         })
-    }, [listGroupes, listGroupesUpdate])
+        // eslint-disable-next-line
+    }, [])
 
     useEffect(() => {
         !listenStatus && window.socket.on('users-status', data => {
