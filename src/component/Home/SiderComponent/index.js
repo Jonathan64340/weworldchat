@@ -62,7 +62,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
 
         !listGroupesUpdate && window.socket.on('receive-user-update-groupe', data => {
             setListenGroupesUpdate(true);
-            setGroupes(data)
+            setTimeout(() => setGroupes(data), 100)
         })
         // eslint-disable-next-line
     }, [])
