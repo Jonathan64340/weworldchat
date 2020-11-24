@@ -66,20 +66,20 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
     }, [usersMatch])
 
     useEffect(() => {
-            if (!listenTchatGroupe) {
-                window.socket.on('receive-user-add-groupe', data => {
-                    typeof store.getState()?.tchat?.data?.userConversation === 'undefined' &&
-                        typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' &&
-                        setTchat(t => [...t, { data: data }])
+        if (!listenTchatGroupe) {
+            window.socket.on('receive-user-add-groupe', data => {
+                typeof store.getState()?.tchat?.data?.userConversation === 'undefined' &&
+                    typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' &&
+                    setTchat(t => [...t, { data: data }])
+            })
+            setListenTchatGroupe(true)
+            if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
+                setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
+                window.socket.on(props?.match?.params?.id, data => {
+                    setTchat(t => [...t, { data: data }])
                 })
-                setListenTchatGroupe(true)
-                if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
-                    setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
-                    window.socket.on(props?.match?.params?.id, data => {
-                        setTchat(t => [...t, { data: data }])
-                    })
-                }
             }
+        }
         // eslint-disable-next-line
     }, [tchat])
 
@@ -102,7 +102,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
                             <div style={{ ...(_tchat[index]?.data?.data?.sender === 'SERVER' && { background: '#001529' }) }} className={`content-box-message 
                             ${_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue' : 'stop'} 
                             ${_tchat[index - 1]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
-                                {el?.data?.data?.message}{' '}{_tchat[index]?.data?.data?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}
+                                <p>{el?.data?.data?.message}</p>{' '}{_tchat[index]?.data?.data?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}
                             </div>
                         </Tooltip>
                     </div>
