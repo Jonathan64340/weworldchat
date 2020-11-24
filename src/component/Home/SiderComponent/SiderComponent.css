@@ -160,7 +160,35 @@
     text-align: center;
     color: #f1f1f1fa;
     text-shadow: 0 0 5px black;
-    font-size: 10px;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.sider-users-connected .flex-container .credit .credit__social a {
+    padding: 0 10px;
+}
+
+.sider-users-connected .flex-container .credit__developer {
+    margin-top: 3px;
+}
+
+.sider-users-connected .flex-container .credit__linkedin {
+    font-size: 18px;
+    width: 12px;
+    margin: auto;
+}
+
+.sider-users-connected .flex-container .credit__github {
+    font-size: 18px;
+    width: 12px;
+    margin: auto;
+}
+
+.sider-users-connected .flex-container .credit__linkedin:hover {
+    cursor: pointer;
 }
 
 .sider-users-connected .flex-container .search-containter {

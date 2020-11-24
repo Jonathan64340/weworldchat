@@ -6,11 +6,12 @@ import _ from 'underscore'
 import './SiderComponent.css'
 import swal from 'sweetalert';
 import { getCountUsersConnected, getListeGroupe } from '../../../endpoints';
-import { MessageOutlined, WechatOutlined, PlayCircleFilled, SettingOutlined, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { MessageOutlined, WechatOutlined, PlayCircleFilled, SettingOutlined, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined, LinkedinFilled, GithubFilled } from '@ant-design/icons';
 import { setEnterGroupDiscussion, setEnterPrivateTchat, setOpenMenu, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
 import DetailGroupeModal from './Modal/DetailGroupeModal';
+import { getVersion } from '../../../endpoints/app';
 
 const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [users, setUsers] = useState([{}])
@@ -27,6 +28,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [visibleCreateGroupe, setVisibleCreateGroupe] = useState(false);
     const [visibleDetailGroupe, setVisibleDetailGroupe] = useState(false);
     const [currentGroup, setCurrentGroup] = useState({});
+    const [currentVersion, setCurrentVersion] = useState(undefined);
     let src = `${process.env.PUBLIC_URL}/sound/notif2.mp3`
     let audio = new Audio(src);
 
@@ -41,6 +43,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     }, [viewTchat])
 
     useEffect(() => {
+        getVersion().then(data => setCurrentVersion(data.version))
         getCountUsersConnected().then(data => {
             if (data) {
                 setUsers(data.users)
@@ -278,10 +281,16 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                         </div>}
                 </ul>
                 <div className="credit">
-                    <span>Développé avec </span><br /><b style={{
-                        color: "red",
-                        fontSize: 18
-                    }} className="hearth-icon-animate">♥</b><span> par Domingues Jonathan</span>
+                    <div className="credit__social">
+                        <a href="https://www.linkedin.com/in/jonathan-domingues/" target="_blank" rel="noopener noreferrer">
+                            <LinkedinFilled className="credit__linkedin" />
+                        </a>
+                        <a href="https://github.com/Jonathan64340" target="_blank" rel="noopener noreferrer">
+                            <GithubFilled className="credit__github" />
+                        </a>
+                    </div>
+                    <small className="credit__developer">Domingues Jonathan</small>
+                    <small>{currentVersion}</small>
                 </div>
             </div>
 
