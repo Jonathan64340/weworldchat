@@ -86,7 +86,8 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
         }
         setSendMessage(tmpValues)
         form.resetFields()
-        return window.socket.emit(props?.match?.params?.groupId ? props?.match?.params?.groupId : props.privateId ? 'send-message' : 'send-message-global', tmpValues);
+        console.log(props?.match?.url?.match('group'), props.privateId)
+        return window.socket.emit(props?.match?.url?.match('group') !== null ? props?.match?.params?.id : props.privateId ? 'send-message' : 'send-message-global', tmpValues);
     }
 
     const addEmojiOnField = emoji => {
@@ -115,7 +116,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
 
     return <>
         {props.privateId ? <div className="container-header-tchat">
-            <Card title={<><span>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? `Discussion groupé : ${tchat?.data?.currentGroupDiscussion?.name}` : 'Vous disctuez avec '} {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? 'Quitter le groupe' : 'Fermer la conversation'}</Button>} >
+            <Card title={<><span>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? `Discussion groupé : ${tchat?.data?.currentGroupDiscussion?.name}` : 'Vous discutez avec '} {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? 'Quitter le groupe' : 'Fermer la conversation'}</Button>} >
                 <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} viewTchat={e => viewTchat(e)} />
                 <div>
                     <Form form={form} name="form" onFinish={handleSubmit}>

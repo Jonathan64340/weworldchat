@@ -73,15 +73,17 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
                     setTchat(t => [...t, { data: data }])
             })
             setListenTchatGroupe(true)
-            if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
-                setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
-                window.socket.on(props?.match?.params?.id, data => {
-                    setTchat(t => [...t, { data: data }])
-                })
-            }
+        }
+        if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
+            window.socket.on(props?.match?.params?.id, data => {
+                console.log(data)
+                setTchat(t => [...t, { data: data }])
+            })
+            console.log('test')
+            setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
         }
         // eslint-disable-next-line
-    }, [tchat])
+    }, [tchat, props?.match?.params])
 
     return <div className="container-flex-with__camera">
         <Layout.Content className="layout-tchat">

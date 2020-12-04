@@ -115,7 +115,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     }, [tchat, listen, filterUser])
 
     const handleSearch = value => {
-        setSearchQuery(value?.currentTarget?.value)
+        setSearchQuery(value?.currentTarget?.value.toLowerCase())
     }
 
     const handleChange = type => {
@@ -242,7 +242,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                         </Popover>
                     </div>
                     {choicePopover === 'clients' ? <div className="item__user">
-                        {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo === el?.data?.pseudo.match(searchQuery).input) : users).map((el, index) => (
+                        {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (
                             <>{
                                 el.id !== user.data?.id && (
                                     <li key={index} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
@@ -262,7 +262,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                             <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
                             <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} owner={{ name: user.data?.name, id: user?.data?.id }} />
                             <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
-                            {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name === el?.data?.dataGroupe.name.match(searchQuery).input) : groupes).map((groupe, index) => (
+                            {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name.toLowerCase() === el?.data?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
                                 <li className={`item-groupe groupe-${index}`} >
                                     <div className="groupe-container">
                                         <div className="groupe-title">
