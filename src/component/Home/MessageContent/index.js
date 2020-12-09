@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Layout, Avatar, Tooltip, Button } from 'antd';
 import { connect } from 'react-redux';
-import { getGlobalTchat, getPrivateTchat } from '../../../endpoints';
+import { getGlobalTchat, getGroupeTchat, getPrivateTchat } from '../../../endpoints';
 import { withRouter } from 'react-router-dom';
 import _ from 'underscore';
 import moment from 'moment';
@@ -28,15 +28,19 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
 
     useEffect(() => {
         setTchat([]);
-        usersMatch ? getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
-            .then(data => {
-                setTchat(data.tchat.filter(el => el.data.data.type === 'string'));
-            })
-            .catch(err => console.log(err))
-            : getGlobalTchat()
+        if (props.history.location.pathname.match('group')) {
+            getGroupeTchat({ groupId: props?.match?.params?.id }).then(data => setTchat(data.tchat.filter(el => el.data.data.type === 'string'))).catch(() => setTchat([]))
+        } else {
+            usersMatch ? getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
                 .then(data => {
-                    setTchat(data.tchat)
+                    setTchat(data.tchat.filter(el => el.data.data.type === 'string'));
                 })
+                .catch(err => console.log(err))
+                : getGlobalTchat()
+                    .then(data => {
+                        setTchat(data.tchat)
+                    })
+        }
         //eslint-disable-next-line 
         if (listen && usersMatch) {
             window.socket.off('receive-message-global');
@@ -76,10 +80,8 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
         }
         if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
             window.socket.on(props?.match?.params?.id, data => {
-                console.log(data)
-                setTchat(t => [...t, { data: data }])
+                props.history.location.pathname.match('group') && setTchat(t => [...t, { data: data }])
             })
-            console.log('test')
             setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
         }
         // eslint-disable-next-line

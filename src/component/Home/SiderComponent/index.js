@@ -43,7 +43,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     }, [viewTchat])
 
     useEffect(() => {
-        getVersion().then(data => setCurrentVersion(data.version))
+        !currentVersion && getVersion().then(data => setCurrentVersion(data.version))
         getCountUsersConnected().then(data => {
             if (data) {
                 setUsers(data.users)
@@ -55,6 +55,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                 setGroupes(data.groupe)
             }
         })
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {

@@ -56,7 +56,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
     const handleTyping = () => {
         if (!messageTyping) {
             const tmpValues = {
-                usersContaints: `${props.privateId}:${user.data.id}`,
+                ...(props?.match?.url?.match('group') === null && { usersContaints: `${props.privateId}:${user.data.id}` }),
                 data: {
                     pseudo: user.data.name,
                     sender: window.socket.id,
@@ -73,7 +73,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
     const handleSubmit = values => {
         setMessageTyping(false)
         const tmpValues = {
-            usersContaints: `${props.privateId}:${user.data.id}`,
+            ...(props?.match?.url?.match('group') === null && { usersContaints: `${props.privateId}:${user.data.id}` }),
             data: {
                 defaultColor: user.data.defaultColor,
                 pseudo: user.data.name,
@@ -86,7 +86,6 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
         }
         setSendMessage(tmpValues)
         form.resetFields()
-        console.log(props?.match?.url?.match('group'), props.privateId)
         return window.socket.emit(props?.match?.url?.match('group') !== null ? props?.match?.params?.id : props.privateId ? 'send-message' : 'send-message-global', tmpValues);
     }
 
@@ -108,6 +107,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
             let prevGroupSubscribed = tchat?.data?.groupeSubscribed;
             props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: prevGroupSubscribed }))
             props.history.push('/global');
+            window.socket.off(props.match.params.id);
         } else {
             props.dispatch(setEnterPrivateTchat({ ...tchat, userConversation: undefined }));
             props.history.push('/global');

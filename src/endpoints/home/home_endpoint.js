@@ -27,3 +27,10 @@ export function getListeGroupe(data) {
         .then(({ data }) => data)
         .catch(err => new Error(err))
 }
+
+export function getGroupeTchat(data) {
+    return axios
+        .post(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/getGroupTchat`, data)
+        .then(({ data }) => data)
+        .catch(err => new Error(err))
+}
