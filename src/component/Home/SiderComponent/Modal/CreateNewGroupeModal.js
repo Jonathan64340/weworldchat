@@ -41,6 +41,7 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
             window.socket.emit('send-user-add-groupe', data);
             setLoading(false)
             props.onChange({ visible: false, data: data, create: true })
+            setValidFields(false)
             form.resetFields();
         }, 1000)
     }
@@ -52,6 +53,7 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
 
     const handleCancel = () => {
         props.onChange({ visible: false, create: false })
+        setValidFields(false)
         form.resetFields();
     }
 
@@ -63,7 +65,6 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
                 name
             }
             getAvailableGroupName(group).then((data) => {
-                setValidFields(true)
                 const { error_exception } = data;
                 if (error_exception) {
                     setValidFields(false);
@@ -73,8 +74,9 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
                             errors: [error_exception]
                         }
                     ])
+                } else {
+                    setValidFields(true)
                 }
-                setValidFields(true)
             }, (data) => {
                 const { error_exception } = data;
                 setValidFields(false);
