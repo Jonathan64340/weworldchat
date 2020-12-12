@@ -180,7 +180,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
             props.history.push(`/group/${group?.id}`)
             return window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
         }
-        if (group.protected) {
+        if (group.protected && !tchat?.data?.groupeSubscribed.includes(group.id)) {
             return swal({
                 title: 'Protection du groupe',
                 icon: 'warning',
