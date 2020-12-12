@@ -9,6 +9,7 @@ import './Login.css'
 import { setLogin } from '../../action/authentication/authentication_actions';
 import { doLogin } from '../../endpoints';
 import { GithubPicker } from 'react-color'
+import { UserOutlined } from '@ant-design/icons';
 
 const Login = ({ user, ...props }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +73,7 @@ const Login = ({ user, ...props }) => {
                 <small className="title-form">Discutez avec vos amis, et le monde</small>
                 <Form className="layout-login-form" onFinish={onFinish} form={form} style={{ display: 'flex' }}>
                     <Form.Item name="pseudo" rules={[{ required: true, message: "Le pseudo n'est pas valide" }]} >
-                        <Input type="text" autoFocus placeholder="Entrez un pseudo" allowClear={true} />
+                        <Input prefix={<UserOutlined />} type="text" autoFocus placeholder="Entrez un pseudo" allowClear={true} />
                     </Form.Item>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 24 }}>
                         {/* eslint-disable-next-line */}

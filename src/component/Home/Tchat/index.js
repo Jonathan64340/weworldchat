@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { getPrivateTchat } from '../../../endpoints';
 import './Tchat.css';
@@ -19,6 +19,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
     const [isTyping, setIsTyping] = useState(false)
     const [listen, setListen] = useState(false)
     const [form] = Form.useForm();
+    const inputElement = useRef()
 
     useEffect(() => {
         if (typeof props.privateId !== 'undefined') {
@@ -28,6 +29,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
                 })
                 .catch(err => console.log(err))
         }
+        inputElement.current.focus()
     }, [props.privateId, user.data.id])
 
     useEffect(() => {
@@ -124,7 +126,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
                             <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
                             <Col className="form-col">
                                 <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
-                                    <Input type="text" autoFocus placeholder="Ecrire un message ..." onChange={handleTyping} onClick={() => toggleMobileMenu()} />
+                                    <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onChange={handleTyping} onClick={() => toggleMobileMenu()} />
                                 </Form.Item>
                             </Col>
                             <Button htmlType="submit" type="primary" icon={<SendOutlined />} />
@@ -143,7 +145,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
                                 <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
                                 <Col className="form-col">
                                     <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
-                                        <Input type="text" autoFocus placeholder="Ecrire un message ..." onClick={() => toggleMobileMenu()} />
+                                        <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onClick={() => toggleMobileMenu()} />
                                     </Form.Item>
                                 </Col>
                                 <Button htmlType="submit" type="primary" icon={<SendOutlined />} />

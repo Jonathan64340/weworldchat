@@ -6,7 +6,7 @@ import _ from 'underscore'
 import './SiderComponent.css'
 import swal from 'sweetalert';
 import { getCountUsersConnected, getListeGroupe } from '../../../endpoints';
-import { MessageOutlined, WechatOutlined, PlayCircleFilled, SettingOutlined, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined, LinkedinFilled, GithubFilled } from '@ant-design/icons';
+import { MessageOutlined, WechatOutlined, PlayCircleFilled, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined, LinkedinFilled, GithubFilled, MenuOutlined } from '@ant-design/icons';
 import { setEnterGroupDiscussion, setEnterPrivateTchat, setOpenMenu, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
@@ -23,7 +23,6 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [listGroupes, setListenGroupes] = useState(false)
     const [listGroupesUpdate, setListenGroupesUpdate] = useState(false)
     const [mobileMenu, setMobileMenu] = useState(false)
-    const [openPopover, setOpenPopover] = useState(false)
     const [choicePopover, setChoicePopover] = useState('clients');
     const [visibleCreateGroupe, setVisibleCreateGroupe] = useState(false);
     const [visibleDetailGroupe, setVisibleDetailGroupe] = useState(false);
@@ -122,12 +121,10 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const handleChange = type => {
         switch (type) {
             case 'clients':
-                setOpenPopover(false)
                 setChoicePopover('clients')
                 break;
 
             case 'groupes':
-                setOpenPopover(false)
                 setChoicePopover('groupes')
                 break;
 
@@ -149,6 +146,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
         setVisibleCreateGroupe(data?.visible)
         if (!data?.create) return;
         setGroupes(g => [...g, { data: { dataGroupe: { ...data?.data?.dataGroupe, id: data?.data?.dataGroupe?.id } } }])
+        handleJoinGroup({ ...data?.data?.dataGroupe, context: 'create' }, true)
     }
 
     const content = (
@@ -173,6 +171,14 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
 
     const handleJoinGroup = (group, create) => {
         if (!group.id) return;
+        if (group.context === 'create' && create) {
+            let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
+            prevGroupSubscribed.push(group?.id)
+            group.currentParticipants++
+            props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
+            props.history.push(`/group/${group?.id}`)
+            return window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+        }
         if (create) {
             if (group.currentParticipants + 1 <= group.maxParticipants) {
                 swal({
@@ -238,8 +244,8 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                             onChange={handleSearch}
                             type="text"
                         ></Input>
-                        <Popover placement="bottomRight" title="Affichage" content={content} onClick={() => setOpenPopover(true)} visible={openPopover}>
-                            <Button icon={<SettingOutlined />} />
+                        <Popover placement="bottomRight" title="Affichage" content={content}>
+                            <Button icon={<MenuOutlined />} />
                         </Popover>
                     </div>
                     {choicePopover === 'clients' ? <div className="item__user">
@@ -261,7 +267,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                         ))}
                     </div> : <div className="item__groupe">
                             <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
-                            <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} owner={{ name: user.data?.name, id: user?.data?.id }} />
+                            <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
                             <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
                             {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name.toLowerCase() === el?.data?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
                                 <li className={`item-groupe groupe-${index}`} >
