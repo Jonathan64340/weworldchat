@@ -5,6 +5,7 @@ import { UsergroupAddOutlined } from '@ant-design/icons';
 import _ from 'underscore';
 import { useForm } from 'antd/lib/form/Form';
 import { v4 } from 'uuid';
+import { getAvailableGroupName } from '../../../../endpoints';
 
 const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
     const [security, setSecurity] = useState(false);
@@ -58,7 +59,32 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
         const name = form.getFieldValue('name');
         const participants = form.getFieldValue('participants');
         if (name.length >= 4 && name.length <= 20 && participants >= 0) {
-            setValidFields(true)
+            const group = {
+                name
+            }
+            getAvailableGroupName(group).then((data) => {
+                setValidFields(true)
+                const { error_exception } = data;
+                if (error_exception) {
+                    setValidFields(false);
+                    form.setFields([
+                        {
+                            name: 'name',
+                            errors: [error_exception]
+                        }
+                    ])
+                }
+                setValidFields(true)
+            }, (data) => {
+                const { error_exception } = data;
+                setValidFields(false);
+                form.setFields([
+                    {
+                        name: 'name',
+                        errors: [error_exception]
+                    }
+                ])
+            })
         } else {
             setValidFields(false);
         }

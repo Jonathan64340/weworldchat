@@ -34,3 +34,10 @@ export function getGroupeTchat(data) {
         .then(({ data }) => data)
         .catch(err => new Error(err))
 }
+
+export function getAvailableGroupName(data) {
+    return axios
+        .post(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/verifyAvailableGroupName`, data)
+        .then(({ data }) => data)
+        .catch(err => new Error(err))
+}
