@@ -12,6 +12,7 @@ import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
 import DetailGroupeModal from './Modal/DetailGroupeModal';
 import { getVersion } from '../../../endpoints/app';
+import { passwordDecrypt } from '../../../utils/passwordHasher';
 
 const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [users, setUsers] = useState([{}])
@@ -178,6 +179,29 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
             props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
             props.history.push(`/group/${group?.id}`)
             return window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+        }
+        if (group.protected) {
+            return swal({
+                title: 'Protection du groupe',
+                icon: 'warning',
+                text: 'Saisir le mot de passe',
+                buttons: ['Annuler', 'Ok'],
+                content: 'input'
+            }).then(password => {
+                if (password === null) return;
+                passwordDecrypt(password, group.password).then(pwd => {
+                    if (pwd) {
+                        let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
+                        prevGroupSubscribed.push(group?.id)
+                        group.currentParticipants++
+                        props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
+                        props.history.push(`/group/${group?.id}`)
+                        window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+                    } else {
+                        handleJoinGroup(group, create);
+                    }
+                })
+            })
         }
         if (create) {
             if (group.currentParticipants + 1 <= group.maxParticipants) {

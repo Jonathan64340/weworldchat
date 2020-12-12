@@ -6,6 +6,7 @@ import _ from 'underscore';
 import { useForm } from 'antd/lib/form/Form';
 import { v4 } from 'uuid';
 import { getAvailableGroupName } from '../../../../endpoints';
+import { passwordEncrypt } from '../../../../utils/passwordHasher';
 
 const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
     const [security, setSecurity] = useState(false);
@@ -17,12 +18,13 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
         setLoading(true);
         let _v4 = v4();
 
-        setTimeout(() => {
+        setTimeout(async () => {
             const data = {
                 dataGroupe: {
                     name: values.name,
                     maxParticipants: values.participants,
                     protected: !!security,
+                    ...(!!security && { password: await passwordEncrypt(values.password) }),
                     currentParticipants: 0,
                     owner: owner.id,
                     participants: [],
@@ -120,8 +122,8 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
                     <Checkbox onChange={handleChange}>Protéger le groupe par mot de passe</Checkbox>
                 </Col>
                 <Col span={24}>
-                    {security && <Form.Item label="Mot de passe" name="password" rules={[{ required: true }]}>
-                        <Input type="password" placeholder="Saisir un mot de passe" />
+                    {security && <Form.Item label="Mot de passe" name="password" rules={[{ required: true, message: 'Mot de passe non valide !' }]}>
+                        <Input type="password" placeholder="Saisir un mot de passe" minLength={4} />
                     </Form.Item>}
                 </Col>
             </Row>

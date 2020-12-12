@@ -12,6 +12,7 @@
     "dotenv": "^8.2.0",
     "emoji-picker-react": "^3.2.4",
     "moment": "^2.29.1",
+    "password-hash": "^1.2.2",
     "react": "^16.13.1",
     "react-color": "^2.19.3",
     "react-dom": "^16.13.1",
