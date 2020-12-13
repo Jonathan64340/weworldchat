@@ -5,15 +5,13 @@ import { Layout, Button, Tooltip, notification, Input, Popover } from 'antd'
 import _ from 'underscore'
 import './SiderComponent.css'
 import swal from 'sweetalert';
-import { getCountUsersConnected, getListeGroupe } from '../../../endpoints';
+import { doLoginOnTchatGroup, getCountUsersConnected, getListeGroupe } from '../../../endpoints';
 import { MessageOutlined, WechatOutlined, PlayCircleFilled, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined, LinkedinFilled, GithubFilled, MenuOutlined } from '@ant-design/icons';
 import { setEnterGroupDiscussion, setEnterPrivateTchat, setOpenMenu, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
 import DetailGroupeModal from './Modal/DetailGroupeModal';
 import { getVersion } from '../../../endpoints/app';
-import { passwordDecrypt } from '../../../utils/passwordHasher';
-
 const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [users, setUsers] = useState([{}])
     const [groupes, setGroupes] = useState([{}])
@@ -187,20 +185,25 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                 text: 'Saisir le mot de passe',
                 buttons: ['Annuler', 'Ok'],
                 content: 'input'
-            }).then(password => {
+            }).then(async password => {
                 if (password === null) return;
-                passwordDecrypt(password, group.password).then(pwd => {
-                    if (pwd) {
-                        let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
-                        prevGroupSubscribed.push(group?.id)
-                        group.currentParticipants++
-                        props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
-                        props.history.push(`/group/${group?.id}`)
-                        window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
-                    } else {
-                        handleJoinGroup(group, create);
-                    }
-                })
+                doLoginOnTchatGroup({ group: { groupId: group.id, passwordTyped: password } })
+                    .then(status => {
+                        if (status === 'OK') {
+                            let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
+                            prevGroupSubscribed.push(group?.id)
+                            group.currentParticipants++
+                            props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
+                            props.history.push(`/group/${group?.id}`)
+                            window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+                        } else {
+                            swal({
+                                icon: 'error',
+                                text: 'Mot de passe incorrect !',
+                                timer: 3000
+                            }).then(() => handleJoinGroup(group, create))
+                        }
+                    })
             })
         }
         if (create) {
