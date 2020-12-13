@@ -13,12 +13,12 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
     const [loading, setLoading] = useState(false);
     const [validFields, setValidFields] = useState(false);
     const [form] = useForm();
-    const handleSubmit = values => {
+    const handleSubmit = async values => {
         if (!values) return;
         setLoading(true);
         let _v4 = v4();
 
-        setTimeout(async () => {
+        if (_v4) {
             const data = {
                 dataGroupe: {
                     name: values.name,
@@ -45,7 +45,7 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
             props.onChange({ visible: false, data: data, create: true })
             setValidFields(false)
             form.resetFields();
-        }, 1000)
+        }
     }
 
     const handleChange = event => {
