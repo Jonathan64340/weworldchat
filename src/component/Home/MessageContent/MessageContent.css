@@ -32,6 +32,16 @@
     justify-content: flex-end;
 }
 
+.layout-tchat .item-message.sender .link-message {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.layout-tchat .item-message.sender .link-message:hover {
+    color: orange;
+}
+
 .layout-tchat .item-message.receiver {
     padding: 2px 0;
     display: flex;
@@ -39,6 +49,15 @@
     flex-direction: row;
     justify-content: flex-start;
     position: relative;
+}
+
+.layout-tchat .item-message.receiver .link-message {
+    color: white;
+    text-decoration: underline;
+}
+
+.layout-tchat .item-message.receiver .link-message:hover {
+    color: orange;
 }
 
 .layout-tchat .content-item-tchat::after {

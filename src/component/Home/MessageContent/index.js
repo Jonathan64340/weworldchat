@@ -7,6 +7,7 @@ import _ from 'underscore';
 import moment from 'moment';
 import './MessageContent.css'
 import { store } from '../../..';
+import CustomRenderElement from './CustomRenderElement';
 const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...props }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
@@ -106,7 +107,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
                             <div style={{ ...(_tchat[index]?.data?.data?.sender === 'SERVER' && { background: '#001529' }) }} className={`content-box-message 
                             ${_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue' : 'stop'} 
                             ${_tchat[index - 1]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
-                                <p>{el?.data?.data?.message}</p>{' '}{_tchat[index]?.data?.data?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}
+                                <p><CustomRenderElement string={el?.data?.data?.message} /></p>{' '}{_tchat[index]?.data?.data?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}
                             </div>
                         </Tooltip>
                     </div>
