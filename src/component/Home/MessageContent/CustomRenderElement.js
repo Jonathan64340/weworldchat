@@ -1,28 +1,19 @@
-import React from 'react';
+import React from "react";
+import reactStringReplace from "react-string-replace";
 
 /**
- * 
+ *
  * @param {String} String
- * @description - Can return simple string or string with regex for parsing url 
+ * @description - Can return simple string or string with regex for parsing url
  */
 const CustomRenderElement = ({ string }) => {
-    const regex = new RegExp(/\b(https?|ftp|file):\/\/[A-Za-z0-9+&@#%?=~_|!:,.;]*[A-Za-z0-9+&@#%=~_|]/g)
-    const str = string.match(regex)
-    if (str instanceof Array) {
-        let tmpString = [];
-        for(let i = 0; i < str.length; i++) {
-            tmpString.push(string.replace(str[i], `<a class="link-message" href=${str[i]} target="_blank" rel="noopener noreferrer">${str[i]}</a>`))
-        }
+  const regex = new RegExp(
+    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g
+  );
 
-        for(let i = 0; i < tmpString.length; i++) {
-            return <div dangerouslySetInnerHTML={{
-                __html: tmpString[i]
-            }}></div>
-        }
-    }
-
-    return <>{string}</>
-
-}
+  return reactStringReplace(string, regex, (match, i, offset) => {
+    return <a className="link-message" href={match} rel="noopener noreferrer" target="_blank">{match}</a>;
+  });
+};
 
 export default CustomRenderElement;

@@ -35,7 +35,6 @@
 .layout-tchat .item-message.sender .link-message {
     color: white;
     text-decoration: underline;
-    font-weight: bold;
 }
 
 .layout-tchat .item-message.sender .link-message:hover {
