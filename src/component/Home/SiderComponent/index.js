@@ -6,12 +6,12 @@ import _ from 'underscore'
 import './SiderComponent.css'
 import swal from 'sweetalert';
 import { doLoginOnTchatGroup, getCountUsersConnected, getListeGroupe } from '../../../endpoints';
-import { MessageOutlined, WechatOutlined, PlayCircleFilled, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined, LinkedinFilled, GithubFilled, MenuOutlined } from '@ant-design/icons';
+import { MessageOutlined, WechatOutlined, PlayCircleFilled, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined, MenuOutlined } from '@ant-design/icons';
 import { setEnterGroupDiscussion, setEnterPrivateTchat, setOpenMenu, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
 import DetailGroupeModal from './Modal/DetailGroupeModal';
-import { getVersion } from '../../../endpoints/app';
+import Footer from './Footer/Footer';
 const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [users, setUsers] = useState([{}])
     const [groupes, setGroupes] = useState([{}])
@@ -26,11 +26,13 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [visibleCreateGroupe, setVisibleCreateGroupe] = useState(false);
     const [visibleDetailGroupe, setVisibleDetailGroupe] = useState(false);
     const [currentGroup, setCurrentGroup] = useState({});
-    const [currentVersion, setCurrentVersion] = useState(undefined);
     let src = `${process.env.PUBLIC_URL}/sound/notif2.mp3`
     let audio = new Audio(src);
 
     const goToPrivate = (id) => {
+        const getUserElement = document.getElementById(id);
+        getUserElement.classList.remove('incomming-message')
+
         props.dispatch(setEnterPrivateTchat({ userConversation: id }))
         document.title = `tchatez - ${user.data?.name}`
         props.history.push(`/conversation/${id}`)
@@ -41,7 +43,6 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     }, [viewTchat])
 
     useEffect(() => {
-        !currentVersion && getVersion().then(data => setCurrentVersion(data.version))
         getCountUsersConnected().then(data => {
             if (data) {
                 setUsers(data.users)
@@ -78,10 +79,20 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     }, [listenStatus])
 
     useEffect(() => {
+        !listen && window.socket.on('users-online', (data) => {
+            if (data) {
+                setUsers(data.users)
+                setFilterUser(data.users)
+            }
+        })
+
         !listen && window.socket.on('receive-message', data => {
             const { tchat, user } = store.getState()
             if (user.data?.statusOnline === "online" && (data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
                 if (tchat.data?.userConversation !== data.data.sender) {
+                    const getUserElement = document.getElementById(data?.data?.sender);
+                    getUserElement.classList.add('incomming-message')
+
                     const key = `open${Date.now()}`;
                     const btn = (
                         <Button size="middle" onClick={() => { notification.close(key); goToPrivate(data.data.sender); document.title = `tchatez - ${user.data?.name}` }} icon={<WechatOutlined />}>
@@ -99,13 +110,6 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                     audio.play();
                     return document.title = `Nouveau message - ${data.data.pseudo}`
                 }
-            }
-        })
-
-        !listen && window.socket.on('users-online', (data) => {
-            if (data) {
-                setUsers(data.users)
-                setFilterUser(data.users)
             }
         })
 
@@ -279,7 +283,7 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                         {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (
                             <>{
                                 el.id !== user.data?.id && (
-                                    <li key={index} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
+                                    <li key={index} id={el.id} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
                                         <Tooltip title={`${el.data?.pseudo} - ${el.data?.statusOnline === 'busy' ? 'occupé' : 'en ligne'}`} placement={el.data?.pseudo.length < 8 ? 'topRight' : 'top'}>
                                             <div className="info-user">
                                                 <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
@@ -314,20 +318,8 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
                                 </li>))}
                         </div>}
                 </ul>
-                <div className="credit">
-                    <div className="credit__social">
-                        <a href="https://www.linkedin.com/in/jonathan-domingues/" target="_blank" rel="noopener noreferrer">
-                            <LinkedinFilled className="credit__linkedin" />
-                        </a>
-                        <a href="https://github.com/Jonathan64340" target="_blank" rel="noopener noreferrer">
-                            <GithubFilled className="credit__github" />
-                        </a>
-                    </div>
-                    <small className="credit__developer">Domingues Jonathan</small>
-                    <small>{currentVersion}</small>
-                </div>
+                <Footer />
             </div>
-
         </Layout.Sider>
     </Layout >)
 }
