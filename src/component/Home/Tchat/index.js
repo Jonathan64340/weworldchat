@@ -88,6 +88,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
         }
         setSendMessage(tmpValues)
         form.resetFields()
+        inputElement.current.focus()
         return window.socket.emit(props?.match?.url?.match('group') !== null ? props?.match?.params?.id : props.privateId ? 'send-message' : 'send-message-global', tmpValues);
     }
 
