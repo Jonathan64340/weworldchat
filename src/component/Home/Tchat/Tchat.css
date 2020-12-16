@@ -1,3 +1,7 @@
+.ant-card-head {
+    padding: 0 7px;
+}
+
 .ant-card-head-title {
     padding: 0;
 }
@@ -8,6 +12,17 @@
 
 .container-header-tchat {
     flex: 1;
+}
+
+.container-header-tchat .flex-content {
+    display: flex;
+    align-items: center;
+}
+
+.container-header-tchat .flex-content .btn-drawer {
+    padding: 0 10px;
+    font-size: 23px;
+    color: #001529;
 }
 
 .container-header-tchat .card-container-header-tchat {

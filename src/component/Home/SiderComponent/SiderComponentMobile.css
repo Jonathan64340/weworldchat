@@ -1,0 +1,254 @@
+.sider-mobile .sider-users-connected > div:first-child {
+    width: 100%;
+    float: right;
+    text-align: end;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .button-opened-menu:hover {
+    cursor: pointer;
+}
+
+.sider-mobile > div:first-child {
+    width: 100%;
+    float: right;
+    text-align: end;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-user {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: .4em 0;
+    justify-content: space-between;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-user .info-user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/**
+*   Keyframes to display animation on receive new unread message
+**/
+
+@keyframes animationIncommingMessage {
+    0% { background-color: rgb(255 255 255 / 30%); }
+    50% { background-color: rgb(0 0 0 / 5%); }
+    100% { background-color: rgb(255 255 255 / 30%);; }
+  }
+.sider-mobile .ant-drawer-content-wrapper .item-user.incomming-message {
+    animation: animationIncommingMessage 1s ease-in-out infinite;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-user .info-user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-user .info-user .status__online__busy {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #FFA500;
+    border: 2px solid rgba(0,0,0,0.1);
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-user .info-user .status__online__online {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #28e922;
+    border: 2px solid rgba(0,0,0,0.1);
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-user > .info-user p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    margin-left: 5px;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container .credit {
+    text-align: left;
+    color: #575656fa;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin-bottom: 0px;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container .credit::before {
+    content: '';
+    width: 100%;
+    border-top: 1px solid rgb(162 182 188 / 0.2);
+    padding-top: 10px;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container .credit .credit__social a {
+    padding: 0 2px;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container .credit__developer {
+    margin-top: 3px;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container .credit__linkedin {
+    font-size: 12px;
+    width: 12px;
+    margin: auto;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container .credit__github {
+    font-size: 12px;
+    width: 12px;
+    margin: auto;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container .credit__linkedin:hover {
+    cursor: pointer;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container .search-containter {
+    display: flex;
+    align-items: center;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .flex-container .search-containter button.ant-btn{
+    border: none;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .search-users {
+    border-radius: 25px;
+    margin-top: 10px;
+    line-break: loose;
+    line-height: 15px;
+    margin-bottom: 10px;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .item__user:not(:first-child, :last-child) {
+    border-bottom: dashed 1px rgba(0,0,0,.25);
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .item__user {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    max-height: 524px;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .item__user::-webkit-scrollbar {
+    width: 0;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .item-user {
+    background: rgb(228 228 228 / 40%);
+    border-radius: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-bottom: 7px;
+    transition: all .5s ease;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .item-user.selected {
+    background: rgb(0 0 0 / 20%);
+    transition: all .5s ease;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .item-user button:hover {
+    border: #5d5a5a21 1px solid;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe.groupe-0 {
+    margin-top: 32px !important;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe {
+    background: rgb(255 255 255 / 10%);
+    border-radius: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-bottom: 7px;
+    box-shadow: 0 0 5px 0px rgba(0 ,0 ,0 ,.2);
+    transition: all .5s ease;
+}
+
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container {
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-title {
+    justify-content: space-between;
+    display: inherit;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-title span {
+    max-width: 102px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 25px;
+    text-align: start;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-title .button-action .group-open svg {
+    fill: rgb(108, 255, 5);
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-title .button-action .group-secure svg {
+    fill: rgb(199, 0, 0);
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-title .ant-btn {
+    background: transparent;
+    border: none;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-title .ant-btn svg {
+    fill: ghostwhite;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-available-space {
+    display: inherit;
+    justify-content: space-between;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-available-space .ant-btn {
+    background: transparent;
+    border: none;
+    color: whitesmoke;
+    font-size: 12px;
+    padding: 0;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .item-user button {
+    background: transparent;
+    border: none;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .item-user button:hover {
+    border: none;
+}
+
+.sider-mobile .ant-drawer-content-wrapper .list-users-connected .item-user button:active {
+    border: none;
+}

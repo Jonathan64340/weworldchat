@@ -4,7 +4,7 @@ import { getPrivateTchat } from '../../../endpoints';
 import './Tchat.css';
 import MessageContent from '../MessageContent';
 import { Input, Form, Row, Col, Button, Card } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
+import { MenuOutlined, SendOutlined } from '@ant-design/icons';
 import _ from 'underscore'
 import Dots from './Components/dots';
 import { store } from '../../..';
@@ -12,7 +12,7 @@ import { withRouter } from 'react-router-dom';
 import Emoji from './Components/Emoji/Emoji';
 import { setOpenMenu, setEnterPrivateTchat, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 
-const Tchat = ({ user, tchat, viewTchat, ...props }) => {
+const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const [_user, setUser] = useState({})
     const [sendMessage, setSendMessage] = useState({})
     const [messageTyping, setMessageTyping] = useState(false)
@@ -97,14 +97,6 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
         form.setFieldsValue({ message: prev += emoji })
     }
 
-    const toggleMobileMenu = () => {
-        props.dispatch(setOpenMenu({ menuOpened: false }))
-        const btnMobile = document.getElementById('button-mobile')
-        const iconBtnMobile = document.getElementsByClassName('button-opened-menu')
-        btnMobile.style.marginLeft = "-165px"
-        iconBtnMobile[0].style.transform = "rotate(0deg)"
-    }
-
     const handleExit = () => {
         if (props.history.location.pathname.match('group') !== null) {
             let prevGroupSubscribed = tchat?.data?.groupeSubscribed;
@@ -117,9 +109,13 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
         }
     }
 
+    const openDrawer = () => {
+        props.dispatch(setOpenMenu({ menuOpened: true }))
+    }
+
     return <>
         {props.privateId ? <div className="container-header-tchat">
-            <Card title={<><span>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? `Discussion groupé : ${tchat?.data?.currentGroupDiscussion?.name}` : 'Vous discutez avec '} {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? 'Quitter le groupe' : 'Fermer la conversation'}</Button>} >
+            <Card title={<div className="flex-content">{isMobile && <div className="btn-drawer"><MenuOutlined onClick={() => openDrawer()} /></div>}<div><span>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? `Discussion groupé : ${tchat?.data?.currentGroupDiscussion?.name}` : 'Vous discutez avec '} {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></div></div>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? 'Quitter le groupe' : 'Fermer la conversation'}</Button>} >
                 <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} viewTchat={e => viewTchat(e)} />
                 <div>
                     <Form form={form} name="form" onFinish={handleSubmit}>
@@ -127,7 +123,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
                             <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
                             <Col className="form-col">
                                 <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
-                                    <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onChange={handleTyping} onClick={() => toggleMobileMenu()} />
+                                    <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onChange={handleTyping} />
                                 </Form.Item>
                             </Col>
                             <Button htmlType="submit" type="primary" icon={<SendOutlined />} />
@@ -138,7 +134,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
         </div> :
             <div className="container-header-tchat">
                 {/* eslint-disable-next-line */}
-                <Card title={<><span>Vous discutez avec tout le monde</span><br /><div><small style={{ display: 'flex' }}>N'oubliez pas que vous êtes sur un channel général, restez courtois ! 😀</small></div></>} id="card-tchat-content-global" className="card-container-header-tchat">
+                <Card title={<div className="flex-content">{isMobile && <div className="btn-drawer"><MenuOutlined onClick={() => openDrawer()} /></div>}<div><span>Vous discutez avec tout le monde</span><br /><div><small style={{ display: 'flex' }}>N'oubliez pas que vous êtes sur un channel général, restez courtois ! 😀</small></div></div></div>} id="card-tchat-content-global" className="card-container-header-tchat">
                     <MessageContent sendMessage={sendMessage} myRefs={ref => console.log(ref)} viewTchat={e => viewTchat(e)} />
                     <div>
                         <Form form={form} name="form" onFinish={handleSubmit}>
@@ -146,7 +142,7 @@ const Tchat = ({ user, tchat, viewTchat, ...props }) => {
                                 <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
                                 <Col className="form-col">
                                     <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
-                                        <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onClick={() => toggleMobileMenu()} />
+                                        <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." />
                                     </Form.Item>
                                 </Col>
                                 <Button htmlType="submit" type="primary" icon={<SendOutlined />} />

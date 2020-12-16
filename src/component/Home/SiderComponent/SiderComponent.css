@@ -59,28 +59,16 @@
     background: linear-gradient(48deg, rgba(36,36,0,1) 0%, rgba(0,6,162,0.6250875350140056) 0%, rgba(166,191,186,1) 100%);
 }
 
-@media screen and (max-width: 580px) {
+@media screen and (max-width: 900px) {
     .sider-users-connected {
-        margin-left: -165px;
-    }
-    .sider-users-connected .button-opened-menu {
-        display: block !important;
+        margin-left: -200px;
     }
 }
 
-@media screen and (min-width: 581px) {
+@media screen and (min-width: 901px) {
     .sider-users-connected {
         margin-left: 0 !important;
     }
-}
-
-.sider-users-connected .button-opened-menu {
-    position: absolute;
-    right: -17px;
-    font-size: 40px;
-    top: calc(100vh / 2 - 50px);
-    color: #f1f2f3;
-    display: none;
 }
 
 .sider-users-connected .button-opened-menu:hover {
@@ -170,11 +158,17 @@
     height: calc(100vh - 70px);
 }
 
+.sider-users-connected .flex-container .credit::before {
+    content: '';
+    width: 100%;
+    border-top: 1px solid rgb(162 182 188 / 0.2);
+    padding-top: 10px;
+}
+
 .sider-users-connected .flex-container .credit {
-    text-align: center;
-    color: #f1f1f1fa;
-    text-shadow: 0 0 5px black;
-    font-size: 15px;
+    text-align: left;
+    color: #f5f5f5fa;
+    font-size: 13px;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -182,7 +176,7 @@
 }
 
 .sider-users-connected .flex-container .credit .credit__social a {
-    padding: 0 10px;
+    padding: 0 10px 0 0;
 }
 
 .sider-users-connected .flex-container .credit__developer {
@@ -190,13 +184,13 @@
 }
 
 .sider-users-connected .flex-container .credit__linkedin {
-    font-size: 18px;
+    font-size: 16px;
     width: 12px;
     margin: auto;
 }
 
 .sider-users-connected .flex-container .credit__github {
-    font-size: 18px;
+    font-size: 16px;
     width: 12px;
     margin: auto;
 }

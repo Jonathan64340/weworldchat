@@ -13,6 +13,14 @@ import { onConnectionRematch } from '../../utils/manager';
 const Home = ({ user, ...props }) => {
     useEffect(() => onConnectionRematch(), [])
     const [viewTchat, setViewTchat] = useState('')
+    const [isMobile, setIsMobile] = useState(window.innerWidth >= 900 ? true : false)
+
+    window.addEventListener('resize', ev => {
+        if (ev?.target?.innerWidth >= 900) {
+            return setIsMobile(true)
+        }
+        return setIsMobile(false)
+    })
 
     return <>
         <Helmet>
@@ -21,8 +29,8 @@ const Home = ({ user, ...props }) => {
         </Helmet>
         <Layout className="home-layout">
             <div className="flex-container">
-                <SiderComponent viewTchat={viewTchat} />
-                <Tchat privateId={props.match.params.id} viewTchat={setViewTchat} />
+                <SiderComponent viewTchat={viewTchat} isMobile={!isMobile} />
+                <Tchat privateId={props.match.params.id} viewTchat={setViewTchat} isMobile={!isMobile} />
             </div>
         </Layout>
     </>

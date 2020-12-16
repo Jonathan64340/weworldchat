@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { Layout, Button, Tooltip, notification, Input, Popover } from 'antd'
+import { Layout, Button, Tooltip, notification, Input, Popover, Drawer } from 'antd'
 import _ from 'underscore'
 import './SiderComponent.css'
+import './SiderComponentMobile.css'
 import swal from 'sweetalert';
 import { doLoginOnTchatGroup, getCountUsersConnected, getListeGroupe } from '../../../endpoints';
-import { MessageOutlined, WechatOutlined, PlayCircleFilled, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined, MenuOutlined } from '@ant-design/icons';
+import { MessageOutlined, WechatOutlined, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined, MenuOutlined } from '@ant-design/icons';
 import { setEnterGroupDiscussion, setEnterPrivateTchat, setOpenMenu, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
 import DetailGroupeModal from './Modal/DetailGroupeModal';
 import Footer from './Footer/Footer';
-const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
+
+const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const [users, setUsers] = useState([{}])
     const [groupes, setGroupes] = useState([{}])
     const [filterUser, setFilterUser] = useState([])
@@ -21,7 +23,6 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
     const [listenStatus, setListenStatus] = useState(false)
     const [listGroupes, setListenGroupes] = useState(false)
     const [listGroupesUpdate, setListenGroupesUpdate] = useState(false)
-    const [mobileMenu, setMobileMenu] = useState(false)
     const [choicePopover, setChoicePopover] = useState('clients');
     const [visibleCreateGroupe, setVisibleCreateGroupe] = useState(false);
     const [visibleDetailGroupe, setVisibleDetailGroupe] = useState(false);
@@ -133,16 +134,6 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
 
             default: break
         }
-    }
-
-
-    const toggleMobileMenu = () => {
-        setMobileMenu(!mobileMenu)
-        props.dispatch(setOpenMenu({ menuOpened: !tchat?.data?.menuOpened }))
-        const btnMobile = document.getElementById('button-mobile')
-        const iconBtnMobile = document.getElementsByClassName('button-opened-menu')
-        btnMobile.style.marginLeft = tchat?.data?.menuOpened ? "-165px" : 0
-        iconBtnMobile[0].style.transform = !tchat?.data?.menuOpened ? "rotate(180deg)" : "rotate(0deg)"
     }
 
     const onChangeGroupe = data => {
@@ -264,64 +255,117 @@ const SiderComponent = ({ user, tchat, viewTchat, ...props }) => {
         })
     }
 
-    return (<Layout>
-        <Layout.Sider className="sider-users-connected" id="button-mobile">
-            <PlayCircleFilled className="button-opened-menu" onClick={() => toggleMobileMenu()} />
-            <div className="flex-container">
-                <ul className="list-users-connected">
-                    <div className="search-containter">
-                        <Input placeholder={`${choicePopover === 'clients' ? 'Rechercher un utilisateur' : 'Rechercher un groupe'}`}
-                            className="search-users"
-                            onChange={handleSearch}
-                            type="text"
-                        ></Input>
-                        <Popover placement="bottomRight" title="Affichage" content={content}>
-                            <Button icon={<MenuOutlined />} />
-                        </Popover>
-                    </div>
-                    {choicePopover === 'clients' ? <div className="item__user">
-                        {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (
-                            <>{
-                                el.id !== user.data?.id && (
-                                    <li key={index} id={el.id} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
-                                        <Tooltip title={`${el.data?.pseudo} - ${el.data?.statusOnline === 'busy' ? 'occupé' : 'en ligne'}`} placement={el.data?.pseudo.length < 8 ? 'topRight' : 'top'}>
-                                            <div className="info-user">
-                                                <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
+    return (
+        <Layout>
+            <Layout.Sider className="sider-users-connected" id="button-mobile">
+                {isMobile ? <Drawer className="sider-mobile" title="WeWorldChat" placement="left" closable key="1" visible={tchat?.data?.menuOpened} onClose={() => props.dispatch(setOpenMenu({ menuOpened: false }))}>
+                    <div className="flex-container">
+                        <ul className="list-users-connected">
+                            <div className="search-containter">
+                                <Input placeholder={`${choicePopover === 'clients' ? 'Rechercher un utilisateur' : 'Rechercher un groupe'}`}
+                                    className="search-users"
+                                    onChange={handleSearch}
+                                    type="text"
+                                ></Input>
+                                <Popover placement="bottomRight" title="Affichage" content={content}>
+                                    <Button icon={<MenuOutlined />} />
+                                </Popover>
+                            </div>
+                            {choicePopover === 'clients' ? <div className="item__user">
+                                {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (
+                                    <>{
+                                        el.id !== user.data?.id && (
+                                            <li key={index} id={el.id} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
+                                                <Tooltip title={`${el.data?.pseudo} - ${el.data?.statusOnline === 'busy' ? 'occupé' : 'en ligne'}`} placement={el.data?.pseudo.length < 8 ? 'topRight' : 'top'}>
+                                                    <div className="info-user">
+                                                        <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
                                             &nbsp;
                                             {el.data?.pseudo}
+                                                    </div>
+                                                </Tooltip>
+                                                {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id)}><MessageOutlined /></Button>}
+                                            </li>
+                                        )
+                                    }</>
+                                ))}
+                            </div> : <div className="item__groupe">
+                                    <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
+                                    <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
+                                    <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
+                                    {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name.toLowerCase() === el?.data?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
+                                        <li className={`item-groupe groupe-${index}`} >
+                                            <div className="groupe-container">
+                                                <div className="groupe-title">
+                                                    <span>{groupe?.data?.dataGroupe?.name}</span>
+                                                    <div className="button-action">
+                                                        <Button icon={tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? <MessageOutlined /> : groupe?.data?.dataGroupe?.owner === user?.data?.id ? <EditOutlined /> : <EyeOutlined />} onClick={() => tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, false) : groupe?.data?.dataGroupe?.owner === user?.data?.id ? handleEditGroupe(groupe?.data?.dataGroupe) : handleDetailGroupe(groupe?.data?.dataGroupe)} size="small" />
+                                                        <Button className={groupe?.data?.dataGroupe?.protected ? "group-secure" : "group-open"} icon={groupe?.data?.dataGroupe?.protected ? <LockOutlined /> : <UnlockOutlined />} size="small" />
+                                                    </div>
+                                                </div>
+                                                <div className="groupe-available-space">
+                                                    <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Quitter' : 'Rejoindre'}</Button>
+                                                    <div><TeamOutlined />{' '}{groupe?.data?.dataGroupe?.currentParticipants}/{groupe?.data?.dataGroupe?.maxParticipants}</div>
+                                                </div>
                                             </div>
-                                        </Tooltip>
-                                        {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id)}><MessageOutlined /></Button>}
-                                    </li>
-                                )
-                            }</>
-                        ))}
-                    </div> : <div className="item__groupe">
-                            <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
-                            <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
-                            <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
-                            {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name.toLowerCase() === el?.data?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
-                                <li className={`item-groupe groupe-${index}`} >
-                                    <div className="groupe-container">
-                                        <div className="groupe-title">
-                                            <span>{groupe?.data?.dataGroupe?.name}</span>
-                                            <div className="button-action">
-                                                <Button icon={tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? <MessageOutlined /> : groupe?.data?.dataGroupe?.owner === user?.data?.id ? <EditOutlined /> : <EyeOutlined />} onClick={() => tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, false) : groupe?.data?.dataGroupe?.owner === user?.data?.id ? handleEditGroupe(groupe?.data?.dataGroupe) : handleDetailGroupe(groupe?.data?.dataGroupe)} size="small" />
-                                                <Button className={groupe?.data?.dataGroupe?.protected ? "group-secure" : "group-open"} icon={groupe?.data?.dataGroupe?.protected ? <LockOutlined /> : <UnlockOutlined />} size="small" />
+                                        </li>))}
+                                </div>}
+                        </ul>
+                        <Footer />
+                    </div></Drawer> : <div className="flex-container">
+                        <ul className="list-users-connected">
+                            <div className="search-containter">
+                                <Input placeholder={`${choicePopover === 'clients' ? 'Rechercher un utilisateur' : 'Rechercher un groupe'}`}
+                                    className="search-users"
+                                    onChange={handleSearch}
+                                    type="text"
+                                ></Input>
+                                <Popover placement="bottomRight" title="Affichage" content={content}>
+                                    <Button icon={<MenuOutlined />} />
+                                </Popover>
+                            </div>
+                            {choicePopover === 'clients' ? <div className="item__user">
+                                {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (
+                                    <>{
+                                        el.id !== user.data?.id && (
+                                            <li key={index} id={el.id} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
+                                                <Tooltip title={`${el.data?.pseudo} - ${el.data?.statusOnline === 'busy' ? 'occupé' : 'en ligne'}`} placement={el.data?.pseudo.length < 8 ? 'topRight' : 'top'}>
+                                                    <div className="info-user">
+                                                        <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
+                                            &nbsp;
+                                            {el.data?.pseudo}
+                                                    </div>
+                                                </Tooltip>
+                                                {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id)}><MessageOutlined /></Button>}
+                                            </li>
+                                        )
+                                    }</>
+                                ))}
+                            </div> : <div className="item__groupe">
+                                    <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
+                                    <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
+                                    <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
+                                    {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name.toLowerCase() === el?.data?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
+                                        <li className={`item-groupe groupe-${index}`} >
+                                            <div className="groupe-container">
+                                                <div className="groupe-title">
+                                                    <span>{groupe?.data?.dataGroupe?.name}</span>
+                                                    <div className="button-action">
+                                                        <Button icon={tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? <MessageOutlined /> : groupe?.data?.dataGroupe?.owner === user?.data?.id ? <EditOutlined /> : <EyeOutlined />} onClick={() => tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, false) : groupe?.data?.dataGroupe?.owner === user?.data?.id ? handleEditGroupe(groupe?.data?.dataGroupe) : handleDetailGroupe(groupe?.data?.dataGroupe)} size="small" />
+                                                        <Button className={groupe?.data?.dataGroupe?.protected ? "group-secure" : "group-open"} icon={groupe?.data?.dataGroupe?.protected ? <LockOutlined /> : <UnlockOutlined />} size="small" />
+                                                    </div>
+                                                </div>
+                                                <div className="groupe-available-space">
+                                                    <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Quitter' : 'Rejoindre'}</Button>
+                                                    <div><TeamOutlined />{' '}{groupe?.data?.dataGroupe?.currentParticipants}/{groupe?.data?.dataGroupe?.maxParticipants}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="groupe-available-space">
-                                            <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Quitter' : 'Rejoindre'}</Button>
-                                            <div><TeamOutlined />{' '}{groupe?.data?.dataGroupe?.currentParticipants}/{groupe?.data?.dataGroupe?.maxParticipants}</div>
-                                        </div>
-                                    </div>
-                                </li>))}
-                        </div>}
-                </ul>
-                <Footer />
-            </div>
-        </Layout.Sider>
-    </Layout >)
+                                        </li>))}
+                                </div>}
+                        </ul>
+                        <Footer />
+                    </div>}
+            </Layout.Sider>
+        </Layout>)
 }
 
 const mapStateToProps = ({ user, tchat }) => ({ user, tchat })
