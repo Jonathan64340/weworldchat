@@ -1,3 +1,7 @@
+.sider-mobile .ant-drawer-body {
+    padding: 5px 10px;
+}
+
 .sider-mobile .sider-users-connected > div:first-child {
     width: 100%;
     float: right;
@@ -151,7 +155,7 @@
     overflow-x: hidden;
     overflow-y: scroll;
     scrollbar-width: none;
-    max-height: 524px;
+    height: calc(100vh - 185px);
 }
 
 .sider-mobile .ant-drawer-content-wrapper .list-users-connected .item__user::-webkit-scrollbar {
@@ -177,7 +181,7 @@
 }
 
 .sider-mobile .ant-drawer-content-wrapper .item-groupe.groupe-0 {
-    margin-top: 32px !important;
+    /* margin-top: 32px !important; */
 }
 
 .sider-mobile .ant-drawer-content-wrapper .item-groupe {
@@ -186,8 +190,8 @@
     padding-right: 10px;
     padding-left: 10px;
     margin-bottom: 7px;
-    box-shadow: 0 0 5px 0px rgba(0 ,0 ,0 ,.2);
     transition: all .5s ease;
+    background: rgb(228 228 228 / 40%);
 }
 
 
@@ -200,6 +204,7 @@
 .sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-title {
     justify-content: space-between;
     display: inherit;
+    color: black;
 }
 
 .sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-title span {
@@ -224,18 +229,19 @@
 }
 
 .sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-title .ant-btn svg {
-    fill: ghostwhite;
+    fill: rgb(90, 90, 90);
 }
 
 .sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-available-space {
     display: inherit;
     justify-content: space-between;
+    color: black;
 }
 
 .sider-mobile .ant-drawer-content-wrapper .item-groupe .groupe-container .groupe-available-space .ant-btn {
     background: transparent;
     border: none;
-    color: whitesmoke;
+    color: black;
     font-size: 12px;
     padding: 0;
 }
