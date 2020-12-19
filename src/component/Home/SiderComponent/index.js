@@ -33,7 +33,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
         if(audioSrc === null) {
             setAudioSrc(`${process.env.PUBLIC_URL}/sound/notif2.mp3`)
         }
-    }, [])
+    }, [audioSrc])
 
     const goToPrivate = (id) => {
         const getUserElement = document.getElementById(id);
