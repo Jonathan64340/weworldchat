@@ -13,6 +13,7 @@ import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
 import DetailGroupeModal from './Modal/DetailGroupeModal';
 import Footer from './Footer/Footer';
+import Notif2 from './notif2.mp3';
 
 const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const [users, setUsers] = useState([{}])
@@ -27,8 +28,13 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const [visibleCreateGroupe, setVisibleCreateGroupe] = useState(false);
     const [visibleDetailGroupe, setVisibleDetailGroupe] = useState(false);
     const [currentGroup, setCurrentGroup] = useState({});
-    let src = `${process.env.PUBLIC_URL}/sound/notif2.mp3`
-    let audio = new Audio(src);
+    const [audioSrc, setAudioSrc] = useState(null);
+
+    useEffect(() => {
+        if(audioSrc === null) {
+            setAudioSrc(`${process.env.PUBLIC_URL}/sound/notif2.mp3`)
+        }
+    }, [])
 
     const goToPrivate = (id) => {
         const getUserElement = document.getElementById(id);
@@ -108,7 +114,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                         key,
                         className: "notification-handle-receive"
                     });
-                    audio.play();
+                    new Audio(audioSrc).play();
                     return document.title = `Nouveau message - ${data.data.pseudo}`
                 }
             }

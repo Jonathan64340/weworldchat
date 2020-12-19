@@ -1,0 +1,3 @@
+{
+    "excludes_routes_array": ["/getUser"]
+}

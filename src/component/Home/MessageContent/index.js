@@ -8,6 +8,7 @@ import moment from 'moment';
 import './MessageContent.css'
 import { store } from '../../..';
 import CustomRenderElement from './CustomRenderElement';
+
 const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userData, ...props }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
