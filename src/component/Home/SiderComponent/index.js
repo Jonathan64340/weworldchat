@@ -13,7 +13,6 @@ import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
 import DetailGroupeModal from './Modal/DetailGroupeModal';
 import Footer from './Footer/Footer';
-import Notif2 from './notif2.mp3';
 
 const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const [users, setUsers] = useState([{}])
