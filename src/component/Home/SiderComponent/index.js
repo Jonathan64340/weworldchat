@@ -27,13 +27,6 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const [visibleCreateGroupe, setVisibleCreateGroupe] = useState(false);
     const [visibleDetailGroupe, setVisibleDetailGroupe] = useState(false);
     const [currentGroup, setCurrentGroup] = useState({});
-    const [audioSrc, setAudioSrc] = useState(null);
-
-    useEffect(() => {
-        if(audioSrc === null) {
-            setAudioSrc(`${process.env.PUBLIC_URL}/sound/notif2.mp3`)
-        }
-    }, [audioSrc])
 
     const goToPrivate = (id) => {
         const getUserElement = document.getElementById(id);
@@ -113,7 +106,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                         key,
                         className: "notification-handle-receive"
                     });
-                    new Audio(audioSrc).play();
+                    new Audio(`${process.env.PUBLIC_URL}/sound/notif2.mp3`).play();
                     return document.title = `Nouveau message - ${data.data.pseudo}`
                 }
             }
