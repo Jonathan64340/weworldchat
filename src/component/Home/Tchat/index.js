@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
-import { getPrivateTchat } from '../../../endpoints';
 import './Tchat.css';
 import MessageContent from '../MessageContent';
 import { Input, Form, Row, Col, Button, Card } from 'antd';
@@ -22,15 +21,8 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const inputElement = useRef()
 
     useEffect(() => {
-        if (typeof props.privateId !== 'undefined') {
-            getPrivateTchat({ userOneId: props.privateId, userTwoId: user.data.id })
-                .then(data => {
-                    setUser(data);
-                })
-                .catch(err => console.log(err))
-        }
         inputElement.current.focus()
-    }, [props.privateId, user.data.id])
+    }, [props.privateId, _user])
 
     useEffect(() => {
         !listen && window.socket.on('receive-message', data => {
@@ -116,7 +108,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     return <>
         {props.privateId ? <div className="container-header-tchat">
             <Card title={<div className="flex-content">{isMobile && <div className="btn-drawer"><MenuOutlined onClick={() => openDrawer()} /></div>}<div><span>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? `Discussion groupé : ${tchat?.data?.currentGroupDiscussion?.name}` : 'Vous discutez avec '} {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></div></div>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? 'Quitter le groupe' : 'Fermer la conversation'}</Button>} >
-                <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} viewTchat={e => viewTchat(e)} />
+                <MessageContent userData={setUser} sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} viewTchat={e => viewTchat(e)} />
                 <div>
                     <Form form={form} name="form" onFinish={handleSubmit}>
                         <Row gutter={4} style={{ display: 'flex', margin: 0 }}>

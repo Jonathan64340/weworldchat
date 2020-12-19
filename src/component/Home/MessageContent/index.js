@@ -8,7 +8,7 @@ import moment from 'moment';
 import './MessageContent.css'
 import { store } from '../../..';
 import CustomRenderElement from './CustomRenderElement';
-const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...props }) => {
+const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userData, ...props }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
     const [listenGlobal, setListenGlobal] = useState(false);
@@ -34,6 +34,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
         } else {
             usersMatch ? getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
                 .then(data => {
+                    userData(data)
                     setTchat(data.tchat.filter(el => el.data.data.type === 'string'));
                 })
                 .catch(err => console.log(err))

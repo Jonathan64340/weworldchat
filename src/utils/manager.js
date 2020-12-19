@@ -6,6 +6,7 @@ import { store } from '../index'
 let _interval = null;
 
 const onConnectionRematch = () => {
+    if (_interval) return;
     if (window.location.href !== '/login')
         _interval = setInterval(() => {
             const { name, isLogged } = store.getState().user?.data;
@@ -39,7 +40,7 @@ const onConnectionRematch = () => {
                             }
                         });
                 })
-        }, 10000)
+        }, 30000)
 }
 
 const onStopConnectionRematch = () => {
