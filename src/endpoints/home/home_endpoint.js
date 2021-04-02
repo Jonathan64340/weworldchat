@@ -41,3 +41,10 @@ export function getAvailableGroupName(data) {
         .then(({ data }) => data)
         .catch(err => new Error(err))
 }
+
+export function getParticipantsFromGroup(data) {
+    return axios
+        .get(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/group?participants=${data}`)
+        .then(({ data }) => data)
+        .catch(err => new Error(err))
+}
