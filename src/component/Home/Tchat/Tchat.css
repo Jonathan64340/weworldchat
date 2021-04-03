@@ -27,6 +27,7 @@
 
 .container-header-tchat .card-container-header-tchat {
     height: 100%;
+    border-radius: 0;
 }
 
 .container-header-tchat .card-container-header-tchat.open {

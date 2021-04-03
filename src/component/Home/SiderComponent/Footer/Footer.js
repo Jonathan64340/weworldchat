@@ -7,7 +7,7 @@ const Footer = () => {
 
     useEffect(() => {
         getVersion().then(data => setCurrentVersion(data.version))
-    }, [currentVersion])
+    }, [])
 
     return <div className="credit" >
         <div className="credit__social">
