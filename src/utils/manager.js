@@ -40,7 +40,7 @@ const onConnectionRematch = () => {
                             }
                         });
                 })
-        }, 30000)
+        }, 10000)
 }
 
 const onStopConnectionRematch = () => {
