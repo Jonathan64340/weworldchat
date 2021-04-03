@@ -177,32 +177,42 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
             return window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
         }
         if (group.protected && !tchat?.data?.groupeSubscribed.includes(group.id)) {
-            return swal({
-                title: 'Protection du groupe',
-                icon: 'warning',
-                text: 'Saisir le mot de passe',
-                buttons: ['Annuler', 'Ok'],
-                content: 'input'
-            }).then(async password => {
-                if (password === null) return;
-                doLoginOnTchatGroup({ group: { groupId: group.id, passwordTyped: password } })
-                    .then(status => {
-                        if (status === 'OK') {
-                            let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
-                            prevGroupSubscribed.push(group?.id)
-                            group.currentParticipants++
-                            props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
-                            props.history.push(`/group/${group?.id}`)
-                            window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
-                        } else {
-                            swal({
-                                icon: 'error',
-                                text: 'Mot de passe incorrect !',
-                                timer: 3000
-                            }).then(() => handleJoinGroup(group, create))
-                        }
-                    })
-            })
+            if (group.currentParticipants + 1 <= group.maxParticipants) {
+                return swal({
+                    title: 'Protection du groupe',
+                    icon: 'warning',
+                    text: 'Saisir le mot de passe',
+                    buttons: ['Annuler', 'Ok'],
+                    content: 'input'
+                }).then(async password => {
+                    if (password === null) return;
+                    doLoginOnTchatGroup({ group: { groupId: group.id, passwordTyped: password } })
+                        .then(status => {
+                            if (status === 'OK') {
+                                let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
+                                prevGroupSubscribed.push(group?.id)
+                                group.currentParticipants++
+                                props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
+                                props.history.push(`/group/${group?.id}`)
+                                window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+                            } else {
+                                swal({
+                                    icon: 'error',
+                                    text: 'Mot de passe incorrect !',
+                                    timer: 3000
+                                }).then(() => handleJoinGroup(group, create))
+                            }
+                        })
+                })
+            } else {
+                swal({
+                    title: `Groupe complet`,
+                    icon: 'warning',
+                    text: `Vous ne pouvez pas rejoindre ce groupe car il est complet.`,
+                    closeOnClickOutside: false,
+                    closeOnEsc: false
+                })
+            }
         }
         if (create) {
             if (group.currentParticipants + 1 <= group.maxParticipants) {
