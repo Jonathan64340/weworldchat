@@ -113,7 +113,7 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
                     </Form.Item>
                 </Col>
                 <Col span={24}>
-                    <small>Renseignez le nombre de participants pouvant rejoindre le groupe. Min:3, max:20.</small>
+                    <small>Renseignez le nombre de participants pouvant rejoindre le groupe. Min:3, max:50.</small>
                     <Form.Item label="Limite de participants" name="participants" initialValue={3} rules={[{ required: true, message: "Vous devez saisir un nombre compris entre 3 et 50 inclus." }]}>
                         <Input type="number" placeholder="Saisir le nombre de participants." onChange={validateGroupeParticipants} min={3} max={50} />
                     </Form.Item>

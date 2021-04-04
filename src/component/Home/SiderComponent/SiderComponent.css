@@ -333,6 +333,7 @@
     text-overflow: ellipsis;
     max-height: 25px;
     text-align: start;
+    font-weight: 600;
 }
 
 .sider-users-connected .item-groupe .groupe-container .groupe-title .button-action .group-open svg {
@@ -358,11 +359,11 @@
 }
 
 .sider-users-connected .item-groupe .groupe-container .groupe-available-space .ant-btn {
-    background: transparent;
+    background: #ffffff2b;
     border: none;
-    color: whitesmoke;
+    color: #fbfbfb;
     font-size: 12px;
-    padding: 0;
+    padding: 0 10px;
 }
 
 .list-option-display div:first-child {
