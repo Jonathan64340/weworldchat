@@ -61,13 +61,17 @@
 
 @media screen and (max-width: 900px) {
     .sider-users-connected {
-        margin-left: -200px;
+        margin-left: -300px;
     }
 }
 
 @media screen and (min-width: 901px) {
     .sider-users-connected {
         margin-left: 0 !important;
+        flex: unset !important;
+        max-width: unset !important;
+        min-width: unset !important;
+        width: unset !important;
     }
 }
 
@@ -118,6 +122,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.sider-users-connected .item-user .info-user span {
+    margin-left: 5px;
+    cursor: pointer;
 }
 
 .sider-users-connected .item-user .info-user .status__online__busy {

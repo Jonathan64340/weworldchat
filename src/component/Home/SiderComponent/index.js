@@ -293,7 +293,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                                     <div className="info-user">
                                                         <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
                                             &nbsp;
-                                            {el.data?.pseudo}
+                                            <span>{el.data?.pseudo}</span>
                                                     </div>
                                                 </Tooltip>
                                                 {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id)}><MessageOutlined /></Button>}
@@ -316,7 +316,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                                 </div>
                                             </div>
                                             <div className="groupe-available-space">
-                                                <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Quitter' : 'Rejoindre'}</Button>
+                                                <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Sortir du groupe' : 'Rejoindre'}</Button>
                                                 <div><TeamOutlined />{' '}{groupe?.data?.dataGroupe?.currentParticipants}/{groupe?.data?.dataGroupe?.maxParticipants}</div>
                                             </div>
                                         </div>
@@ -345,7 +345,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                                 <div className="info-user">
                                                     <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
                                             &nbsp;
-                                            {el.data?.pseudo}
+                                            <span onClick={() => goToPrivate(el.id)}>{el.data?.pseudo}</span>
                                                 </div>
                                             </Tooltip>
                                             {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id)}><MessageOutlined /></Button>}
@@ -368,7 +368,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                             </div>
                                         </div>
                                         <div className="groupe-available-space">
-                                            <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Quitter' : 'Rejoindre'}</Button>
+                                            <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Sortir du groupe' : 'Rejoindre'}</Button>
                                             <div><TeamOutlined />{' '}{groupe?.data?.dataGroupe?.currentParticipants}/{groupe?.data?.dataGroupe?.maxParticipants}</div>
                                         </div>
                                     </div>
