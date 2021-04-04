@@ -92,6 +92,12 @@
     color: white;
 }
 
+.layout-tchat .video-wrapper .video-frame {
+    border: 0;
+    border-radius: 10px;
+    margin-top: 5px;
+    width: 100%;
+}
 .layout-tchat .item-message.receiver .content-box-message {
     margin-left: 8px;
     background: rgb(2,0,36);
