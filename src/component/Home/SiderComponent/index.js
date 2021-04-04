@@ -32,7 +32,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
 
     const goToPrivate = (id) => {
         const getUserElement = document.getElementById(id);
-        getUserElement.classList.remove('incomming-message')
+        getUserElement && getUserElement.classList.remove('incomming-message')
 
         props.dispatch(setEnterPrivateTchat({ userConversation: id }))
         document.title = `tchatez - ${user.data?.name}`
@@ -92,7 +92,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
             if (user.data?.statusOnline === "online" && (data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
                 if (tchat.data?.userConversation !== data.data.sender) {
                     const getUserElement = document.getElementById(data?.data?.sender);
-                    getUserElement.classList.add('incomming-message')
+                    getUserElement && getUserElement.classList.add('incomming-message')
 
                     const key = `open${Date.now()}`;
                     const btn = (
@@ -306,7 +306,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                 <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
                                 <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
                                 {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name.toLowerCase() === el?.data?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
-                                    <li className={`item-groupe groupe-${index}`} >
+                                    <li className={`item-groupe groupe-${index}`} key={index} >
                                         <div className="groupe-container">
                                             <div className="groupe-title">
                                                 <span>{groupe?.data?.dataGroupe?.name}</span>
@@ -358,7 +358,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                             <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
                             <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
                             {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name.toLowerCase() === el?.data?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
-                                <li className={`item-groupe groupe-${index}`} >
+                                <li className={`item-groupe groupe-${index}`} key={index} >
                                     <div className="groupe-container">
                                         <div className="groupe-title">
                                             <span>{groupe?.data?.dataGroupe?.name}</span>
