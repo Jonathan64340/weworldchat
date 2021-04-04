@@ -12,8 +12,6 @@ const DetailGroupeModal = ({ current, visible, ...props }) => {
         props.onChange(false)
     }
 
-    console.log(current)
-
     return <Modal centered visible={visible} title={`Groupe : ${current?.name}`} onCancel={() => props.onChange(false)} footer={false}>
         {current?.currentParticipants <= 0 ? <h3>Le groupe est actuellement vide</h3> : <List
             itemLayout="horizontal"
