@@ -12,7 +12,9 @@ const DetailGroupeModal = ({ current, visible, ...props }) => {
         props.onChange(false)
     }
 
-    return <Modal centered visible={visible} title={current?.name} onCancel={() => props.onChange(false)} footer={false}>
+    console.log(current)
+
+    return <Modal centered visible={visible} title={`Groupe : ${current?.name}`} onCancel={() => props.onChange(false)} footer={false}>
         {current?.currentParticipants <= 0 ? <h3>Le groupe est actuellement vide</h3> : <List
             itemLayout="horizontal"
             dataSource={current?.participantsDetails}
@@ -21,7 +23,7 @@ const DetailGroupeModal = ({ current, visible, ...props }) => {
                     actions={[<Button onClick={() => goToPrivate(item?.data?.id)}>Message privé</Button>]}
                 >
                     <List.Item.Meta
-                        title={item?.data?.pseudo}
+                        title={`${item?.data?.pseudo} ${current?.owner === item?.data?.id ? "(administrateur)" : ""}`}
                     />
                 </List.Item>
             )}
