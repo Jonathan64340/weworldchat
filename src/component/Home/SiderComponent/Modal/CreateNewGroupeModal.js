@@ -108,14 +108,14 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
         <Form form={form} onFinish={handleSubmit} layout="vertical">
             <Row>
                 <Col span={24}>
-                    <Form.Item label="Nom du groupe" name="name" rules={[{ required: true, message: "Le nom n'est pas valide.", min: 4, max: 20 }]} initialValue=''>
-                        <Input type="text" placeholder="Saisir un nom de groupe (4 caractères minimum et 20 caractères maximum)" onChange={validateGroupeName} />
+                    <Form.Item label="Nom du groupe" name="name" rules={[{ required: true, message: "Le nom n'est pas valide.", min: 4, max: 30 }]} initialValue=''>
+                        <Input type="text" placeholder="Saisir un nom de groupe (4 caractères minimum et 30 caractères maximum)" onChange={validateGroupeName} />
                     </Form.Item>
                 </Col>
                 <Col span={24}>
                     <small>Renseignez le nombre de participants pouvant rejoindre le groupe. Min:3, max:20.</small>
-                    <Form.Item label="Limite de participants" name="participants" initialValue={3} rules={[{ required: true, message: "Vous devez saisir un nombre compris entre 3 et 20 inclus." }]}>
-                        <Input type="number" placeholder="Saisir le nombre de participants." onChange={validateGroupeParticipants} min={3} max={20} />
+                    <Form.Item label="Limite de participants" name="participants" initialValue={3} rules={[{ required: true, message: "Vous devez saisir un nombre compris entre 3 et 50 inclus." }]}>
+                        <Input type="number" placeholder="Saisir le nombre de participants." onChange={validateGroupeParticipants} min={3} max={50} />
                     </Form.Item>
                 </Col>
                 <Col span={24} style={{ marginBottom: 24 }}>
