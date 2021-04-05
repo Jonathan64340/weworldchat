@@ -11,18 +11,20 @@ const CustomRenderElement = ({ string }) => {
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g
   );
 
+  const youtubeRegex = new RegExp(
+    /youtu(?:.*\/v\/|.*v\=|\.be\/)([A-Za-z0-9_\-]{11})/)
+
   return reactStringReplace(string, regex, (match, i, offset) => {
-    if (string.match('youtube' || 'youtu.be')) {
-      let video_id = match.split('v=')[1];
-      if (video_id) {
-        const amp = video_id.indexOf('&');
-        amp !== -1 && (video_id = video_id.substring(0, amp));
+    let ytId = string.match(youtubeRegex);
+    if (typeof ytId !== 'undefined') {
+      if (string.match(youtubeRegex)) {
+        ytId = ytId[1]
         return <div className="video-wrapper">
           <div className="video">
             <iframe
               title="Vidéo"
               className="video-frame"
-              src={`https://www.youtube.com/embed/${video_id}`}
+              src={`https://www.youtube.com/embed/${ytId}`}
               allowFullScreen
             />
           </div>
