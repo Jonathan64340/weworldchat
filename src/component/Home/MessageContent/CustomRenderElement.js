@@ -12,6 +12,7 @@ const CustomRenderElement = ({ string }) => {
   );
 
   const youtubeRegex = new RegExp(
+    // eslint-disable-next-line
     /youtu(?:.*\/v\/|.*v\=|\.be\/)([A-Za-z0-9_\-]{11})/)
 
   return reactStringReplace(string, regex, (match, i, offset) => {
