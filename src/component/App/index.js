@@ -14,6 +14,8 @@ import {
 import Login from '../Login';
 import Home from '../Home';
 import Loader from '../Loader/Loader';
+import PasswordRecovered from '../Login/PasswordRecovered';
+import Registered from '../Login/Registered';
 
 const App = ({ user }) => {
     return (
@@ -23,6 +25,8 @@ const App = ({ user }) => {
                     {user?.data?.isLogged && <HeaderLayout />}
                     <Switch>
                         <Route path="/login" component={Login} />
+                        <Route path="/recovered" exact component={PasswordRecovered} />
+                        <Route path="/register" exact component={Registered} />
                         {!user?.data?.isLogged && <Redirect to="/login" />}
                         <Route path="/global" exact component={Home} />
                         <Route path="/conversation/:id" exact component={Home} />

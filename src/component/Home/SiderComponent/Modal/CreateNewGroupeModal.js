@@ -30,15 +30,13 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
                     participants: [],
                     id: _v4
                 },
-                data: {
-                    pseudo: 'Serveur : ',
-                    sender: 'SERVER',
-                    owner: owner.id,
-                    timestamp: new Date().getTime(),
-                    message: `${owner.name} vient de créer un nouveau groupe de discussion (${values.name}) 🎉🎉 !`,
-                    destination: 'all',
-                    type: 'action_groupe'
-                }
+                pseudo: 'Serveur : ',
+                sender: 'SERVER',
+                owner: owner.id,
+                timestamp: new Date().getTime(),
+                message: `${owner.name} vient de créer un nouveau groupe de discussion (${values.name}) 🎉🎉 !`,
+                destination: 'all',
+                type: 'action_groupe'
             }
             window.socket.emit('send-user-add-groupe', data);
             setLoading(false)

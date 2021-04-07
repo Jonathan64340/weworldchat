@@ -20,6 +20,7 @@ const CustomRenderElement = ({ string }) => {
     if (typeof ytId !== 'undefined') {
       if (string.match(youtubeRegex)) {
         ytId = ytId[1]
+        
         return <div className="video-wrapper">
           <div className="video">
             <iframe

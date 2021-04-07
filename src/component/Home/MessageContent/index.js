@@ -15,33 +15,39 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
     const [listenGlobal, setListenGlobal] = useState(false);
     const [listenTchatGroupe, setListenTchatGroupe] = useState(false);
     const [listenListTchatGroup, setListenListTchatGroup] = useState([]);
+    const [reloadPagination, setReloadPagination] = useState(false);
     const messages = useRef();
-
+    const tchatHeight = useRef();
     useEffect(() => {
-        setTchat(t => [...t, { data: sendMessage }])
+        setTchat(t => [...t, { ...sendMessage }])
+        setTimeout(() => messages.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"}), 100);
     }, [sendMessage])
 
-    useEffect(() => {
-        messages.current.scrollIntoView({
-            block: "nearest",
-            inline: "end"
-        });
-    }, [_tchat])
+    const pagination = (num) => {
+        setReloadPagination(true)
+        getGlobalTchat({
+            skipNumber: num
+        }).then(data => {
+            setReloadPagination(false)
+            setTchat(p => [...p, ...data.tchat].sort((a, b) => a.timestamp > b.timestamp ? 1 : -1))
+        })
+    }
 
     useEffect(() => {
         setTchat([]);
         if (props.history.location.pathname.match('group')) {
-            getGroupeTchat({ groupId: props?.match?.params?.id }).then(data => setTchat(data.tchat.filter(el => el.data.data.type === 'string'))).catch(() => setTchat([]))
+            getGroupeTchat({ groupId: props?.match?.params?.id }).then(data => setTchat(data.tchat.filter(el => el.type === 'string'))).catch(() => setTchat([]))
         } else {
             usersMatch ? getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
                 .then(data => {
                     userData(data)
-                    setTchat(data.tchat.filter(el => el.data.data.type === 'string'));
+                    setTchat(data.tchat.filter(el => el.type === 'string'));
                 })
                 .catch(err => console.log(err))
                 : getGlobalTchat()
                     .then(data => {
                         setTchat(data.tchat)
+                        messages.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
                     })
         }
         //eslint-disable-next-line 
@@ -51,9 +57,9 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         }
         if (!listen && usersMatch) {
             window.socket.on('receive-message', data => {
-                if ((data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
-                    if (store.getState().tchat?.data?.userConversation === data.data.sender && data.data.destination !== 'all') {
-                        setTchat(t => [...t, { data: data }])
+                if ((data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data?.type === 'string') {
+                    if (store.getState().tchat?.userConversation === data.sender && data.destination !== 'all') {
+                        setTchat(t => [...t, { ...data }])
                     }
                 }
             })
@@ -63,7 +69,8 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         } else {
             if (!listenGlobal && !usersMatch) {
                 window.socket.on('receive-message-global', data => {
-                    setTchat(t => [...t, { data: data }])
+                    setTchat(t => [...t, { ...data }])
+                    messages.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
                 })
                 setListenGlobal(true);
             }
@@ -77,39 +84,45 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             window.socket.on('receive-user-add-groupe', data => {
                 typeof store.getState()?.tchat?.data?.userConversation === 'undefined' &&
                     typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' &&
-                    setTchat(t => [...t, { data: data }])
+                    setTchat(t => [...t, { ...data }])
             })
             setListenTchatGroupe(true)
         }
         if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
             window.socket.on(props?.match?.params?.id, data => {
-                props.history.location.pathname.match('group') && setTchat(t => [...t, { data: data }])
+                props.history.location.pathname.match('group') && setTchat(t => [...t, { ...data }])
             })
             setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
         }
         // eslint-disable-next-line
-    }, [tchat, props?.match?.params])
+    }, [props?.match?.params])
 
     return <div className="container-flex-with__camera">
-        <Layout.Content className="layout-tchat">
-            <div className="tchat-container">
-                {_tchat.map((el, index) => (<div className="content-item-tchat" senderinfo={_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? '' : `${_tchat[index]?.data?.data?.sender === user?.data?.id ? '' : _tchat[index]?.data?.data?.pseudo !== "Serveur : " ? `${_tchat[index]?.data?.data?.pseudo} • ${moment(_tchat[index]?.data?.data?.timestamp).format('HH:mm')}` : `message automatique (serveur) • ${moment(_tchat[index]?.data?.data?.timestamp).format('HH:mm')}`}`}>
-                    <div key={index} className={`item-message ${user.data.id === el?.data?.data?.sender ? 'sender' : 'receiver'}`} >
-                        {el?.data?.data?.sender && user.data.id !== el?.data?.data?.sender && (
+        <Layout.Content className="layout-tchat" onScroll={e => {
+            console.log(e)
+            if (e.currentTarget.scrollTop === 0) {
+                e.currentTarget.scrollTop = 1
+                !reloadPagination && pagination(_tchat.length)
+            }
+        }}>
+            <div className="tchat-container" ref={tchatHeight}>
+                {_tchat.map((el, index) => (<div className="content-item-tchat" senderinfo={_tchat[index]?.sender === _tchat[index + 1]?.sender ? '' : `${_tchat[index]?.sender === user?.data?.id ? '' : _tchat[index]?.pseudo !== "Serveur : " ? `${_tchat[index]?.pseudo} • ${moment(_tchat[index]?.timestamp).format('HH:mm')}` : `message automatique (serveur) • ${moment(_tchat[index]?.timestamp).format('HH:mm')}`}`}>
+                    <div key={index} className={`item-message ${user?.data?.id === el?.sender ? 'sender' : 'receiver'}`} >
+                        {el?.sender && user?.data?.id !== el?.sender && (
                             <>
-                                {_tchat[index]?.data?.data?.sender !== _tchat[index + 1]?.data?.data?.sender &&
+                                {_tchat[index]?.sender !== _tchat[index + 1]?.sender &&
                                     <div className="content-avatar">
-                                        <Avatar size="small" style={{ background: el?.data?.data?.defaultColor ? 'rgba(' + el?.data?.data?.defaultColor + ')' : 'rgb(0, 21, 41)', textTransform: "uppercase" }}>
-                                            {el?.data?.data?.pseudo.length > 1 ? el?.data?.data?.pseudo.substring(0, el?.data?.data?.pseudo.length - (el?.data?.data?.pseudo.length - 1)) : el?.data?.data?.pseudo}
+                                        <Avatar size="small" style={{ background: el?.defaultColor ? 'rgba(' + el?.defaultColor + ')' : 'rgb(0, 21, 41)', textTransform: "uppercase" }}>
+                                            {el?.pseudo.length > 1 ? el?.pseudo.substring(0, el?.pseudo.length - (el?.pseudo.length - 1)) : el?.pseudo}
                                         </Avatar>
                                     </div>
                                 }
                             </>)}
-                        <Tooltip title={moment(el?.data?.data?.timestamp).format('HH:mm')} placement="top">
-                            <div style={{ ...(_tchat[index]?.data?.data?.sender === 'SERVER' && { background: '#001529' }) }} className={`content-box-message 
-                            ${_tchat[index]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue' : 'stop'} 
-                            ${_tchat[index - 1]?.data?.data?.sender === _tchat[index + 1]?.data?.data?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
-                                <p><CustomRenderElement string={el?.data?.data?.message} /></p>{' '}{_tchat[index]?.data?.data?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}
+                        <Tooltip title={moment(el?.timestamp).format('HH:mm')} placement="top">
+                            <div style={{ ...(_tchat[index]?.sender === 'SERVER' && { background: '#001529' }) }} className={`content-box-message 
+                            ${_tchat[index]?.sender === _tchat[index + 1]?.sender ? 'continue' : 'stop'} 
+                            ${_tchat[index - 1]?.sender === _tchat[index + 1]?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
+                                <p><CustomRenderElement string={el?.message} /></p>{' '}{_tchat[index]?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}
                             </div>
                         </Tooltip>
                     </div>

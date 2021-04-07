@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export function getCountUsersConnected() {
+export function getCountUsersConnected(data) {
     return axios
-        .get(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/countUsersConnected`)
+        .get(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/countUsersConnected`, data)
         .then(({ data }) => data)
         .catch(err => new Error(err))
 }
@@ -14,9 +14,10 @@ export function getPrivateTchat(data) {
         .catch(err => new Error(err))
 }
 
-export function getGlobalTchat() {
+export function getGlobalTchat(data) {
+    console.log(data)
     return axios
-        .get(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/getGlobalTchat`)
+        .post(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/getGlobalTchat`, data)
         .then(({ data }) => data)
         .catch(err => new Error(err))
 }

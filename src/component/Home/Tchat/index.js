@@ -50,14 +50,12 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const handleTyping = () => {
         if (!messageTyping) {
             const tmpValues = {
-                ...(props?.match?.url?.match('group') === null && { usersContaints: `${props.privateId}:${user.data.id}` }),
-                data: {
-                    pseudo: user.data.name,
-                    sender: window.socket.id,
-                    timestamp: new Date().getTime(),
-                    destination: store.getState().tchat?.data?.userConversation,
-                    type: 'string'
-                }
+                ...((!props?.match?.url === "/group" || !props?.match?.url === "/global") && { usersContaints: `${props.privateId}:${user.data.id}` }),
+                pseudo: user.data.name,
+                sender: window.socket.id,
+                timestamp: new Date().getTime(),
+                destination: store.getState().tchat?.data?.userConversation,
+                type: 'string'
             }
             setMessageTyping(true)
             window.socket.emit('message-typing', tmpValues)
@@ -67,16 +65,14 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const handleSubmit = values => {
         setMessageTyping(false)
         const tmpValues = {
-            ...(props?.match?.url?.match('group') === null && { usersContaints: `${props.privateId}:${user.data.id}` }),
-            data: {
-                defaultColor: user.data.defaultColor,
-                pseudo: user.data.name,
-                sender: user.data.id,
-                timestamp: new Date().getTime(),
-                message: values.message,
-                destination: props.privateId || 'all',
-                type: 'string'
-            }
+            ...((!props?.match?.url === "/group" || !props?.match?.url === "/global") && { usersContaints: `${props.privateId}:${user.data.id}` }),
+            defaultColor: user.data.defaultColor,
+            pseudo: user.data.name,
+            sender: user.data.id,
+            timestamp: new Date().getTime(),
+            message: values.message,
+            destination: props.privateId || 'all',
+            type: 'string'
         }
         setSendMessage(tmpValues)
         form.resetFields()

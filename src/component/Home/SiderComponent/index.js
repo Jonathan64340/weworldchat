@@ -44,9 +44,9 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     }, [viewTchat])
 
     useEffect(() => {
-        getCountUsersConnected().then(data => {
+        getCountUsersConnected({ socketId: user?.data?.id }).then(data => {
             if (data) {
-                setUsers(data.users)
+                setUsers(data.users.filter(e => e.id !== window.socket.id))
             }
         })
 
@@ -82,8 +82,8 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     useEffect(() => {
         !listen && window.socket.on('users-online', (data) => {
             if (data) {
-                setUsers(data.users)
-                setFilterUser(data.users)
+                setUsers(data.users.filter(e => e.id !== window.socket.id))
+                setFilterUser(data.users.filter(e => e.id !== window.socket.id))
             }
         })
 
