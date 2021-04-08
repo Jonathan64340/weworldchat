@@ -173,12 +173,10 @@
 .layout-tchat .item-message.sender .content-box-message p {
     padding: 0;
     margin: 0;
-    word-break: break-all;
 }
 
 
 .layout-tchat .item-message.receiver .content-box-message p {
     padding: 0;
     margin: 0;
-    word-break: break-all;
 }
