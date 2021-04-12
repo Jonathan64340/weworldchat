@@ -55,6 +55,7 @@ const Registered = ({ user, ...props }) => {
                         statusOnline: 'online',
                         id: window.socket.id
                     })
+
                     props.history.push('/global')
                 }
             })

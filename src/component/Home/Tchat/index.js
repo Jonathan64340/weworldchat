@@ -26,21 +26,11 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
 
     useEffect(() => {
         !listen && window.socket.on('receive-message', data => {
-            const { tchat } = store.getState()
-            if (data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) {
-                if (tchat.data?.userConversation === data.data.sender) {
-                    setIsTyping(false);
-                }
-            }
+            setIsTyping(false);
         })
 
         window.socket.on('receive-message-typing', data => {
-            const { tchat } = store.getState()
-            if (data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) {
-                if (tchat.data?.userConversation === data.data.sender) {
-                    setIsTyping(data)
-                }
-            }
+            setIsTyping(data)
         })
 
         setListen(true)
@@ -64,6 +54,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
 
     const handleSubmit = values => {
         setMessageTyping(false)
+        console.log(props.socketId)
         const tmpValues = {
             ...((!props?.match?.url === "/group" || !props?.match?.url === "/global") && { usersContaints: `${props.privateId}:${user.data.id}` }),
             defaultColor: user.data.defaultColor,
@@ -72,6 +63,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
             timestamp: new Date().getTime(),
             message: values.message,
             destination: props.privateId || 'all',
+            socketId: props.socketId,
             type: 'string'
         }
         setSendMessage(tmpValues)

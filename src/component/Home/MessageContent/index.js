@@ -20,7 +20,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
     const tchatHeight = useRef();
     useEffect(() => {
         setTchat(t => [...t, { ...sendMessage }])
-        setTimeout(() => messages.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"}), 100);
+        setTimeout(() => messages.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" }), 100);
     }, [sendMessage])
 
     const pagination = (num) => {
@@ -34,20 +34,18 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
     }
 
     useEffect(() => {
-        setTchat([]);
         if (props.history.location.pathname.match('group')) {
             getGroupeTchat({ groupId: props?.match?.params?.id }).then(data => setTchat(data.tchat.filter(el => el.type === 'string'))).catch(() => setTchat([]))
         } else {
             usersMatch ? getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
                 .then(data => {
-                    userData(data)
-                    setTchat(data.tchat.filter(el => el.type === 'string'));
+                    setTchat(data.tchat);
                 })
                 .catch(err => console.log(err))
                 : getGlobalTchat()
                     .then(data => {
                         setTchat(data.tchat)
-                        messages.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+                        messages.current.scrollIntoView({ block: "end", inline: "nearest" });
                     })
         }
         //eslint-disable-next-line 
@@ -57,11 +55,8 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         }
         if (!listen && usersMatch) {
             window.socket.on('receive-message', data => {
-                if ((data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data?.type === 'string') {
-                    if (store.getState().tchat?.userConversation === data.sender && data.destination !== 'all') {
-                        setTchat(t => [...t, { ...data }])
-                    }
-                }
+                setTchat(t => [...t, { ...data }])
+                messages.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
             })
             window.socket.off('receive-message-global');
             setListen(true)
@@ -70,7 +65,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             if (!listenGlobal && !usersMatch) {
                 window.socket.on('receive-message-global', data => {
                     setTchat(t => [...t, { ...data }])
-                    messages.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+                    messages.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
                 })
                 setListenGlobal(true);
             }
@@ -99,7 +94,6 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
 
     return <div className="container-flex-with__camera">
         <Layout.Content className="layout-tchat" onScroll={e => {
-            console.log(e)
             if (e.currentTarget.scrollTop === 0) {
                 e.currentTarget.scrollTop = 1
                 !reloadPagination && pagination(_tchat.length)

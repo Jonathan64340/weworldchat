@@ -44,7 +44,8 @@ const Login = ({ user, ...props }) => {
                     window.socket.emit('users', {
                         pseudo: values.pseudo,
                         statusOnline: 'online',
-                        id: window.socket.id
+                        id: data?._id,
+                        socketId: window.socket.id,
                     })
                     props.history.push('/global')
                 }

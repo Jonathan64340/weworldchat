@@ -5,8 +5,6 @@ const tchat = (state = { data: { userConversation: undefined, groupeSubscribed: 
         case ENTER_PRIVATE_TCHAT:
             return {
                 data: {
-                    userOneId: action.payload.userOneId,
-                    userTwoId: action.payload.userTwoId,
                     userConversation: action.payload.userConversation,
                     enableWebcamCall: action.payload.enableWebcamCall,
                     groupeSubscribed: state.data.groupeSubscribed
@@ -31,7 +29,8 @@ const tchat = (state = { data: { userConversation: undefined, groupeSubscribed: 
             return {
                 ...state,
                 data: {
-                    ...state.data, userConversation: null,
+                    ...state.data, 
+                    userConversation: null,
                     currentGroupDiscussion: action.payload.currentGroupDiscussion,
                     groupeSubscribed: action.payload.groupeSubscribed
                 }

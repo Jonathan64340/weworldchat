@@ -30,13 +30,17 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     let src = `${process.env.PUBLIC_URL}/sound/notif3.mp3`;
     const audio = new Audio(src);
 
-    const goToPrivate = (id) => {
+    useEffect(() => {
+        console.log(tchat)
+    }, [tchat])
+
+    const goToPrivate = (id, e) => {
+        console.log(id)
         const getUserElement = document.getElementById(id);
         getUserElement && getUserElement.classList.remove('incomming-message')
-
         props.dispatch(setEnterPrivateTchat({ userConversation: id }))
         document.title = `tchatez - ${user.data?.name}`
-        props.history.push(`/conversation/${id}`)
+        props.history.push(`/conversation/${e?.data?.id}`, { socketId: id })
     }
 
     useEffect(() => {
@@ -82,34 +86,35 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     useEffect(() => {
         !listen && window.socket.on('users-online', (data) => {
             if (data) {
-                setUsers(data.users.filter(e => e.id !== window.socket.id))
-                setFilterUser(data.users.filter(e => e.id !== window.socket.id))
+                setUsers(user => data.type === 'add' ? user ? [...user, { ...data }] : [users] : users.filter(e => e.id !== window.socket.id && e.id !== user.id))
+                setFilterUser(user => data.type === 'add' ? user ? [...user, { ...data }] : [users] : users.filter(e => e.id !== window.socket.id && e.id !== user.id))
             }
         })
 
         !listen && window.socket.on('receive-message', data => {
             const { tchat, user } = store.getState()
-            if (user.data?.statusOnline === "online" && (data.usersContaints.split(':')[0] === window.socket.id || data.usersContaints.split(':')[1] === window.socket.id) && data.data?.type === 'string') {
-                if (tchat.data?.userConversation !== data.data.sender) {
-                    const getUserElement = document.getElementById(data?.data?.sender);
+            if (user.data?.statusOnline === "online"
+                && (data?.socketId === window.socket.id)
+                && data?.type === 'string') {
+                if (tchat.data.userConversation !== data.socketIdDestination) {
+                    const getUserElement = document.getElementById(data?.socketIdDestination);
                     getUserElement && getUserElement.classList.add('incomming-message')
-
                     const key = `open${Date.now()}`;
                     const btn = (
-                        <Button size="middle" onClick={() => { notification.close(key); goToPrivate(data.data.sender); document.title = `tchatez - ${user.data?.name}` }} icon={<WechatOutlined />}>
+                        <Button size="middle" onClick={() => { notification.close(key); goToPrivate(data.socketIdDestination || data?.socketId, { data: { id: data?.sender, socketId: data?.socketIdDestination || data?.socketId }, id: data.sender }); document.title = `tchatez - ${user.data?.name}` }} icon={<WechatOutlined />}>
                             Ouvrir la conversation
                         </Button>
                     );
                     notification.open({
-                        message: `Nouveau message de ${data.data.pseudo}`,
+                        message: `Nouveau message de ${data.pseudo}`,
                         description:
-                            data.data.message.length > 30 ? `${data.data.message.substring(0, 30)}...` : data.data.message,
+                            data.message.length > 30 ? `${data.message.substring(0, 30)}...` : data.message,
                         btn,
                         key,
                         className: "notification-handle-receive"
                     });
                     audio.play();
-                    return document.title = `Nouveau message - ${data.data.pseudo}`
+                    return document.title = `Nouveau message - ${data.pseudo}`
                 }
             }
         })
@@ -296,7 +301,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                             <span>{el.data?.pseudo}</span>
                                                     </div>
                                                 </Tooltip>
-                                                {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id)}><MessageOutlined /></Button>}
+                                                {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id, el)}><MessageOutlined /></Button>}
                                             </li>
                                         )
                                     }</>
@@ -345,10 +350,10 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                                 <div className="info-user">
                                                     <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
                                             &nbsp;
-                                            <span onClick={() => goToPrivate(el.id)}>{el.data?.pseudo}</span>
+                                            <span onClick={() => goToPrivate(el.id, el)}>{el.data?.pseudo}</span>
                                                 </div>
                                             </Tooltip>
-                                            {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id)}><MessageOutlined /></Button>}
+                                            {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id, el)}><MessageOutlined /></Button>}
                                         </li>
                                     )
                                 }</>
@@ -378,7 +383,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                     <Footer />
                 </div>}
             </Layout.Sider>
-        </Layout>)
+        </Layout >)
 }
 
 const mapStateToProps = ({ user, tchat }) => ({ user, tchat })
