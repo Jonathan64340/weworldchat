@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from 'antd';
 import Picker, { SKIN_TONE_LIGHT } from 'emoji-picker-react';
 import { SmileOutlined } from '@ant-design/icons';
