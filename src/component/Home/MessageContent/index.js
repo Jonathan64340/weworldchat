@@ -23,14 +23,34 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         setTimeout(() => messages.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" }), 100);
     }, [sendMessage])
 
-    const pagination = (num) => {
+    useEffect(() => {
+        let videoCustom = document.getElementsByClassName('video-wrapper');
+        for (let video of videoCustom) {
+            video.parentNode.parentNode.style.background = 'transparent'
+        }
+    }, [_tchat])
+
+    const pagination = (num, global, privateId) => {
         setReloadPagination(true)
-        getGlobalTchat({
-            skipNumber: num
-        }).then(data => {
-            setReloadPagination(false)
-            setTchat(p => [...p, ...data.tchat].sort((a, b) => a.timestamp > b.timestamp ? 1 : -1))
-        })
+        if (global) {
+            return getGlobalTchat({
+                skipNumber: num
+            }).then(data => {
+                setReloadPagination(false)
+                setTchat(p => [...p, ...data.tchat].sort((a, b) => a.timestamp > b.timestamp ? 1 : -1))
+            })
+        }
+
+        if (privateId) {
+            return getPrivateTchat({
+                skipNumber: num,
+                userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1]
+            }).then(data => {
+                setReloadPagination(false)
+                setTchat(p => [...p, ...data.tchat].sort((a, b) => a.timestamp > b.timestamp ? 1 : -1))
+            })
+        }
+
     }
 
     useEffect(() => {
@@ -96,7 +116,13 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         <Layout.Content className="layout-tchat" onScroll={e => {
             if (e.currentTarget.scrollTop === 0) {
                 e.currentTarget.scrollTop = 1
-                !reloadPagination && pagination(_tchat.length)
+                if(!reloadPagination && _tchat.length >= 25) {
+                    if(usersMatch) {
+                        return pagination(_tchat.length, false, true)
+                    } else {
+                        return pagination(_tchat.length, true, false)
+                    }
+                }
             }
         }}>
             <div className="tchat-container" ref={tchatHeight}>
@@ -113,7 +139,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
                                 }
                             </>)}
                         <Tooltip title={moment(el?.timestamp).format('HH:mm')} placement="top">
-                            <div style={{ ...(_tchat[index]?.sender === 'SERVER' && { background: '#001529' }) }} className={`content-box-message 
+                            <div style={{ ...(_tchat[index]?.sender === 'SERVER' && { background: '#096dd9', color: 'white' }) }} className={`content-box-message 
                             ${_tchat[index]?.sender === _tchat[index + 1]?.sender ? 'continue' : 'stop'} 
                             ${_tchat[index - 1]?.sender === _tchat[index + 1]?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
                                 <p><CustomRenderElement string={el?.message} /></p>{' '}{_tchat[index]?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}

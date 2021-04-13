@@ -7,7 +7,7 @@
 .nav-bar-header-login-form {
     margin-top: 10px;
     display: inline-flex;
-    background: #1a1a2a;
+    background: #1a1a2a !important;
 }
 
 .nav-bar-header-login-form .ant-form-item-control-input-content {

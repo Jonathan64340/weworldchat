@@ -39,8 +39,7 @@
 
 
 .notification-handle-receive {
-    background: rgb(36,36,0);
-    background: linear-gradient(48deg, rgba(36,36,0,1) 0%, rgba(0,6,162,0.6250875350140056) 0%, rgba(166,191,186,1) 100%);
+    background: #1a1a2a;
 }
 
 .notification-handle-receive .ant-notification-notice-content {
@@ -55,8 +54,7 @@
     height: calc(100vh - 64px);
     box-shadow: 1px 1px 40px -25px black;
     padding: 5px 10px;
-    background: rgb(36,36,0);
-    background: linear-gradient(48deg, rgba(36,36,0,1) 0%, rgba(0,6,162,0.6250875350140056) 0%, rgba(166,191,186,1) 100%);
+    background: #1a1a2a;
 }
 
 @media screen and (max-width: 900px) {
@@ -122,11 +120,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 7px;
 }
 
 .sider-users-connected .item-user .info-user span {
     margin-left: 5px;
     cursor: pointer;
+    color: white;
 }
 
 .sider-users-connected .item-user .info-user .status__online__busy {
