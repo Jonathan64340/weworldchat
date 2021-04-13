@@ -1,6 +1,4 @@
 import React from 'react';
-import LoadingOverlay from 'react-loading-overlay'
-import PacmanLoader from 'react-spinners/PacmanLoader'
 import { connect } from 'react-redux';
 
 const Loader = ({ app, ...props }) => {
