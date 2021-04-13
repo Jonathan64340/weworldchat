@@ -140,11 +140,12 @@
 }
 
 .sider-mobile .ant-drawer-content-wrapper .list-users-connected .search-users {
-    border-radius: 25px;
-    margin-top: 10px;
+    border-radius: 5px;
     line-break: loose;
-    line-height: 15px;
+    line-height: 20px;
     margin-bottom: 10px;
+    font-size: 13px;
+    margin-top: -5px;
 }
 
 .sider-mobile .ant-drawer-content-wrapper .list-users-connected .item__user:not(:first-child, :last-child) {
@@ -155,7 +156,7 @@
     overflow-x: hidden;
     overflow-y: scroll;
     scrollbar-width: none;
-    height: calc(100vh - 185px);
+    height: calc(100vh - 245px);
 }
 
 .sider-mobile .ant-drawer-content-wrapper .list-users-connected .item__user::-webkit-scrollbar {

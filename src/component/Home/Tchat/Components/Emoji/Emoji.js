@@ -4,9 +4,7 @@ import Picker, { SKIN_TONE_LIGHT } from 'emoji-picker-react';
 import { SmileOutlined } from '@ant-design/icons';
 import './emoji.css';
 
-const Emoji = ({ onEmojiChoose }) => {
-    const [open, setOpen] = useState(false);
-
+const Emoji = ({ onEmojiChoose, setOpen, open = false }) => {
     const chooseEmoji = (event, emoji) => {
         onEmojiChoose(emoji)
     }

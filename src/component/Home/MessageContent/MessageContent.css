@@ -91,7 +91,15 @@
     color: #050505;
 }
 
-.layout-tchat .video-wrapper .video-frame {
+.layout-tchat .sender .video-wrapper .video-frame {
+    border: 0;
+    border-radius: 10px;
+    margin-top: -5px;
+    margin-bottom: -12px;
+    margin-right: -5px;
+}
+
+.layout-tchat .receiver .video-wrapper .video-frame {
     border: 0;
     border-radius: 10px;
     margin-top: -5px;

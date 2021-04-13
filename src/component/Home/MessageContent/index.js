@@ -20,7 +20,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
     const tchatHeight = useRef();
     useEffect(() => {
         setTchat(t => [...t, { ...sendMessage }])
-        setTimeout(() => messages.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" }), 100);
+        messages.current.scrollIntoView({ block: "end", inline: "nearest" });
     }, [sendMessage])
 
     useEffect(() => {
@@ -76,7 +76,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         if (!listen && usersMatch) {
             window.socket.on('receive-message', data => {
                 setTchat(t => [...t, { ...data }])
-                messages.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+                messages.current.scrollIntoView({ block: "end", inline: "nearest" });
             })
             window.socket.off('receive-message-global');
             setListen(true)
@@ -85,7 +85,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             if (!listenGlobal && !usersMatch) {
                 window.socket.on('receive-message-global', data => {
                     setTchat(t => [...t, { ...data }])
-                    messages.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+                    messages.current.scrollIntoView({ block: "end", inline: "nearest" });
                 })
                 setListenGlobal(true);
             }

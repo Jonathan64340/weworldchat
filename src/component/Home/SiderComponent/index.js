@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { Layout, Button, Tooltip, notification, Input, Popover, Drawer, Menu } from 'antd'
+import { Layout, Button, Tooltip, notification, Input, Drawer, Menu } from 'antd'
 import _ from 'underscore'
 import './SiderComponent.css'
 import './SiderComponentMobile.css'
 import swal from 'sweetalert';
 import { doLoginOnTchatGroup, getCountUsersConnected, getListeGroupe, getParticipantsFromGroup } from '../../../endpoints';
-import { MessageOutlined, WechatOutlined, UserOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined, MenuOutlined } from '@ant-design/icons';
+import { MessageOutlined, WechatOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { setEnterGroupDiscussion, setEnterPrivateTchat, setOpenMenu, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
@@ -274,7 +274,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                         Conversation
                                     </Menu.Item>
                                     <Menu.Item key="groupes">
-                                        Utilisateur
+                                        Groupe
                                     </Menu.Item>
                                 </Menu>
                             </div>
@@ -331,7 +331,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                     Conversation
                                     </Menu.Item>
                                 <Menu.Item key="groupes">
-                                    Utilisateur
+                                    Groupe
                                     </Menu.Item>
                             </Menu>
                         </div>

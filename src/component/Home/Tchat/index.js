@@ -19,6 +19,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const [listen, setListen] = useState(false)
     const [form] = Form.useForm();
     const inputElement = useRef()
+    const [openEmoji, setOpenEmoji] = useState(false);
 
     useEffect(() => {
         inputElement.current.focus()
@@ -100,10 +101,10 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                 <div>
                     <Form form={form} name="form" onFinish={handleSubmit}>
                         <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
-                            <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
+                            <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} setOpen={setOpenEmoji} open={openEmoji} />
                             <Col className="form-col">
                                 <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
-                                    <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onChange={handleTyping} />
+                                    <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onChange={handleTyping} onClick={() => setOpenEmoji(false)} />
                                 </Form.Item>
                             </Col>
                             <Button htmlType="submit" type="primary" icon={<SendOutlined />} />
@@ -119,10 +120,10 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                     <div>
                         <Form form={form} name="form" onFinish={handleSubmit}>
                             <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
-                                <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} />
+                                <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} setOpen={setOpenEmoji} open={openEmoji} />
                                 <Col className="form-col">
-                                    <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
-                                        <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." />
+                                    <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]} >
+                                        <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onClick={() => setOpenEmoji(false)} />
                                     </Form.Item>
                                 </Col>
                                 <Button htmlType="submit" type="primary" icon={<SendOutlined />} />
