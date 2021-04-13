@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { Layout, Button, Tooltip, notification, Input, Popover, Drawer } from 'antd'
+import { Layout, Button, Tooltip, notification, Input, Popover, Drawer, Menu } from 'antd'
 import _ from 'underscore'
 import './SiderComponent.css'
 import './SiderComponentMobile.css'
@@ -30,12 +30,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     let src = `${process.env.PUBLIC_URL}/sound/notif3.mp3`;
     const audio = new Audio(src);
 
-    useEffect(() => {
-        console.log(tchat)
-    }, [tchat])
-
     const goToPrivate = (id, e) => {
-        console.log(id)
         const getUserElement = document.getElementById(id);
         getUserElement && getUserElement.classList.remove('incomming-message')
         props.dispatch(setEnterPrivateTchat({ userConversation: id }))
@@ -127,8 +122,8 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
         setSearchQuery(value?.currentTarget?.value.toLowerCase())
     }
 
-    const handleChange = type => {
-        switch (type) {
+    const handleChange = ({ key }) => {
+        switch (key) {
             case 'clients':
                 setChoicePopover('clients')
                 break;
@@ -147,17 +142,6 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
         setGroupes(g => [...g, { data: { dataGroupe: { ...data?.data?.dataGroupe, id: data?.data?.dataGroupe?.id } } }])
         handleJoinGroup({ ...data?.data?.dataGroupe, context: 'create' }, true)
     }
-
-    const content = (
-        <div className="list-option-display">
-            <div onClick={() => handleChange('clients')}>
-                <span><UserOutlined />{' '}Clients</span>
-            </div>
-            <div onClick={() => handleChange('groupes')}>
-                <span><TeamOutlined />{' '}Groupes</span>
-            </div>
-        </div>
-    );
 
     const handleEditGroupe = group => {
         console.log(group)
@@ -285,9 +269,14 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                     onChange={handleSearch}
                                     type="text"
                                 ></Input>
-                                <Popover placement="bottomRight" title="Affichage" content={content}>
-                                    <Button icon={<MenuOutlined />} />
-                                </Popover>
+                                <Menu mode="horizontal" onClick={handleChange} selectedKeys={choicePopover} className="search-container-selectable">
+                                    <Menu.Item key="clients">
+                                        Conversation
+                                    </Menu.Item>
+                                    <Menu.Item key="groupes">
+                                        Utilisateur
+                                    </Menu.Item>
+                                </Menu>
                             </div>
                             {choicePopover === 'clients' ? <div className="item__user">
                                 {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (
@@ -337,9 +326,14 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                                 onChange={handleSearch}
                                 type="text"
                             ></Input>
-                            <Popover placement="bottomRight" title="Affichage" content={content}>
-                                <Button icon={<MenuOutlined />} />
-                            </Popover>
+                            <Menu mode="horizontal" onClick={handleChange} selectedKeys={choicePopover} className="search-container-selectable">
+                                <Menu.Item key="clients">
+                                    Conversation
+                                    </Menu.Item>
+                                <Menu.Item key="groupes">
+                                    Utilisateur
+                                    </Menu.Item>
+                            </Menu>
                         </div>
                         {choicePopover === 'clients' ? <div className="item__user">
                             {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (

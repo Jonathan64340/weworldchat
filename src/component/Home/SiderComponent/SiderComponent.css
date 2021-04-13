@@ -208,9 +208,16 @@
     cursor: pointer;
 }
 
-.sider-users-connected .flex-container .search-containter {
+.flex-container .search-containter {
     display: flex;
     align-items: center;
+    flex-direction: column;
+}
+
+.sider-users-connected .flex-container .search-containter .search-container-selectable {
+    color: white;
+    background: #353948;
+    margin-bottom: 10px;
 }
 
 .sider-users-connected .flex-container .search-containter button.ant-btn{
@@ -251,7 +258,7 @@
 }
 
 .sider-users-connected .list-users-connected .item__user {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 245px);
     overflow-x: hidden;
     overflow-y: scroll;
     scrollbar-width: none;
