@@ -19,6 +19,15 @@
     align-items: center;
 }
 
+.container-header-tchat form .upload-image .ant-btn {
+    border: none !important;
+    outline: none;
+}
+
+.container-header-tchat form .upload-image .ant-btn:hover {
+    color: rgb(38 38 38);
+}
+
 .container-header-tchat .flex-content .btn-drawer {
     padding: 0 10px;
     font-size: 23px;

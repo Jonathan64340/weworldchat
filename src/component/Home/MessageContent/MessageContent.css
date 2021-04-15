@@ -117,6 +117,10 @@
     padding: 7px;
 }
 
+.flex-container form .ant-upload-list {
+    display: none;
+}
+
 .layout-tchat .item-message.receiver .content-box-message.continue {
     margin-left: 32px;
     background: #e4e6eb;
@@ -127,11 +131,27 @@
     padding: 7px;
 }
 
+.layout-tchat .item-message.sender .image-render-item.continue {
+    padding: 7px;
+    border-radius: 15px;
+    margin-left: 32px;
+    width: 50%;
+    max-width: 600px;
+}
+
 .layout-tchat .item-message.receiver .content-box-message.continue.continue-normalize {
     border-radius: 5px 15px 15px 5px !important;
     font-size: 14px;
     padding: 7px;
 } 
+
+.layout-tchat .item-message.receiver .image-render-item.continue.continue-normalize {
+    border-radius: 5px 15px 15px 5px !important;
+    padding: 7px;
+    width: 50%;
+    max-width: 600px;
+    margin-left: 25px;
+}
 
 .layout-tchat .item-message.sender .content-box-message.continue.continue-normalize {
     border-radius: 15px 5px 5px 15px !important;
@@ -141,10 +161,25 @@
     color: white;
 } 
 
+.layout-tchat .item-message.sender .image-render-item.continue.continue-normalize {
+    padding: 7px;
+    border-radius: 15px 5px 5px 15px !important;
+    width: 50%;
+    max-width: 600px;
+}
+
 .layout-tchat .item-message.receiver .content-box-message.continue:first-child {
     border-radius: 15px 15px 15px 5px;
     font-size: 14px;
     padding: 7px;
+}
+
+.layout-tchat .item-message.receiver .image-render-item.continue:first-child {
+    border-radius: 15px 15px 15px 5px;
+    padding: 7px;
+    width: 50%;
+    max-width: 600px;
+    margin-left: 25px;
 }
 
 .layout-tchat .item-message.sender .content-box-message.continue:first-child {
@@ -155,9 +190,24 @@
     color: white;
 }
 
+.layout-tchat .item-message.sender .image-render-item.continue:first-child {
+    border-radius: 15px 15px 5px 15px;
+    font-size: 14px;
+    padding: 7px;
+    width: 50%;
+    max-width: 600px;
+}
+
 .layout-tchat .item-message.receiver .content-box-message.stop {
     border-radius: 5px 15px 15px 15px;
     padding: 7px;
+}
+
+.layout-tchat .item-message.receiver .image-render-item.stop {
+    border-radius: 5px 15px 15px 15px;
+    padding: 7px;
+    width: 50%;
+    max-width: 600px;
 }
 
 .layout-tchat .item-message.receiver .content-box-message.stop p {
@@ -169,6 +219,13 @@
     padding: 7px;
     background: #096dd9;
     color: white;
+}
+
+.layout-tchat .item-message.sender .image-render-item.stop {
+    border-radius: 15px 5px 15px 15px;
+    padding: 7px;
+    width: 50%;
+    max-width: 600px;
 }
 
 .layout-tchat .item-message.sender .content-box-message.stop p {

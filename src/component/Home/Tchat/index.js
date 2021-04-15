@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import './Tchat.css';
 import MessageContent from '../MessageContent';
-import { Input, Form, Row, Col, Button, Card } from 'antd';
-import { MenuOutlined, SendOutlined } from '@ant-design/icons';
+import { Input, Form, Row, Col, Button, Card, Upload } from 'antd';
+import { FileImageOutlined, MenuOutlined, SendOutlined, UploadOutlined } from '@ant-design/icons';
 import _ from 'underscore'
 import Dots from './Components/dots';
 import { store } from '../../..';
@@ -53,7 +53,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
         }
     }
 
-    const handleSubmit = values => {
+    const handleSubmit = (values, imageBase64) => {
         setMessageTyping(false)
         const tmpValues = {
             ...((!props?.match?.url === "/group" || !props?.match?.url === "/global") && { usersContaints: `${props.privateId}:${user.data.id}` }),
@@ -61,10 +61,10 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
             pseudo: user.data.name,
             sender: user.data.id,
             timestamp: new Date().getTime(),
-            message: values.message,
+            message: imageBase64 ? imageBase64 : values?.message,
             destination: props.privateId || 'all',
             socketId: props.socketId,
-            type: 'string'
+            type: imageBase64 ? 'image' : 'string'
         }
         setSendMessage(tmpValues)
         form.resetFields()
@@ -93,6 +93,15 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
         props.dispatch(setOpenMenu({ menuOpened: true }))
     }
 
+    const uploadImage = data => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            console.log(reader.result)
+            handleSubmit(null, reader.result)
+        }
+        const image = reader.readAsDataURL(data)
+    }
+
     return <>
         {props.privateId ? <div className="container-header-tchat">
             <Card title={<div className="flex-content">{isMobile && <div className="btn-drawer"><MenuOutlined onClick={() => openDrawer()} /></div>}<div><span>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? `Discussion groupé : ${tchat?.data?.currentGroupDiscussion?.name}` : 'Vous discutez avec '} {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></div></div>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? 'Fermer' : 'Fermer'}</Button>} >
@@ -101,6 +110,9 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                     <Form form={form} name="form" onFinish={handleSubmit}>
                         <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
                             <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} setOpen={setOpenEmoji} open={openEmoji} />
+                            <Upload className="upload-image" beforeUpload={uploadImage}>
+                                <Button icon={<UploadOutlined />} title="Envoyer une image"></Button>
+                            </Upload>
                             <Col className="form-col">
                                 <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
                                     <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onChange={handleTyping} onClick={() => setOpenEmoji(false)} />
@@ -120,6 +132,9 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                         <Form form={form} name="form" onFinish={handleSubmit}>
                             <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
                                 <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} setOpen={setOpenEmoji} open={openEmoji} />
+                                <Upload className="upload-image" beforeUpload={uploadImage}>
+                                    <Button icon={<UploadOutlined />} title="Envoyer une image"></Button>
+                                </Upload>
                                 <Col className="form-col">
                                     <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]} >
                                         <Input type="text" ref={inputElement} placeholder="Ecrire un message ..." onClick={() => setOpenEmoji(false)} />

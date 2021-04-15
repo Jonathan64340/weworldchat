@@ -28,7 +28,6 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         for (let video of videoCustom) {
             video.parentNode.parentNode.style.background = 'transparent'
         }
-        setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
     }, [_tchat])
 
     const pagination = (num, global, privateId) => {
@@ -61,11 +60,13 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             usersMatch ? getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
                 .then(data => {
                     setTchat(data.tchat);
+                    setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
                 })
                 .catch(err => console.log(err))
                 : getGlobalTchat()
                     .then(data => {
                         setTchat(data.tchat)
+                        setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
                     })
         }
         //eslint-disable-next-line 
@@ -76,6 +77,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         if (!listen && usersMatch) {
             window.socket.on('receive-message', data => {
                 setTchat(t => [...t, { ...data }])
+                setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
             })
             window.socket.off('receive-message-global');
             setListen(true)
@@ -84,6 +86,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             if (!listenGlobal && !usersMatch) {
                 window.socket.on('receive-message-global', data => {
                     setTchat(t => [...t, { ...data }])
+                    setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
                 })
                 setListenGlobal(true);
             }
@@ -98,6 +101,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
                 typeof store.getState()?.tchat?.data?.userConversation === 'undefined' &&
                     typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' &&
                     setTchat(t => [...t, { ...data }])
+                    setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
             })
             setListenTchatGroupe(true)
         }
@@ -136,13 +140,14 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
                                     </div>
                                 }
                             </>)}
-                        <Tooltip title={moment(el?.timestamp).format('HH:mm')} placement="top">
+                        {el?.type === 'string' ? <Tooltip title={moment(el?.timestamp).format('HH:mm')} placement="top">
                             <div style={{ ...(_tchat[index]?.sender === 'SERVER' && { background: '#e4e6eb', color: 'black' }) }} className={`content-box-message 
                             ${_tchat[index]?.sender === _tchat[index + 1]?.sender ? 'continue' : 'stop'} 
                             ${_tchat[index - 1]?.sender === _tchat[index + 1]?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
                                 <p><CustomRenderElement string={el?.message} /></p>{' '}{_tchat[index]?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}
                             </div>
-                        </Tooltip>
+                        </Tooltip> : <img src={el?.message} className={`image-render-item ${_tchat[index]?.sender === _tchat[index + 1]?.sender ? 'continue' : 'stop'} 
+                            ${_tchat[index - 1]?.sender === _tchat[index + 1]?.sender ? 'continue-normalize' : 'stop-normalize'}`} />}
                     </div>
                 </div>))}
                 <div ref={messages} />
