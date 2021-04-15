@@ -55,7 +55,6 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
 
     const handleSubmit = values => {
         setMessageTyping(false)
-        console.log(props.socketId)
         const tmpValues = {
             ...((!props?.match?.url === "/group" || !props?.match?.url === "/global") && { usersContaints: `${props.privateId}:${user.data.id}` }),
             defaultColor: user.data.defaultColor,

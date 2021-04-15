@@ -20,7 +20,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
     const tchatHeight = useRef();
     useEffect(() => {
         setTchat(t => [...t, { ...sendMessage }])
-        messages.current.scrollIntoView({ block: "end", inline: "nearest" });
+        setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
     }, [sendMessage])
 
     useEffect(() => {
@@ -28,6 +28,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         for (let video of videoCustom) {
             video.parentNode.parentNode.style.background = 'transparent'
         }
+        setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
     }, [_tchat])
 
     const pagination = (num, global, privateId) => {
@@ -65,7 +66,6 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
                 : getGlobalTchat()
                     .then(data => {
                         setTchat(data.tchat)
-                        messages.current.scrollIntoView({ block: "end", inline: "nearest" });
                     })
         }
         //eslint-disable-next-line 
@@ -76,7 +76,6 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         if (!listen && usersMatch) {
             window.socket.on('receive-message', data => {
                 setTchat(t => [...t, { ...data }])
-                messages.current.scrollIntoView({ block: "end", inline: "nearest" });
             })
             window.socket.off('receive-message-global');
             setListen(true)
@@ -85,7 +84,6 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             if (!listenGlobal && !usersMatch) {
                 window.socket.on('receive-message-global', data => {
                     setTchat(t => [...t, { ...data }])
-                    messages.current.scrollIntoView({ block: "end", inline: "nearest" });
                 })
                 setListenGlobal(true);
             }
@@ -116,8 +114,8 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
         <Layout.Content className="layout-tchat" onScroll={e => {
             if (e.currentTarget.scrollTop === 0) {
                 e.currentTarget.scrollTop = 1
-                if(!reloadPagination && _tchat.length >= 25) {
-                    if(usersMatch) {
+                if (!reloadPagination && _tchat.length >= 25) {
+                    if (usersMatch) {
                         return pagination(_tchat.length, false, true)
                     } else {
                         return pagination(_tchat.length, true, false)
