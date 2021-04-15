@@ -139,7 +139,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
                                 }
                             </>)}
                         <Tooltip title={moment(el?.timestamp).format('HH:mm')} placement="top">
-                            <div style={{ ...(_tchat[index]?.sender === 'SERVER' && { background: '#096dd9', color: 'white' }) }} className={`content-box-message 
+                            <div style={{ ...(_tchat[index]?.sender === 'SERVER' && { background: '#e4e6eb', color: 'black' }) }} className={`content-box-message 
                             ${_tchat[index]?.sender === _tchat[index + 1]?.sender ? 'continue' : 'stop'} 
                             ${_tchat[index - 1]?.sender === _tchat[index + 1]?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
                                 <p><CustomRenderElement string={el?.message} /></p>{' '}{_tchat[index]?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}

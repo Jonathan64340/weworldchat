@@ -72,17 +72,18 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
 
     useEffect(() => {
         !listenStatus && window.socket.on('users-status', data => {
-            setUsers(data)
-            setFilterUser(data)
-            setListenStatus(true)
+            // setUsers(data)
+            // setFilterUser(data)
+            // setListenStatus(true)
         })
     }, [listenStatus])
 
     useEffect(() => {
         !listen && window.socket.on('users-online', (data) => {
-            if (data) {
-                setUsers(user => data.type === 'add' ? user ? [...user, { ...data }] : [users] : users.filter(e => e.id !== window.socket.id && e.id !== user.id))
-                setFilterUser(user => data.type === 'add' ? user ? [...user, { ...data }] : [users] : users.filter(e => e.id !== window.socket.id && e.id !== user.id))
+            console.log("###########################",data)
+            if (data?.users) {
+                setUsers(data.users)
+                setFilterUser(data.users)
             }
         })
 
@@ -337,17 +338,17 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                         </div>
                         {choicePopover === 'clients' ? <div className="item__user">
                             {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (
-                                <>{
-                                    el.id !== user.data?.id && (
-                                        <li key={index} id={el.id} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
+                                <>{console.log(el)}{
+                                    el?.data?.id !== user.data?.id && (
+                                        <li key={index} id={el?.data?.id} className={`item-user ${el?.id === tchat.data?.userConversation ? 'selected' : ''}`}>
                                             <Tooltip title={`${el.data?.pseudo} - ${el.data?.statusOnline === 'busy' ? 'occupé' : 'en ligne'}`} placement={el.data?.pseudo.length < 8 ? 'topRight' : 'top'}>
                                                 <div className="info-user">
                                                     <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
                                             &nbsp;
-                                            <span onClick={() => goToPrivate(el.id, el)}>{el.data?.pseudo}</span>
+                                            <span onClick={() => goToPrivate(el?.id, el)}>{el.data?.pseudo}</span>
                                                 </div>
                                             </Tooltip>
-                                            {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id, el)}><MessageOutlined /></Button>}
+                                            {el?.data?.id !== user.data?.id && <Button size="small" disabled={el?.id === tchat.data?.userConversation} onClick={() => goToPrivate(el?.id, el)}><MessageOutlined /></Button>}
                                         </li>
                                     )
                                 }</>

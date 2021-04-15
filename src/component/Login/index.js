@@ -12,10 +12,11 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 const Login = ({ user, ...props }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [socket, setSocket] = useState(null)
     const [form] = Form.useForm();
 
     useEffect(() => {
-        window.socket.open()
+        setSocket(window.io(`${process.env.REACT_APP_ENDPOINT}`, { "forceBase64": 1 }))
     }, [])
 
     const onFinish = values => {
@@ -32,7 +33,7 @@ const Login = ({ user, ...props }) => {
                         }
                     ])
                 }
-                if (!error_exception && !user?.data?.id) {
+                if (!error_exception && !user?.data?.id) {      
                     setIsLoading(false)
                     props.dispatch(setLogin({
                         pseudo: values.pseudo,
@@ -72,7 +73,7 @@ const Login = ({ user, ...props }) => {
                     <Form.Item name="password" rules={[{ required: true, message: "Le mot de passe n'est pas valide" }]} >
                         <Input prefix={<LockOutlined />} type="password" autoFocus placeholder="Entrez votre mot de passe" allowClear={true} />
                     </Form.Item>
-                    <Button htmlType="submit" loading={isLoading} type="primary">Connexion</Button>
+                    <Button htmlType="submit" disabled={!socket} loading={isLoading} type="primary">Connexion</Button>
                     <div>
                         <span className="title-form"><small>Problème de connexion ? <a href="/recovered">Réinitialiser mot de passe</a></small></span>
                     </div>
