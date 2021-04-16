@@ -129,7 +129,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
             await imageCompression(data, { maxSizeMB: 1, useWebWorker: true }).then(res => {
                 if ((res.size / 1024).toFixed(0) === sizeOfImage) {
                     return notification.error({
-                        description: `L\'image (${res.name}) est trop grande (${(res.size / 1024).toFixed(0)} Kb).`,
+                        description: `L'image (${res.name}) est trop grande (${(res.size / 1024).toFixed(0)} Kb).`,
                         duration: 5
                     })
                 }
