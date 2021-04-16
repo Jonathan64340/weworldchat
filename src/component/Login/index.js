@@ -16,7 +16,10 @@ const Login = ({ user, ...props }) => {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        setSocket(window.io(`${process.env.REACT_APP_ENDPOINT}`, { "forceBase64": 1 }))
+        window.io(`${process.env.REACT_APP_ENDPOINT}`, { "forceBase64": 1 })
+        window.socket.on('ready', (data) => {
+            setSocket(data);
+        })
     }, [])
 
     const onFinish = values => {

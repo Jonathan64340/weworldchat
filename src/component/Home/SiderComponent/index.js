@@ -103,7 +103,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                     notification.open({
                         message: `Nouveau message de ${data.pseudo}`,
                         description:
-                        data?.type === 'string' ? (data.message.length > 30) ? `${data.message.substring(0, 30)}...` : data.message : 'Vous a envoyé un fichier',
+                            data?.type === 'string' ? (data.message.length > 30) ? `${data.message.substring(0, 30)}...` : data.message : 'Vous a envoyé un fichier',
                         btn,
                         key,
                         className: "notification-handle-receive"
@@ -273,8 +273,8 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                     <Menu.Item key="clients">
                                         Conversation
                                     </Menu.Item>
-                                    <Menu.Item key="groupes">
-                                        Groupe
+                                    <Menu.Item /* key="groupes" */>
+                                        <small>(Bientôt dispo)</small>
                                     </Menu.Item>
                                 </Menu>
                             </div>
@@ -330,9 +330,9 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                 <Menu.Item key="clients">
                                     Conversation
                                     </Menu.Item>
-                                <Menu.Item key="groupes">
-                                    Groupe
-                                    </Menu.Item>
+                                <Menu.Item /*key="groupes" */>
+                                    <small>(Bientôt dispo)</small>
+                                </Menu.Item>
                             </Menu>
                         </div>
                         {choicePopover === 'clients' ? <div className="item__user">
