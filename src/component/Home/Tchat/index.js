@@ -2,14 +2,15 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import './Tchat.css';
 import MessageContent from '../MessageContent';
-import { Input, Form, Row, Col, Button, Card, Upload } from 'antd';
-import { FileImageOutlined, MenuOutlined, SendOutlined, UploadOutlined } from '@ant-design/icons';
-import _ from 'underscore'
+import { Input, Form, Row, Col, Button, Card, Upload, notification } from 'antd';
+import { FileImageOutlined, MenuOutlined, SendOutlined } from '@ant-design/icons';
+import _, { size } from 'underscore'
 import Dots from './Components/dots';
 import { store } from '../../..';
 import { withRouter } from 'react-router-dom';
 import Emoji from './Components/Emoji/Emoji';
 import { setOpenMenu, setEnterPrivateTchat, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
+import imageCompression from 'browser-image-compression';
 
 const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
     const [_user, setUser] = useState({})
@@ -69,6 +70,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
         setSendMessage(tmpValues)
         form.resetFields()
         inputElement.current.focus()
+        setOpenEmoji(false)
         return window.socket.emit(props?.match?.url?.match('group') !== null ? props?.match?.params?.id : props.privateId ? 'send-message' : 'send-message-global', tmpValues);
     }
 
@@ -93,13 +95,24 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
         props.dispatch(setOpenMenu({ menuOpened: true }))
     }
 
-    const uploadImage = data => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            console.log(reader.result)
-            handleSubmit(null, reader.result)
+    const uploadImage = async data => {
+        const sizeOfData = data.size / 1024 / 1024
+        if (sizeOfData > 0.500) return notification.error({
+            message: 'Echec de l\'envoi',
+            description:
+                `L'image sélectionné (${data.name}) est trop grande, veuillez en choisir une autre s'il vous plaît.`,
+            duration: 3
+        })
+        if (data.type === 'image/png' || data.type === 'image/jpeg' || data.type === 'image/webp') {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                handleSubmit(null, reader.result)
+                setOpenEmoji(false)
+                return Upload.LIST_IGNORE;
+            }
+            await imageCompression(data, { maxSizeMB: 1, useWebWorker: true }).then(res => reader.readAsDataURL(res))
         }
-        const image = reader.readAsDataURL(data)
+        return Upload.LIST_IGNORE;
     }
 
     return <>
@@ -110,8 +123,8 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                     <Form form={form} name="form" onFinish={handleSubmit}>
                         <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
                             <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} setOpen={setOpenEmoji} open={openEmoji} />
-                            <Upload className="upload-image" beforeUpload={uploadImage}>
-                                <Button icon={<UploadOutlined />} title="Envoyer une image"></Button>
+                            <Upload className="upload-image" beforeUpload={uploadImage} accept="image/png, image/jpeg, image/webp">
+                                <Button icon={<FileImageOutlined />} title="Envoyer une image"></Button>
                             </Upload>
                             <Col className="form-col">
                                 <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]}>
@@ -132,8 +145,8 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                         <Form form={form} name="form" onFinish={handleSubmit}>
                             <Row gutter={4} style={{ display: 'flex', margin: 0 }}>
                                 <Emoji onEmojiChoose={({ emoji }) => addEmojiOnField(emoji)} setOpen={setOpenEmoji} open={openEmoji} />
-                                <Upload className="upload-image" beforeUpload={uploadImage}>
-                                    <Button icon={<UploadOutlined />} title="Envoyer une image"></Button>
+                                <Upload className="upload-image" beforeUpload={uploadImage} accept="image/png, image/jpeg, image/webp">
+                                    <Button icon={<FileImageOutlined />} title="Envoyer une image"></Button>
                                 </Upload>
                                 <Col className="form-col">
                                     <Form.Item name="message" rules={[{ required: true, message: 'Le message ne peux pas être vide' }]} >

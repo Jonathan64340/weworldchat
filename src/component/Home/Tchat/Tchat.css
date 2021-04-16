@@ -22,6 +22,7 @@
 .container-header-tchat form .upload-image .ant-btn {
     border: none !important;
     outline: none;
+    font-size: 20px;
 }
 
 .container-header-tchat form .upload-image .ant-btn:hover {
