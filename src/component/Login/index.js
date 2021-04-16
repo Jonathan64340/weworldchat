@@ -78,10 +78,10 @@ const Login = ({ user, ...props }) => {
                     </Form.Item>
                     <Button htmlType="submit" disabled={!socket} loading={isLoading} type="primary">Connexion</Button>
                     <div>
-                        <span className="title-form"><small>Problème de connexion ? <a href="/recovered">Réinitialiser mot de passe</a></small></span>
+                        <span className="title-form"><small>Problème de connexion ? <a href="" onClick={() => props.history.push('/recovered')}>Réinitialiser mot de passe</a></small></span>
                     </div>
                     <div>
-                        <span className="title-form"><small>Pas encore membre ? <a href="/register">Créer mon compte</a></small></span>
+                        <span className="title-form"><small>Pas encore membre ? <a href="" onClick={() => props.history.push('/register')}>Créer mon compte</a></small></span>
                     </div>
                 </Form>
             </div>
