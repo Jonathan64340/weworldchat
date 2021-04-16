@@ -12,6 +12,7 @@ import { GithubPicker } from 'react-color'
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 
 const Registered = ({ user, ...props }) => {
+    const [socket, setSocket] = useState(null)
     const [isLoading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
     const [defaultColor, setDefaultColor] = useState({
@@ -23,7 +24,10 @@ const Registered = ({ user, ...props }) => {
     const [displayColor, setDisplayColor] = useState(false);
 
     useEffect(() => {
-        window.socket.open()
+        window.io(`${process.env.REACT_APP_ENDPOINT}`, { "forceBase64": 1 })
+        window.socket.on('ready', (data) => {
+            setSocket(data);
+        })
     }, [])
 
     const onFinish = values => {
@@ -95,7 +99,7 @@ const Registered = ({ user, ...props }) => {
                     {displayColor && <Form.Item name="color">
                         <GithubPicker triangle="top-right" onChange={onChange} />
                     </Form.Item>}
-                    <Button htmlType="submit" loading={isLoading} type="primary">Connexion</Button>
+                    <Button htmlType="submit" loading={isLoading} disabled={!socket} type="primary">Connexion</Button>
                     <div>
                         {/* eslint-disable-next-line */}
                         <span className="title-form"><small>Déjà membre ? <a href="" onClick={() => props.history.push('/login')}>Connexion</a></small></span>
