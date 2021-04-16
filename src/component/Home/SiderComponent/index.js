@@ -281,16 +281,16 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                             {choicePopover === 'clients' ? <div className="item__user">
                                 {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (
                                     <>{
-                                        el.id !== user.data?.id && (
-                                            <li key={index} id={el.id} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
+                                        el?.data?.id !== user.data?.id && (
+                                            <li key={index} id={el?.data?.id} className={`item-user ${el.id === tchat.data?.userConversation ? 'selected' : ''}`}>
                                                 <Tooltip title={`${el.data?.pseudo} - ${el.data?.statusOnline === 'busy' ? 'occupé' : 'en ligne'}`} placement={el.data?.pseudo.length < 8 ? 'topRight' : 'top'}>
                                                     <div className="info-user">
                                                         <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
                                             &nbsp;
-                                            <span>{el.data?.pseudo}</span>
+                                            <span onClick={() => goToPrivate(el?.id, el)}>{el.data?.pseudo}</span>
                                                     </div>
                                                 </Tooltip>
-                                                {el.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id, el)}><MessageOutlined /></Button>}
+                                                {el?.data?.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id, el)}><MessageOutlined /></Button>}
                                             </li>
                                         )
                                     }</>

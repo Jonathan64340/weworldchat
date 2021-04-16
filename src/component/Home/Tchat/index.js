@@ -20,10 +20,32 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
     const [form] = Form.useForm();
     const inputElement = useRef()
     const [openEmoji, setOpenEmoji] = useState(false);
+    const [_uploadImage, setUploadImage] = useState(undefined);
 
     useEffect(() => {
         inputElement.current.focus()
     }, [props.privateId, currentInterlocUser])
+
+    useEffect(() => {
+        if (typeof _uploadImage !== 'undefined') {
+            if (_uploadImage === 'upload') {
+                notification.info({
+                    message: 'Envoi en cours',
+                    description:
+                        `Votre image est en cours d'upload. Veuillez patienter.`,
+                    duration: 5
+                })
+            } else {
+                notification.success({
+                    message: 'Envoi réussi',
+                    description:
+                        `Votre image a bien été uploadé.`,
+                    duration: 5
+                })
+                setUploadImage(undefined)
+            }
+        }
+    }, [_uploadImage])
 
     useEffect(() => {
         !listen && window.socket.on('receive-message', data => {
@@ -94,14 +116,9 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
         props.dispatch(setOpenMenu({ menuOpened: true }))
     }
 
+    let sizeOfImage = 1000;
+
     const uploadImage = async data => {
-        const sizeOfData = data.size / 1024 / 1024
-        if (sizeOfData > 1) return notification.error({
-            message: 'Echec de l\'envoi',
-            description:
-                `L'image sélectionné (${data.name}) est trop grande, veuillez en choisir une autre s'il vous plaît.`,
-            duration: 3
-        })
         if (data.type === 'image/png' || data.type === 'image/jpeg' || data.type === 'image/webp') {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -109,7 +126,22 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
                 setOpenEmoji(false)
                 return Upload.LIST_IGNORE;
             }
-            await imageCompression(data, { maxSizeMB: 1, useWebWorker: true }).then(res => reader.readAsDataURL(res))
+            await imageCompression(data, { maxSizeMB: 1, useWebWorker: true }).then(res => {
+                if ((res.size / 1024).toFixed(0) === sizeOfImage) {
+                    return notification.error({
+                        description: `L\'image (${res.name}) est trop grande (${(res.size / 1024).toFixed(0)} Kb).`,
+                        duration: 5
+                    })
+                }
+                if (sizeOfImage >= 400) {
+                    setUploadImage('upload')
+                    uploadImage(res);
+                } else {
+                    setUploadImage('done')
+                    reader.readAsDataURL(res)
+                }
+                sizeOfImage = (res.size / 1024).toFixed(0);
+            })
         }
         return Upload.LIST_IGNORE;
     }
