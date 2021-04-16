@@ -116,7 +116,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
         props.dispatch(setOpenMenu({ menuOpened: true }))
     }
 
-    let sizeOfImage = 1000;
+    let sizeOfImage = 99999999999999;
 
     const uploadImage = async data => {
         if (data.type === 'image/png' || data.type === 'image/jpeg' || data.type === 'image/webp') {
@@ -127,7 +127,8 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
                 return Upload.LIST_IGNORE;
             }
             await imageCompression(data, { maxSizeMB: 1, useWebWorker: true }).then(res => {
-                if ((res.size / 1024).toFixed(0) === sizeOfImage) {
+                console.log((res.size / 1024).toFixed(0), sizeOfImage)
+                if ((res.size / 1024).toFixed(0) === sizeOfImage && sizeOfImage >= 400) {
                     return notification.error({
                         description: `L'image (${res.name}) est trop grande (${(res.size / 1024).toFixed(0)} Kb).`,
                         duration: 5
