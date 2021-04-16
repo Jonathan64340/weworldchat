@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
 import _ from 'underscore';
 import { withRouter } from 'react-router-dom'
@@ -8,9 +8,10 @@ import { Helmet } from "react-helmet";
 import SiderComponent from './SiderComponent';
 import Tchat from './Tchat';
 import './Home.css'
+import { onConnectionRematch } from '../../utils/manager';
 
 const Home = ({ user, ...props }) => {
-    // useEffect(() => onConnectionRematch(), [])
+    useEffect(() => onConnectionRematch(), [])
     const [viewTchat, setViewTchat] = useState('')
     const [isMobile, setIsMobile] = useState(window.innerWidth >= 900 ? true : false)
     const [selectedUser, setSelectedUser] = useState(undefined)
