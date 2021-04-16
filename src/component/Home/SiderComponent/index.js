@@ -14,7 +14,7 @@ import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
 import DetailGroupeModal from './Modal/DetailGroupeModal';
 import Footer from './Footer/Footer';
 
-const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
+const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...props }) => {
     const [users, setUsers] = useState([{}])
     const [groupes, setGroupes] = useState([{}])
     const [filterUser, setFilterUser] = useState([])
@@ -35,6 +35,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
         getUserElement && getUserElement.classList.remove('incomming-message')
         props.dispatch(setEnterPrivateTchat({ userConversation: id }))
         document.title = `tchatez - ${user.data?.name}`
+        onSelectUser(user?.data)
         props.history.push(`/conversation/${e?.data?.id}`, { socketId: id })
     }
 
@@ -72,15 +73,14 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
 
     useEffect(() => {
         !listenStatus && window.socket.on('users-status', data => {
-            // setUsers(data)
-            // setFilterUser(data)
-            // setListenStatus(true)
+            setUsers(data.users.filter(e => e.id !== window.socket.id))
+            setFilterUser(data.users.filter(e => e.id !== window.socket.id))
+            setListenStatus(true)
         })
     }, [listenStatus])
 
     useEffect(() => {
         !listen && window.socket.on('users-online', (data) => {
-            console.log("###########################",data)
             if (data?.users) {
                 setUsers(data.users)
                 setFilterUser(data.users)
@@ -90,8 +90,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
         !listen && window.socket.on('receive-message', data => {
             const { tchat, user } = store.getState()
             if (user.data?.statusOnline === "online"
-                && (data?.socketId === window.socket.id)
-                && data?.type === 'string') {
+                && (data?.socketId === window.socket.id)) {
                 if (tchat.data.userConversation !== data.socketIdDestination) {
                     const getUserElement = document.getElementById(data?.socketIdDestination);
                     getUserElement && getUserElement.classList.add('incomming-message')
@@ -104,7 +103,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                     notification.open({
                         message: `Nouveau message de ${data.pseudo}`,
                         description:
-                            data.message.length > 30 ? `${data.message.substring(0, 30)}...` : data.message,
+                        data?.type === 'string' ? (data.message.length > 30) ? `${data.message.substring(0, 30)}...` : data.message : 'Vous a envoyé un fichier',
                         btn,
                         key,
                         className: "notification-handle-receive"
@@ -338,7 +337,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, ...props }) => {
                         </div>
                         {choicePopover === 'clients' ? <div className="item__user">
                             {typeof users !== 'undefined' && (searchQuery.length > 0 ? users.filter(el => typeof el?.data?.pseudo.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.pseudo.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.pseudo.toLowerCase() === el?.data?.pseudo.toLowerCase().match(searchQuery).input) : users).map((el, index) => (
-                                <>{console.log(el)}{
+                                <>{
                                     el?.data?.id !== user.data?.id && (
                                         <li key={index} id={el?.data?.id} className={`item-user ${el?.id === tchat.data?.userConversation ? 'selected' : ''}`}>
                                             <Tooltip title={`${el.data?.pseudo} - ${el.data?.statusOnline === 'busy' ? 'occupé' : 'en ligne'}`} placement={el.data?.pseudo.length < 8 ? 'topRight' : 'top'}>

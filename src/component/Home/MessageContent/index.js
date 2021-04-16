@@ -9,7 +9,7 @@ import './MessageContent.css'
 import { store } from '../../..';
 import CustomRenderElement from './CustomRenderElement';
 
-const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userData, ...props }) => {
+const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...props }) => {
     const [_tchat, setTchat] = useState([]);
     const [listen, setListen] = useState(false)
     const [listenGlobal, setListenGlobal] = useState(false);
@@ -60,13 +60,13 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             usersMatch ? getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
                 .then(data => {
                     setTchat(data.tchat);
-                    setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
+                    messages.current && messages.current.scrollIntoView({ block: "end", inline: "nearest" });
                 })
                 .catch(err => console.log(err))
                 : getGlobalTchat()
                     .then(data => {
                         setTchat(data.tchat)
-                        setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
+                        messages.current && messages.current.scrollIntoView({ block: "end", inline: "nearest" });
                     })
         }
         //eslint-disable-next-line 
@@ -74,10 +74,11 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             window.socket.off('receive-message-global');
             setListenGlobal(false);
         }
+
         if (!listen && usersMatch) {
             window.socket.on('receive-message', data => {
-                setTchat(t => [...t, { ...data }])
-                setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
+                props.history.location.pathname !== '/global' && setTchat(t => [...t, { ...data }])
+                messages.current && messages.current.scrollIntoView({ block: "end", inline: "nearest" });
             })
             window.socket.off('receive-message-global');
             setListen(true)
@@ -86,12 +87,13 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             if (!listenGlobal && !usersMatch) {
                 window.socket.on('receive-message-global', data => {
                     setTchat(t => [...t, { ...data }])
-                    setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
+                    messages.current && messages.current.scrollIntoView({ block: "end", inline: "nearest" });
                 })
                 setListenGlobal(true);
             }
 
         }
+
         // eslint-disable-next-line 
     }, [usersMatch])
 
@@ -101,7 +103,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
                 typeof store.getState()?.tchat?.data?.userConversation === 'undefined' &&
                     typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' &&
                     setTchat(t => [...t, { ...data }])
-                    setTimeout(() => messages.current.scrollIntoView({ block: "end", inline: "nearest" }), 0);
+                    messages.current && messages.current.scrollIntoView({ block: "end", inline: "nearest" });
             })
             setListenTchatGroupe(true)
         }
@@ -128,8 +130,8 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, userD
             }
         }}>
             <div className="tchat-container" ref={tchatHeight}>
-                {_tchat.map((el, index) => (<div className="content-item-tchat" senderinfo={_tchat[index]?.sender === _tchat[index + 1]?.sender ? '' : `${_tchat[index]?.sender === user?.data?.id ? '' : _tchat[index]?.pseudo !== "Serveur : " ? `${_tchat[index]?.pseudo} • ${moment(_tchat[index]?.timestamp).format('HH:mm')}` : `message automatique (serveur) • ${moment(_tchat[index]?.timestamp).format('HH:mm')}`}`}>
-                    <div key={index} className={`item-message ${user?.data?.id === el?.sender ? 'sender' : 'receiver'}`} >
+                {_tchat.map((el, index) => (<div key={el?._id} className="content-item-tchat" senderinfo={_tchat[index]?.sender === _tchat[index + 1]?.sender ? '' : `${_tchat[index]?.sender === user?.data?.id ? '' : _tchat[index]?.pseudo !== "Serveur : " ? `${_tchat[index]?.pseudo} • ${moment(_tchat[index]?.timestamp).format('HH:mm')}` : `message automatique (serveur) • ${moment(_tchat[index]?.timestamp).format('HH:mm')}`}`}>
+                    <div key={el?._id} className={`item-message ${user?.data?.id === el?.sender ? 'sender' : 'receiver'}`} >
                         {el?.sender && user?.data?.id !== el?.sender && (
                             <>
                                 {_tchat[index]?.sender !== _tchat[index + 1]?.sender &&

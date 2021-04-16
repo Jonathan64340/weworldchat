@@ -4,7 +4,7 @@ import './Tchat.css';
 import MessageContent from '../MessageContent';
 import { Input, Form, Row, Col, Button, Card, Upload, notification } from 'antd';
 import { FileImageOutlined, MenuOutlined, SendOutlined } from '@ant-design/icons';
-import _, { size } from 'underscore'
+import _ from 'underscore'
 import Dots from './Components/dots';
 import { store } from '../../..';
 import { withRouter } from 'react-router-dom';
@@ -12,8 +12,7 @@ import Emoji from './Components/Emoji/Emoji';
 import { setOpenMenu, setEnterPrivateTchat, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 import imageCompression from 'browser-image-compression';
 
-const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
-    const [_user, setUser] = useState({})
+const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props }) => {
     const [sendMessage, setSendMessage] = useState({})
     const [messageTyping, setMessageTyping] = useState(false)
     const [isTyping, setIsTyping] = useState(false)
@@ -24,7 +23,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
 
     useEffect(() => {
         inputElement.current.focus()
-    }, [props.privateId, _user])
+    }, [props.privateId, currentInterlocUser])
 
     useEffect(() => {
         !listen && window.socket.on('receive-message', data => {
@@ -97,7 +96,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
 
     const uploadImage = async data => {
         const sizeOfData = data.size / 1024 / 1024
-        if (sizeOfData > 0.500) return notification.error({
+        if (sizeOfData > 1) return notification.error({
             message: 'Echec de l\'envoi',
             description:
                 `L'image sélectionné (${data.name}) est trop grande, veuillez en choisir une autre s'il vous plaît.`,
@@ -117,8 +116,8 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, ...props }) => {
 
     return <>
         {props.privateId ? <div className="container-header-tchat">
-            <Card title={<div className="flex-content">{isMobile && <div className="btn-drawer"><MenuOutlined onClick={() => openDrawer()} /></div>}<div><span>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? `Discussion groupé : ${tchat?.data?.currentGroupDiscussion?.name}` : 'Vous discutez avec '} {_user?.user?.data?.pseudo}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></div></div>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? 'Fermer' : 'Fermer'}</Button>} >
-                <MessageContent userData={setUser} sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} viewTchat={e => viewTchat(e)} />
+            <Card title={<div className="flex-content">{isMobile && <div className="btn-drawer"><MenuOutlined onClick={() => openDrawer()} /></div>}<div><span>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? `Discussion groupé : ${tchat?.data?.currentGroupDiscussion?.name}` : ''}{currentInterlocUser?.name}</span><br /><div style={{ ...(!isTyping ? { visibility: 'hidden' } : { visibility: 'visible' }) }}><small style={{ display: 'flex' }}>En train d'écrire un message <Dots /></small></div></div></div>} id="card-tchat-content" className="card-container-header-tchat" extra={<Button type="primary" danger onClick={() => handleExit()}>{typeof tchat?.data?.currentGroupDiscussion !== 'undefined' ? 'Fermer' : 'Fermer'}</Button>} >
+                <MessageContent sendMessage={sendMessage} usersMatch={`${props.privateId}:${user.data.id}`} myRefs={ref => console.log(ref)} viewTchat={e => viewTchat(e)} />
                 <div>
                     <Form form={form} name="form" onFinish={handleSubmit}>
                         <Row gutter={4} style={{ display: 'flex', margin: 0 }}>

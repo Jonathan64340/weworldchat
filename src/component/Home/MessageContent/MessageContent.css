@@ -135,8 +135,8 @@
     padding: 0 7px;
     border-radius: 15px;
     margin-left: 32px;
-    max-height: 400px;
-    max-width: 600px;
+    max-width: 400px;
+    width: 50%;
 }
 
 .layout-tchat .item-message.receiver .content-box-message.continue.continue-normalize {
@@ -148,9 +148,9 @@
 .layout-tchat .item-message.receiver .image-render-item.continue.continue-normalize {
     border-radius: 5px 15px 15px 5px !important;
     padding: 0 7px;
-    max-height: 400px;
-    max-width: 600px;
+    max-width: 400px;
     margin-left: 25px;
+    width: 50%;
 }
 
 .layout-tchat .item-message.sender .content-box-message.continue.continue-normalize {
@@ -164,8 +164,8 @@
 .layout-tchat .item-message.sender .image-render-item.continue.continue-normalize {
     padding: 0 7px;
     border-radius: 15px 5px 5px 15px !important;
-    max-height: 400px;
-    max-width: 600px;
+    max-width: 400px;
+    width: 50%;
 }
 
 .layout-tchat .item-message.receiver .content-box-message.continue:first-child {
@@ -177,9 +177,9 @@
 .layout-tchat .item-message.receiver .image-render-item.continue:first-child {
     border-radius: 15px 15px 15px 5px;
     padding: 0 7px;
-    max-height: 400px;
-    max-width: 600px;
+    max-width: 400px;
     margin-left: 25px;
+    width: 50%;
 }
 
 .layout-tchat .item-message.sender .content-box-message.continue:first-child {
@@ -194,8 +194,8 @@
     border-radius: 15px 15px 5px 15px;
     font-size: 14px;
     padding: 0 7px;
-    max-height: 400px;
-    max-width: 600px;
+    max-width: 400px;
+    width: 50%;
 }
 
 .layout-tchat .item-message.receiver .content-box-message.stop {
@@ -206,8 +206,8 @@
 .layout-tchat .item-message.receiver .image-render-item.stop {
     border-radius: 5px 15px 15px 15px;
     padding: 0 7px;
-    max-height: 400px;
-    max-width: 600px;
+    max-width: 400px;
+    width: 50%;
 }
 
 .layout-tchat .item-message.receiver .content-box-message.stop p {
@@ -224,8 +224,8 @@
 .layout-tchat .item-message.sender .image-render-item.stop {
     border-radius: 15px 5px 15px 15px;
     padding: 0 7px;
-    max-width: 600px;
-    max-height: 400px;
+    max-width: 400px;
+    width: 50%;
 }
 
 .layout-tchat .item-message.sender .content-box-message.stop p {

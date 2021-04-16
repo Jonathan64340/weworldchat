@@ -20,7 +20,7 @@ const Footer = () => {
         </div>
         <div className="footer-content-description" ref={toggleHeight}>
             <div className="footer-content-description-info">
-                <InfoCircleOutlined />{' '}Ce chat ne collecte aucune information sensible. <br /> Toutes les données échangées au cours d'une discussion seront automatiquement supprimées une fois que l'utilisateur se déconnectera de l'application.
+                <InfoCircleOutlined />{' '}Ce chat requiert une authentification. <br /> En continuant vous acceptez de respecter les autres personnes présentes sur le chat sous réserve de bannir votre compte.
             </div>
         </div>
     </div>)

@@ -43,3 +43,38 @@
 .footer-content-description-info {
     padding: 30px 30px;
 }
+
+@media screen and (max-width: 600px) {
+
+.footer-content > .footer-content-btn {
+    position: relative;
+    top: 0;
+    right: 70px;
+    width: 70px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 0 10px 0px #d2d2d252;
+    border-radius: 5px 5px 0px 0;
+    cursor: pointer;
+    height: 20px;
+    float: right;
+    transition: .2s;
+}
+
+.footer-content > .footer-content-btn:hover {
+    height: 25px;
+}
+
+.footer-content .footer-content-description {
+    position: relative;
+    float: left;
+    background: white;
+    font-size: .5rem;
+    color: rgb(233, 105, 0);
+    width: 100%;
+}
+
+.footer-content-description-info {
+    padding: 10px 10px;
+}
+}

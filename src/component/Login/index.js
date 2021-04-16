@@ -37,14 +37,14 @@ const Login = ({ user, ...props }) => {
                     setIsLoading(false)
                     props.dispatch(setLogin({
                         pseudo: values.pseudo,
-                        statusOnline: 'online',
+                        statusOnline: data?.statusOnline,
                         id: data?._id,
                         socketId: window.socket.id,
                         defaultColor: `${data?.defaultColor?.r},${data?.defaultColor?.g},${data?.defaultColor.b},${data?.defaultColor?.a}`
                     }))
                     window.socket.emit('users', {
                         pseudo: values.pseudo,
-                        statusOnline: 'online',
+                        statusOnline: data?.statusOnline,
                         id: data?._id,
                         socketId: window.socket.id,
                     })
