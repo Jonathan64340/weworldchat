@@ -97,6 +97,7 @@ const Registered = ({ user, ...props }) => {
                     </Form.Item>}
                     <Button htmlType="submit" loading={isLoading} type="primary">Connexion</Button>
                     <div>
+                        {/* eslint-disable-next-line */}
                         <span className="title-form"><small>Déjà membre ? <a href="" onClick={() => props.history.push('/login')}>Connexion</a></small></span>
                     </div>
                 </Form>

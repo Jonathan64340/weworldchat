@@ -33,9 +33,11 @@ const PasswordRecovered = ({ user, ...props }) => {
                     </Form.Item>
                     <Button htmlType="submit" loading={isLoading} type="primary">Réinitialiser</Button>
                     <div>
+                        {/* eslint-disable-next-line */}
                         <span className="title-form"><small>Déjà membre ? <a href="" onClick={() => props.history.push('/login')}>Connexion</a></small></span>
                     </div>
                     <div>
+                        {/* eslint-disable-next-line */}
                         <span className="title-form"><small>Pas encore membre ? <a href="" onClick={() => props.history.push('/register')}>Créer mon compte</a></small></span>
                     </div>
                 </Form>
