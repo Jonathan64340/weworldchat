@@ -97,7 +97,7 @@ const Registered = ({ user, ...props }) => {
                     </Form.Item>}
                     <Button htmlType="submit" loading={isLoading} type="primary">Connexion</Button>
                     <div>
-                        <span className="title-form"><small>Déjà membre ? <a href="/login">Connexion</a></small></span>
+                        <span className="title-form"><small>Déjà membre ? <a href="" onClick={() => props.history.push('/login')}>Connexion</a></small></span>
                     </div>
                 </Form>
             </div>

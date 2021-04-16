@@ -33,10 +33,10 @@ const PasswordRecovered = ({ user, ...props }) => {
                     </Form.Item>
                     <Button htmlType="submit" loading={isLoading} type="primary">Réinitialiser</Button>
                     <div>
-                        <span className="title-form"><small>Déjà membre ? <a href="/login">Connexion</a></small></span>
+                        <span className="title-form"><small>Déjà membre ? <a href="" onClick={() => props.history.push('/login')}>Connexion</a></small></span>
                     </div>
                     <div>
-                        <span className="title-form"><small>Pas encore membre ? <a href="/register">Créer mon compte</a></small></span>
+                        <span className="title-form"><small>Pas encore membre ? <a href="" onClick={() => props.history.push('/register')}>Créer mon compte</a></small></span>
                     </div>
                 </Form>
             </div>
