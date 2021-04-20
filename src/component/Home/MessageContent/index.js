@@ -8,6 +8,9 @@ import moment from 'moment';
 import './MessageContent.css'
 import { store } from '../../..';
 import CustomRenderElement from './CustomRenderElement';
+import Lightbox from "react-awesome-lightbox";
+// You need to import the CSS only once
+import "react-awesome-lightbox/build/style.css";
 
 const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...props }) => {
     const [_tchat, setTchat] = useState([]);
@@ -16,6 +19,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
     const [listenTchatGroupe, setListenTchatGroupe] = useState(false);
     const [listenListTchatGroup, setListenListTchatGroup] = useState([]);
     const [reloadPagination, setReloadPagination] = useState(false);
+    const [openedPicture, setOpenedPicture] = useState({});
     const messages = useRef();
     const tchatHeight = useRef();
     useEffect(() => {
@@ -103,7 +107,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
                 typeof store.getState()?.tchat?.data?.userConversation === 'undefined' &&
                     typeof store.getState()?.tchat?.data?.currentGroupDiscussion === 'undefined' &&
                     setTchat(t => [...t, { ...data }])
-                    messages.current && messages.current.scrollIntoView({ block: "end", inline: "nearest" });
+                messages.current && messages.current.scrollIntoView({ block: "end", inline: "nearest" });
             })
             setListenTchatGroupe(true)
         }
@@ -148,8 +152,12 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
                             ${_tchat[index - 1]?.sender === _tchat[index + 1]?.sender ? 'continue-normalize' : 'stop-normalize'}`}>
                                 <p><CustomRenderElement string={el?.message} /></p>{' '}{_tchat[index]?.type === 'action_groupe' && (<Button type="primary" size="small" onClick={() => viewTchat('groupes')}>Voir les groupes</Button>)}
                             </div>
-                        </Tooltip> : <img src={el?.message} alt="" className={`image-render-item ${_tchat[index]?.sender === _tchat[index + 1]?.sender ? 'continue' : 'stop'} 
-                            ${_tchat[index - 1]?.sender === _tchat[index + 1]?.sender ? 'continue-normalize' : 'stop-normalize'}`} />}
+                        </Tooltip> : <>
+                            {!!openedPicture && <Lightbox image={openedPicture?.src} title={openedPicture?.title} onClose={() => setOpenedPicture({})} />}
+                            <img onClick={e => setOpenedPicture({ src: e?.currentTarget.src, title: `Envoyé le ${new Date(el?.timestamp).toLocaleDateString('fr')} par ${el?.pseudo}` })} src={el?.message} alt="" className={`image-render-item ${_tchat[index]?.sender === _tchat[index + 1]?.sender ? 'continue' : 'stop'} 
+                            ${_tchat[index - 1]?.sender === _tchat[index + 1]?.sender ? 'continue-normalize' : 'stop-normalize'}`} />
+                        </>
+                        }
                     </div>
                 </div>))}
                 <div ref={messages} />

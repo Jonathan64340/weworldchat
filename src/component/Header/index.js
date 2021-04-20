@@ -22,15 +22,7 @@ const HeaderLayout = ({ user, ...props }) => {
         props.dispatch(setLogout())
         props.dispatch(setEnterPrivateTchat({ userConversation: undefined }))
         props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: undefined }))
-        // window.socket.close()
-        // Supprimer tout les écouteurs à la déconnection
-        // window.socket.off('receive-message')
-        // window.socket.off('users-online')
-        // window.socket.off('users-status')
-        // window.socket.off('receive-message-typing')
-        // window.socket.off('receive-message-global')
-        // window.socket.off('receive-user-add-groupe')
-        // window.socket.off('receive-user-update-groupe')
+        window.socket.disconnect()
         props.history.push('/login')
     }
 

@@ -17,9 +17,15 @@ const Login = ({ user, ...props }) => {
 
     useEffect(() => {
         window.io(`${process.env.REACT_APP_ENDPOINT}`, { "forceBase64": 1 })
+
         window.socket.on('ready', (data) => {
             setSocket(data);
         })
+
+        if (window.socket.disconnected) {
+            window.socket.connect(process.env.REACT_APP_ENDPOINT)
+            setSocket(true)
+        }
     }, [])
 
     const onFinish = values => {
@@ -36,7 +42,7 @@ const Login = ({ user, ...props }) => {
                         }
                     ])
                 }
-                if (!error_exception && !user?.data?.id) {      
+                if (!error_exception && !user?.data?.id) {
                     setIsLoading(false)
                     props.dispatch(setLogin({
                         pseudo: values.pseudo,

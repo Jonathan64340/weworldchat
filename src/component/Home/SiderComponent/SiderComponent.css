@@ -317,8 +317,7 @@
 .sider-users-connected .item-groupe {
     background: rgb(255 255 255 / 10%);
     border-radius: 5px;
-    padding-right: 10px;
-    padding-left: 10px;
+    padding: 5px 0;
     margin-bottom: 7px;
     box-shadow: 0 0 5px 0px rgba(0 ,0 ,0 ,.2);
     transition: all .5s ease;
@@ -370,8 +369,8 @@
     background: #ffffff2b;
     border: none;
     color: #fbfbfb;
-    font-size: 12px;
-    padding: 0 10px;
+    font-size: 11px;
+    padding: 0 5px;
 }
 
 .list-option-display div:first-child {

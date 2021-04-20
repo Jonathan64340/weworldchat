@@ -4,9 +4,8 @@ import './modal.css';
 import { UsergroupAddOutlined } from '@ant-design/icons';
 import _ from 'underscore';
 import { useForm } from 'antd/lib/form/Form';
-import { v4 } from 'uuid';
 import { getAvailableGroupName } from '../../../../endpoints';
-import { passwordEncrypt } from '../../../../utils/passwordHasher';
+import { connect } from 'react-redux';
 
 const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
     const [security, setSecurity] = useState(false);
@@ -16,34 +15,24 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
     const handleSubmit = async values => {
         if (!values) return;
         setLoading(true);
-        let _v4 = v4();
 
-        if (_v4) {
-            const data = {
-                dataGroupe: {
-                    name: values.name,
-                    maxParticipants: values.participants,
-                    protected: !!security,
-                    ...(!!security && { password: await passwordEncrypt(values.password) }),
-                    currentParticipants: 0,
-                    owner: owner.id,
-                    participants: [],
-                    id: _v4
-                },
-                pseudo: 'Serveur : ',
-                sender: 'SERVER',
+        const data = {
+            dataGroupe: {
+                name: values.name,
+                maxParticipants: values.participants,
+                protected: !!security,
+                ...(!!security && { password: values.password }),
+                currentParticipants: 0,
                 owner: owner.id,
-                timestamp: new Date().getTime(),
-                message: `${owner.name} vient de créer un nouveau groupe de discussion (${values.name}) 🎉🎉 !`,
-                destination: 'all',
-                type: 'action_groupe'
+                ownerName: props?.user?.data?.name,
+                participants: []
             }
-            window.socket.emit('send-user-add-groupe', data);
-            setLoading(false)
-            props.onChange({ visible: false, data: data, create: true })
-            setValidFields(false)
-            form.resetFields();
         }
+        window.socket.emit('send-user-add-groupe', data);
+        setLoading(false)
+        props.onChange({ visible: false, ...data, create: true })
+        setValidFields(false)
+        form.resetFields();
     }
 
     const handleChange = event => {
@@ -130,4 +119,6 @@ const CreateNewGroupeModal = ({ visible, owner, ...props }) => {
     </Modal>
 }
 
-export default CreateNewGroupeModal;
+const mapStateToProps = ({ user }) => ({ user })
+
+export default connect(mapStateToProps)(CreateNewGroupeModal);

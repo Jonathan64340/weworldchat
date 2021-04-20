@@ -35,7 +35,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
         getUserElement && getUserElement.classList.remove('incomming-message')
         props.dispatch(setEnterPrivateTchat({ userConversation: id }))
         document.title = `tchatez - ${user.data?.name}`
-        onSelectUser(user?.data)
+        onSelectUser(e.data?.pseudo)
         props.history.push(`/conversation/${e?.data?.id}`, { socketId: id })
     }
 
@@ -52,6 +52,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
 
         getListeGroupe().then(data => {
             if (data) {
+                console.log('fetch groupe', data.groupe)
                 setGroupes(data.groupe)
             }
         })
@@ -59,14 +60,20 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
     }, [])
 
     useEffect(() => {
+        // const { tchat, user } = store.getState()
+        console.log(tchat)
+    }, [tchat])
+
+    useEffect(() => {
         !listGroupes && window.socket.on('receive-user-add-groupe', data => {
             setListenGroupes(true)
-            setGroupes(g => [...g, { data: { ...data, id: data?.id } }])
+            console.log('socket data', data)
+            setGroupes(g => [...g,  { ...data }].sort((a, b) => a.timestamp > b.timestamp ? -1 : 1))
         })
 
         !listGroupesUpdate && window.socket.on('receive-user-update-groupe', data => {
             setListenGroupesUpdate(true);
-            setTimeout(() => setGroupes(data), 100)
+            setTimeout(() => setGroupes(data.sort((a, b) => a.timestamp > b.timestamp ? -1 : 1)), 100)
         })
         // eslint-disable-next-line
     }, [])
@@ -139,8 +146,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
     const onChangeGroupe = data => {
         setVisibleCreateGroupe(data?.visible)
         if (!data?.create) return;
-        setGroupes(g => [...g, { data: { dataGroupe: { ...data?.data?.dataGroupe, id: data?.data?.dataGroupe?.id } } }])
-        handleJoinGroup({ ...data?.data?.dataGroupe, context: 'create' }, true)
+        handleJoinGroup({ ...data?.dataGroupe, context: 'create', _id: data?._id }, true)
     }
 
     const handleEditGroupe = group => {
@@ -156,16 +162,16 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
     }
 
     const handleJoinGroup = (group, create) => {
-        if (!group.id) return;
+        if (!group._id) return;
         if (group.context === 'create' && create) {
             let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
-            prevGroupSubscribed.push(group?.id)
+            prevGroupSubscribed.push(group?._id)
             group.currentParticipants++
             props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
-            props.history.push(`/group/${group?.id}`)
-            return window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+            props.history.push(`/group/${group?._id}`)
+            return window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
         }
-        if (group.protected && !tchat?.data?.groupeSubscribed.includes(group.id)) {
+        if (group.protected && !tchat?.data?.groupeSubscribed.includes(group._id)) {
             if (group.currentParticipants + 1 <= group.maxParticipants) {
                 return swal({
                     title: 'Protection du groupe',
@@ -175,15 +181,15 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                     content: 'input'
                 }).then(async password => {
                     if (password === null) return;
-                    doLoginOnTchatGroup({ group: { groupId: group.id, passwordTyped: password } })
+                    doLoginOnTchatGroup({ group: { groupId: group._id, passwordTyped: password } })
                         .then(status => {
                             if (status === 'OK') {
                                 let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
-                                prevGroupSubscribed.push(group?.id)
+                                prevGroupSubscribed.push(group?._id)
                                 group.currentParticipants++
                                 props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
-                                props.history.push(`/group/${group?.id}`)
-                                window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+                                props.history.push(`/group/${group?._id}`)
+                                window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
                             } else {
                                 swal({
                                     icon: 'error',
@@ -214,11 +220,11 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                 }).then(choice => {
                     if (choice) {
                         let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
-                        prevGroupSubscribed.push(group?.id)
+                        prevGroupSubscribed.push(group?._id)
                         group.currentParticipants++
                         props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
-                        props.history.push(`/group/${group?.id}`)
-                        window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+                        props.history.push(`/group/${group?._id}`)
+                        window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
                     }
                 })
             } else {
@@ -233,13 +239,13 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
 
         } else {
             props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: tchat?.data?.groupeSubscribed || [] }))
-            props.history.push(`/group/${group?.id}`)
+            props.history.push(`/group/${group?._id}`)
         }
 
     }
 
     const handleLeftGroup = group => {
-        if (!group.id) return;
+        if (!group._id) return;
         swal({
             title: `Quitter un groupe`,
             text: `Souhaitez-vous vraiment quitter le groupe ?`,
@@ -250,9 +256,9 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
             if (choice) {
                 let prevGroupSubscribed = tchat?.data?.groupeSubscribed;
                 group.currentParticipants--;
-                props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: prevGroupSubscribed.filter(e => e !== group.id) }))
+                props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: prevGroupSubscribed.filter(e => e !== group._id) }))
                 props.history.push(`/global`)
-                window.socket.emit('send-user-update-groupe', { cibleGroupe: group.id, id: user?.data?.id, name: user?.data?.name, type: 'left' });
+                window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, id: user?.data?.id, name: user?.data?.name, type: 'left' });
             }
         })
     }
@@ -273,8 +279,8 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                     <Menu.Item key="clients">
                                         Conversation
                                     </Menu.Item>
-                                    <Menu.Item /* key="groupes" */>
-                                        <small>(Bientôt dispo)</small>
+                                    <Menu.Item key="groupes">
+                                        Groupe
                                     </Menu.Item>
                                 </Menu>
                             </div>
@@ -299,19 +305,19 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                 <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
                                 <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
                                 <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
-                                {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name.toLowerCase() === el?.data?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
+                                {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.dataGroupe.name.toLowerCase() === el?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
                                     <li className={`item-groupe groupe-${index}`} key={index} >
                                         <div className="groupe-container">
                                             <div className="groupe-title">
-                                                <span>{groupe?.data?.dataGroupe?.name}</span>
+                                                <span>{groupe?.dataGroupe?.name}</span>
                                                 <div className="button-action">
-                                                    <Button icon={tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? <MessageOutlined /> : groupe?.data?.dataGroupe?.owner === user?.data?.id ? <EditOutlined /> : <EyeOutlined />} onClick={() => tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, false) : groupe?.data?.dataGroupe?.owner === user?.data?.id ? handleEditGroupe(groupe?.data?.dataGroupe) : handleDetailGroupe(groupe?.data?.dataGroupe)} size="small" />
-                                                    <Button className={groupe?.data?.dataGroupe?.protected ? "group-secure" : "group-open"} icon={groupe?.data?.dataGroupe?.protected ? <LockOutlined /> : <UnlockOutlined />} size="small" />
+                                                    <Button icon={tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?._id) ? <MessageOutlined /> : groupe?.dataGroupe?.owner === user?.data?.id ? <EditOutlined /> : <EyeOutlined />} onClick={() => tchat?.data?.groupeSubscribed.includes(groupe?._id) ? handleJoinGroup({ ...groupe?.dataGroupe, _id: groupe?._id }, false) : groupe?.dataGroupe?.owner === user?.data?.id ? handleEditGroupe({ ...groupe?.dataGroupe, _id: groupe?._id }) : handleDetailGroupe({ ...groupe?.dataGroupe, _id: groupe?._id })} size="small" />
+                                                    <Button className={groupe?.dataGroupe?.protected ? "group-secure" : "group-open"} icon={groupe?.dataGroupe?.protected ? <LockOutlined /> : <UnlockOutlined />} size="small" />
                                                 </div>
                                             </div>
                                             <div className="groupe-available-space">
-                                                <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Sortir du groupe' : 'Rejoindre le groupe'}</Button>
-                                                <div><TeamOutlined />{' '}{groupe?.data?.dataGroupe?.currentParticipants}/{groupe?.data?.dataGroupe?.maxParticipants}</div>
+                                                <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?._id) ? handleJoinGroup({ ...groupe?.dataGroupe, _id: groupe?._id }, true) : handleLeftGroup({ ...groupe?.dataGroupe, _id: groupe?._id })}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?._id) ? 'Sortir du groupe' : 'Rejoindre le groupe'}</Button>
+                                                <div><TeamOutlined />{' '}{groupe?.dataGroupe?.currentParticipants}/{groupe?.dataGroupe?.maxParticipants}</div>
                                             </div>
                                         </div>
                                     </li>))}
@@ -330,8 +336,8 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                 <Menu.Item key="clients">
                                     Conversation
                                     </Menu.Item>
-                                <Menu.Item /*key="groupes" */>
-                                    <small>(Bientôt dispo)</small>
+                                <Menu.Item key="groupes">
+                                    Groupe
                                 </Menu.Item>
                             </Menu>
                         </div>
@@ -356,19 +362,19 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                             <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
                             <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
                             <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
-                            {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.data?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.data?.dataGroupe.name.toLowerCase() === el?.data?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
+                            {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.dataGroupe.name.toLowerCase() === el?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
                                 <li className={`item-groupe groupe-${index}`} key={index} >
                                     <div className="groupe-container">
                                         <div className="groupe-title">
-                                            <span>{groupe?.data?.dataGroupe?.name}</span>
+                                            <span>{groupe?.dataGroupe?.name}</span>
                                             <div className="button-action">
-                                                <Button icon={tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? <MessageOutlined /> : groupe?.data?.dataGroupe?.owner === user?.data?.id ? <EditOutlined /> : <EyeOutlined />} onClick={() => tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, false) : groupe?.data?.dataGroupe?.owner === user?.data?.id ? handleEditGroupe(groupe?.data?.dataGroupe) : handleDetailGroupe(groupe?.data?.dataGroupe)} size="small" />
-                                                <Button className={groupe?.data?.dataGroupe?.protected ? "group-secure" : "group-open"} icon={groupe?.data?.dataGroupe?.protected ? <LockOutlined /> : <UnlockOutlined />} size="small" />
+                                                <Button icon={tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?._id) ? <MessageOutlined /> : groupe?.dataGroupe?.owner === user?.data?.id ? <EditOutlined /> : <EyeOutlined />} onClick={() => tchat?.data?.groupeSubscribed.includes(groupe?._id) ? handleJoinGroup({ ...groupe?.dataGroupe, _id: groupe?._id }, false) : groupe?.dataGroupe?.owner === user?.data?.id ? handleEditGroupe({ ...groupe?.dataGroupe, _id: groupe?._id }) : handleDetailGroupe({ ...groupe?.dataGroupe, _id: groupe?._id })} size="small" />
+                                                <Button className={groupe?.dataGroupe?.protected ? "group-secure" : "group-open"} icon={groupe?.dataGroupe?.protected ? <LockOutlined /> : <UnlockOutlined />} size="small" />
                                             </div>
                                         </div>
                                         <div className="groupe-available-space">
-                                            <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? handleJoinGroup(groupe?.data?.dataGroupe, true) : handleLeftGroup(groupe?.data?.dataGroupe)}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?.data?.dataGroupe?.id) ? 'Sortir du groupe' : 'Rejoindre le groupe'}</Button>
-                                            <div><TeamOutlined />{' '}{groupe?.data?.dataGroupe?.currentParticipants}/{groupe?.data?.dataGroupe?.maxParticipants}</div>
+                                            <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?._id) ? handleJoinGroup({ ...groupe?.dataGroupe, _id: groupe?._id }, true) : handleLeftGroup({ ...groupe?.dataGroupe, _id: groupe?._id })}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?._id) ? 'Sortir du groupe' : 'Rejoindre le groupe'}</Button>
+                                            <div><TeamOutlined />{' '}{groupe?.dataGroupe?.currentParticipants}/{groupe?.dataGroupe?.maxParticipants}</div>
                                         </div>
                                     </div>
                                 </li>))}

@@ -15,13 +15,13 @@ const DetailGroupeModal = ({ current, visible, ...props }) => {
     return <Modal centered visible={visible} title={`Groupe : ${current?.name}`} onCancel={() => props.onChange(false)} footer={false}>
         {current?.currentParticipants <= 0 ? <h3>Le groupe est actuellement vide</h3> : <List
             itemLayout="horizontal"
-            dataSource={current?.participantsDetails}
+            dataSource={current?.participants}
             renderItem={item => (
                 <List.Item
                     actions={[<Button onClick={() => goToPrivate(item?.data?.id)}>Message privé</Button>]}
                 >
                     <List.Item.Meta
-                        title={`${item?.data?.pseudo} ${current?.owner === item?.data?.id ? "(administrateur)" : ""}`}
+                        title={`${item?.name} ${current?.owner === item?.data?.id ? "(administrateur)" : ""}`}
                     />
                 </List.Item>
             )}
