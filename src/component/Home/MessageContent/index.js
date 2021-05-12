@@ -135,6 +135,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
         }}>
             <div className="tchat-container" ref={tchatHeight}>
                 {_tchat.map((el, index) => (<div key={el?._id} className="content-item-tchat" senderinfo={_tchat[index]?.sender === _tchat[index + 1]?.sender ? '' : `${_tchat[index]?.sender === user?.data?.id ? '' : _tchat[index]?.pseudo !== "Serveur : " ? `${_tchat[index]?.pseudo} • ${moment(_tchat[index]?.timestamp).format('HH:mm')}` : `message automatique (serveur) • ${moment(_tchat[index]?.timestamp).format('HH:mm')}`}`}>
+                    {moment(_tchat[index - 1]?.timestamp).format('DD') !== moment(_tchat[index]?.timestamp).format('DD') ? <div className="content-item-tchat-date"><span>{moment(_tchat[index]?.timestamp).format('DD/MM/YYYY')}</span></div> : <></>}
                     <div key={el?._id} className={`item-message ${user?.data?.id === el?.sender ? 'sender' : 'receiver'}`} >
                         {el?.sender && user?.data?.id !== el?.sender && (
                             <>

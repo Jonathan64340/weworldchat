@@ -62,13 +62,35 @@
 }
 
 .layout-tchat .content-item-tchat::after {
-        content: attr(senderinfo);
-        text-transform: lowercase;
-        font-weight: bold;
-        font-size: small;
-        position: relative;
-        left: 42px;
-        top: -2px;
+    content: attr(senderinfo);
+    text-transform: lowercase;
+    font-weight: bold;
+    font-size: small;
+    position: relative;
+    left: 42px;
+    top: -2px;
+}
+
+.layout-tchat .content-item-tchat-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+    position: relative;
+}
+
+.layout-tchat .content-item-tchat-date span {
+    background: white;
+    z-index: 1;
+    padding: 0 10px;
+}
+
+.layout-tchat .content-item-tchat-date::after {
+    content: '';
+    border-bottom: 1px solid #e4e6eb;
+    position: absolute;
+    width: 100%;
+    bottom: 23px;
 }
 
 .layout-tchat .item-message.receiver .content-avatar {
@@ -143,7 +165,7 @@
     border-radius: 5px 15px 15px 5px !important;
     font-size: 14px;
     padding: 7px;
-} 
+}
 
 .layout-tchat .item-message.receiver .image-render-item.continue.continue-normalize {
     border-radius: 5px 15px 15px 5px !important;
@@ -159,7 +181,7 @@
     padding: 0 7px;
     background: #096dd9;
     color: white;
-} 
+}
 
 .layout-tchat .item-message.sender .image-render-item.continue.continue-normalize {
     padding: 7px 0 7px 0;
@@ -236,7 +258,6 @@
     .layout-tchat .item-message.sender .content-box-message {
         max-width: 60%;
     }
-
     .layout-tchat .item-message.receiver .content-box-message {
         max-width: 60%;
     }
@@ -246,7 +267,6 @@
     .layout-tchat .item-message.sender .content-box-message {
         max-width: 80%;
     }
-
     .layout-tchat .item-message.receiver .content-box-message {
         max-width: 80%;
     }
@@ -269,7 +289,6 @@
     .layout-tchat .item-message.sender .content-box-message {
         max-width: calc(100% - 42px);
     }
-
     .layout-tchat .item-message.receiver .content-box-message {
         max-width: calc(100% - 42px);
     }
@@ -279,7 +298,6 @@
     padding: 0;
     margin: 0;
 }
-
 
 .layout-tchat .item-message.receiver .content-box-message p {
     padding: 0;
