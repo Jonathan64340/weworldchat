@@ -22,7 +22,7 @@ const Login = ({ user, ...props }) => {
     }, [window.socket.id])
 
     const onFinish = values => {
-        setIsLoading(true)
+        setIsLoading(true);
         doLogin({ pseudo: values.pseudo, password: values.password, socketId: window.socket.id })
             .then((data) => {
                 const { error_exception } = data;
@@ -37,22 +37,22 @@ const Login = ({ user, ...props }) => {
                 }
                 if (!error_exception && !user?.data?.id) {
                     setIsLoading(false)
-                    props.dispatch(setLogin({
-                        pseudo: values.pseudo,
-                        statusOnline: data?.statusOnline,
-                        id: data?._id,
-                        socketId: window.socket.id,
-                        defaultColor: `${data?.defaultColor?.r},${data?.defaultColor?.g},${data?.defaultColor.b},${data?.defaultColor?.a}`
-                    }))
-                    window.socket.emit('users', {
-                        pseudo: values.pseudo,
-                        statusOnline: data?.statusOnline,
-                        id: data?._id,
-                        socketId: window.socket.id,
-                    })
                     getSubscribedGroups({ _id: data?._id }).then(async subs => {
                         await props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: null, groupeSubscribed: subs }))
                         await updateGroupSid({ sid: window.socket.id, _id: data?._id })
+                        await props.dispatch(setLogin({
+                            pseudo: values.pseudo,
+                            statusOnline: data?.statusOnline,
+                            id: data?._id,
+                            socketId: window.socket.id,
+                            defaultColor: `${data?.defaultColor?.r},${data?.defaultColor?.g},${data?.defaultColor.b},${data?.defaultColor?.a}`
+                        }));
+                        await window.socket.emit('users', {
+                            pseudo: values.pseudo,
+                            statusOnline: data?.statusOnline,
+                            id: data?._id,
+                            socketId: window.socket.id,
+                        });
                         await props.history.push('/global')
                     })
                 }
