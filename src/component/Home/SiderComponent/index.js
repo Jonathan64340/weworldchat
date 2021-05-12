@@ -169,7 +169,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
             group.currentParticipants++
             props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
             props.history.push(`/group/${group?._id}`)
-            return window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+            return window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'join' });
         }
         if (group.protected && !tchat?.data?.groupeSubscribed.includes(group._id)) {
             if (group.currentParticipants + 1 <= group.maxParticipants) {
@@ -189,7 +189,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                 group.currentParticipants++
                                 props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
                                 props.history.push(`/group/${group?._id}`)
-                                window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+                                window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'join' });
                             } else {
                                 swal({
                                     icon: 'error',
@@ -224,7 +224,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                         group.currentParticipants++
                         props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
                         props.history.push(`/group/${group?._id}`)
-                        window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, id: user?.data?.id, name: user?.data?.name, type: 'join' });
+                        window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'join' });
                     }
                 })
             } else {
@@ -258,7 +258,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                 group.currentParticipants--;
                 props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: prevGroupSubscribed.filter(e => e !== group._id) }))
                 props.history.push(`/global`)
-                window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, id: user?.data?.id, name: user?.data?.name, type: 'left' });
+                window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'left' });
             }
         })
     }
@@ -304,7 +304,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                             </div> : <div className="item__groupe">
                                 <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
                                 <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
-                                <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
+                                <DetailGroupeModal visible={visibleDetailGroupe} onSelectUser={onSelectUser} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
                                 {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.dataGroupe.name.toLowerCase() === el?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
                                     <li className={`item-groupe groupe-${index}`} key={index} >
                                         <div className="groupe-container">
@@ -361,7 +361,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                         </div> : <div className="item__groupe">
                             <Button className="button-create-groupe" icon={<UsergroupAddOutlined />} onClick={() => setVisibleCreateGroupe(true)}>Créer un groupe</Button>
                             <CreateNewGroupeModal visible={visibleCreateGroupe} onChange={onChangeGroupe} onCreate={e => handleJoinGroup(e, true)} owner={{ name: user.data?.name, id: user?.data?.id }} />
-                            <DetailGroupeModal visible={visibleDetailGroupe} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
+                            <DetailGroupeModal visible={visibleDetailGroupe} onSelectUser={onSelectUser} current={currentGroup} onChange={e => setVisibleDetailGroupe(e)} />
                             {typeof groupes !== 'undefined' && (searchQuery.length > 0 ? groupes.filter(el => typeof el?.dataGroupe.name.toLowerCase().match(searchQuery) !== 'undefined' && typeof el?.dataGroupe.name.toLowerCase().match(searchQuery)?.input !== 'undefined' && el?.dataGroupe.name.toLowerCase() === el?.dataGroupe.name.toLowerCase().match(searchQuery).input) : groupes).map((groupe, index) => (
                                 <li className={`item-groupe groupe-${index}`} key={index} >
                                     <div className="groupe-container">

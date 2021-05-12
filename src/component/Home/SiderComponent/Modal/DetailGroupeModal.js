@@ -5,10 +5,12 @@ import { setEnterPrivateTchat } from '../../../../action/tchat/tchat_actions';
 import _ from 'underscore';
 import { withRouter } from 'react-router-dom'
 
-const DetailGroupeModal = ({ current, visible, ...props }) => {
-    const goToPrivate = id => {
-        props.dispatch(setEnterPrivateTchat({ userConversation: id}));
-        props.history.push(`/conversation/${id}`)
+const DetailGroupeModal = ({ current, visible, onSelectUser, ...props }) => {
+    const goToPrivate = ({ id, ...e }) => {
+        if (!id || !e?.data?.sid) return;
+        props.dispatch(setEnterPrivateTchat({ userConversation: id }));
+        props.history.push(`/conversation/${id}`, { socketId: e.data.sid });
+        onSelectUser(e.data?.name);
         props.onChange(false)
     }
 
@@ -18,15 +20,16 @@ const DetailGroupeModal = ({ current, visible, ...props }) => {
             dataSource={current?.participants}
             renderItem={item => (
                 <List.Item
-                    actions={[<Button onClick={() => goToPrivate(item?.data?.id)}>Message privé</Button>]}
+                    actions={[<Button onClick={() => goToPrivate(current?.owner === item?._id ? ({ id: item?._id, data: { ...item } }) : false)} type="primary">{current?.owner === item?._id ? "Message privé" : ""}</Button>]
+                    }
                 >
                     <List.Item.Meta
-                        title={`${item?.name} ${current?.owner === item?.data?.id ? "(administrateur)" : ""}`}
+                        title={`${item?.name} ${current?.owner === item?._id ? "(administrateur)" : ""}`}
                     />
-                </List.Item>
+                </List.Item >
             )}
         />}
-    </Modal>
+    </Modal >
 }
 
 const mapDispatchToProps = dispatch => ({ dispatch })

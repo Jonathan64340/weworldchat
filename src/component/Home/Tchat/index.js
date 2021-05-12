@@ -61,6 +61,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
     }, [user.data.id, tchat])
 
     const handleTyping = () => {
+        console.log(store.getState().tchat?.data?.userConversation)
         if (!messageTyping) {
             const tmpValues = {
                 ...((!props?.match?.url === "/group" || !props?.match?.url === "/global") && { usersContaints: `${props.privateId}:${user.data.id}` }),

@@ -7,8 +7,9 @@ import { Helmet } from "react-helmet";
 import Footer from '../Footer'
 import './Login.css'
 import { setLogin } from '../../action/authentication/authentication_actions';
-import { doLogin } from '../../endpoints';
+import { doLogin, getSubscribedGroups, updateGroupSid } from '../../endpoints';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { setEnterGroupDiscussion } from '../../action/tchat/tchat_actions';
 
 const Login = ({ user, ...props }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -16,17 +17,9 @@ const Login = ({ user, ...props }) => {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        window.io(`${process.env.REACT_APP_ENDPOINT}`, { "forceBase64": 1 })
-
-        window.socket.on('ready', (data) => {
-            setSocket(data);
-        })
-
-        if (window.socket.disconnected) {
-            window.socket.connect(process.env.REACT_APP_ENDPOINT)
-            setSocket(true)
-        }
-    }, [])
+        setSocket(true);
+        // eslint-disable-next-line
+    }, [window.socket.id])
 
     const onFinish = values => {
         setIsLoading(true)
@@ -57,7 +50,11 @@ const Login = ({ user, ...props }) => {
                         id: data?._id,
                         socketId: window.socket.id,
                     })
-                    props.history.push('/global')
+                    getSubscribedGroups({ _id: data?._id }).then(async subs => {
+                        await props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: null, groupeSubscribed: subs }))
+                        await updateGroupSid({ sid: window.socket.id, _id: data?._id })
+                        await props.history.push('/global')
+                    })
                 }
             })
             .catch(err => { setIsLoading(false) })

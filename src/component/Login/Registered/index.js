@@ -7,7 +7,7 @@ import { Helmet } from "react-helmet";
 import Footer from '../../Footer'
 import '../Login.css'
 import { setLogin } from '../../../action/authentication/authentication_actions';
-import {  doRegister } from '../../../endpoints';
+import { doRegister } from '../../../endpoints';
 import { GithubPicker } from 'react-color'
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 
@@ -24,11 +24,9 @@ const Registered = ({ user, ...props }) => {
     const [displayColor, setDisplayColor] = useState(false);
 
     useEffect(() => {
-        window.io(`${process.env.REACT_APP_ENDPOINT}`, { "forceBase64": 1 })
-        window.socket.on('ready', (data) => {
-            setSocket(data);
-        })
-    }, [])
+        setSocket(true);
+        // eslint-disable-next-line
+    }, [window.socket.id])
 
     const onFinish = values => {
         setIsLoading(true)

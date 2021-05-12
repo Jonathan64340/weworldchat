@@ -48,3 +48,17 @@ export function getParticipantsFromGroup(data) {
         .then(({ data }) => data)
         .catch(err => new Error(err))
 }
+
+export function getSubscribedGroups(data) {
+    return axios
+        .post(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/subscribedGroups`, data)
+        .then(({ data }) => data)
+        .catch(err => new Error(err))
+}
+
+export function updateGroupSid(data) {
+    return axios
+        .post(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/updateSidFromGroupe`, data)
+        .then(({ data }) => data)
+        .catch(err => new Error(err))
+}
