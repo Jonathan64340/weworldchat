@@ -46,7 +46,7 @@ const HeaderLayout = ({ user, ...props }) => {
     const menu = (
         <Menu className="dropdown-menu-title">
             <div className="option"><span>{user?.data?.name}</span>
-                <Button size="small" onClick={() => setVisible(true)}><SettingFilled /></Button>
+                <Button size="small" onClick={() => props.history.push('/profile')}><SettingFilled /></Button>
             </div>
             <Menu.Item>
                 <Button onClick={handleLogout}>Se déconnecter</Button>
@@ -79,7 +79,7 @@ const HeaderLayout = ({ user, ...props }) => {
             </fieldset>
         </Modal>
         <Header className="nav-bar-header">
-            <Link to="#/"><img src={`${process.env.PUBLIC_URL}/home-logo.png`} alt="logo" style={{ width: 45, position: 'absolute', top: '11px' }} /></Link>
+            <Link to="/global"><img src={`${process.env.PUBLIC_URL}/home-logo.png`} alt="logo" style={{ width: 45, position: 'absolute', top: '11px' }} /></Link>
             {user?.data?.isLogged && <div className="user-action">
                 <Dropdown overlay={menu} arrow trigger={['click']}>
                     <Avatar size="large" style={{ background: 'rgba(' + user?.data?.defaultColor + ')', textTransform: 'uppercase' }}>

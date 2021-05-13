@@ -16,6 +16,7 @@ import Home from '../Home';
 import Loader from '../Loader/Loader';
 import PasswordRecovered from '../Login/PasswordRecovered';
 import Registered from '../Login/Registered';
+import Profile from '../Profile';
 
 const App = ({ user }) => {
     return (
@@ -28,6 +29,7 @@ const App = ({ user }) => {
                         <Route path="/recovered" exact component={PasswordRecovered} />
                         <Route path="/register" exact component={Registered} />
                         {!user?.data?.isLogged && <Redirect to="/login" />}
+                        <Route path="/profile" exact component={Profile} />
                         <Route path="/global" exact component={Home} />
                         <Route path="/conversation/:id" exact component={Home} />
                         <Route path="/group/:id" exact component={Home} />

@@ -1,0 +1,64 @@
+.profile-container {
+    background: #fff;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.profile-container .information, .parametre, .rgpd {
+    flex-basis: 50%;
+    flex-grow: 0;
+    padding: 50px 100px;
+}
+
+.profile-container .information .info-list {
+    padding-top: 20px;
+    margin-bottom: -20px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.profile-container .information .info-list .untouched {
+    background: #f7f7f7;
+    padding: 5px 8px;
+    border-radius: 3px;
+}
+
+.profile-container .avatar-container {
+    display: flex;
+    align-items: center;
+}
+
+.profile-container .avatar-container .avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: chocolate;
+    margin-right: 20px;
+}
+
+.profile-container .parametre .info-list {
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.profile-container .parametre .info-list .status, .langue {
+    display: inline-flex;
+    align-items: center;
+}
+
+.profile-container .parametre .info-list .status span, .langue span {
+    margin-right: 10px;
+}
+
+.profile-container .parametre .info-list button {
+    display: block;
+}
+
+.profile-container .delete-profile button {
+    display: block;
+}

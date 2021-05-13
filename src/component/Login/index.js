@@ -36,7 +36,6 @@ const Login = ({ user, ...props }) => {
                     ])
                 }
                 if (!error_exception && !user?.data?.id) {
-                    setIsLoading(false)
                     getSubscribedGroups({ _id: data?._id }).then(async subs => {
                         await props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: null, groupeSubscribed: subs }))
                         await updateGroupSid({ sid: window.socket.id, _id: data?._id })
@@ -45,7 +44,9 @@ const Login = ({ user, ...props }) => {
                             statusOnline: data?.statusOnline,
                             id: data?._id,
                             socketId: window.socket.id,
-                            defaultColor: `${data?.defaultColor?.r},${data?.defaultColor?.g},${data?.defaultColor.b},${data?.defaultColor?.a}`
+                            defaultColor: `${data?.defaultColor?.r},${data?.defaultColor?.g},${data?.defaultColor.b},${data?.defaultColor?.a}`,
+                            email: data?.email,
+                            registerDate: data?.registerDate
                         }));
                         await window.socket.emit('users', {
                             pseudo: values.pseudo,
@@ -53,6 +54,7 @@ const Login = ({ user, ...props }) => {
                             id: data?._id,
                             socketId: window.socket.id,
                         });
+                        setIsLoading(false);
                         await props.history.push('/global')
                     })
                 }

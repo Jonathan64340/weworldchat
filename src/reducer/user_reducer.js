@@ -10,7 +10,9 @@ const user = (state = { isAdmin: false }, action) => {
                     name: action.payload.pseudo,
                     statusOnline: action.payload.statusOnline,
                     defaultColor: action.payload.defaultColor,
-                    isLogged: true
+                    isLogged: true,
+                    email: action.payload.email,
+                    registerDate: action.payload.registerDate
                 }
             }
 
@@ -30,7 +32,9 @@ const user = (state = { isAdmin: false }, action) => {
                     id: undefined,
                     name: null,
                     statusOnline: null,
-                    isLogged: false
+                    isLogged: false,
+                    email: null,
+                    registerDate: null
                 }
             }
 

@@ -36,7 +36,8 @@ const Registered = ({ user, ...props }) => {
             email: values.email,
             defaultColor: defaultColor,
             socketId: window.socket.id,
-            statusOnline: 'online'
+            statusOnline: 'online',
+            registerDate: new Date().getTime()
         })
             .then((data) => {
                 const { error_exception } = data;
@@ -51,7 +52,14 @@ const Registered = ({ user, ...props }) => {
                 }
                 if (!error_exception && !user?.data?.id) {
                     setIsLoading(false)
-                    props.dispatch(setLogin({ pseudo: values.pseudo, statusOnline: 'online', id: window.socket.id, defaultColor: `${defaultColor.r},${defaultColor.g},${defaultColor.b},${defaultColor.a}` }))
+                    props.dispatch(setLogin({ 
+                        pseudo: values.pseudo,
+                         statusOnline: 'online', 
+                         id: window.socket.id,
+                          defaultColor: `${defaultColor.r},${defaultColor.g},${defaultColor.b},${defaultColor.a}`,
+                          email: values.email,
+                          registerDate: new Date().getTime()
+                         }))
                     window.socket.emit('users', {
                         pseudo: values.pseudo,
                         statusOnline: 'online',
