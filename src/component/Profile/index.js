@@ -16,11 +16,23 @@ const Profile = ({ user, ...props }) => {
             title: 'Attention',
             text: 'Cette action est irréversible, souhaitez-vous vraiment continuer ?',
             icon: 'info',
-            buttons: [{
-                text: 'Annuler'
-            }, {
-                text: 'Contiuner'
-            }]
+            closeOnClickOutside: false,
+            buttons: {
+                cancel: {
+                    text: "Annuler",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: true,
+                },
+                confirm: {
+                    text: "Confirmer",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: true
+                }
+            }
         }).then(async confirm => {
             if (confirm) {
                 await deleteAccount({ id: user?.data?.id });
@@ -67,7 +79,7 @@ const Profile = ({ user, ...props }) => {
         <div className="rgpd">
             <h2>RGPD</h2>
             <div className="delete-profile">
-                <span>Vous souhaitez ne plus faire partie de l'application WeWolrdChat ?</span>
+                <span>Vous souhaitez ne plus faire partie de l'application WeWorldChat ?</span>
                 <Button type="primary" danger onClick={() => handleDeleteAccount()}>Supprimer mon compte</Button>
             </div>
         </div>
