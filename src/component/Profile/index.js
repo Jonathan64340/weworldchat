@@ -47,7 +47,7 @@ const Profile = ({ user, ...props }) => {
                     Pseudo : <span className="untouched">{user?.data?.name}</span>
                 </div>
                 <div>
-                    Inscrit depuis le : <span className="untouched">{user?.data?.registerDate && new Date(user?.data?.registerDate).toLocaleDateString('fr')}</span>
+                    Inscrit depuis le : <span className="untouched">{user?.data?.registerDate && new Date(user?.data?.registerDate).toLocaleDateString('fr', { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
             </div>
         </div>
