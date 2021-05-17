@@ -120,7 +120,7 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
     let sizeOfImage = 99999999999999;
 
     const uploadImage = async data => {
-        if (data.type === 'image/png' || data.type === 'image/jpeg' || data.type === 'image/webp') {
+        if (data.type === 'image/png' || data.type === 'image/jpeg' || data.type === 'image/webp' || data.type === 'image/gif') {
             const reader = new FileReader();
             reader.onloadend = () => {
                 handleSubmit(null, reader.result)

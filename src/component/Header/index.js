@@ -22,7 +22,7 @@ const HeaderLayout = ({ user, ...props }) => {
         props.dispatch(setLogout())
         props.dispatch(setEnterPrivateTchat({ userConversation: undefined }))
         props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: undefined }))
-        // window.socket.disconnect()
+        window.socket.disconnect()
         props.history.push('/login')
     }
 
