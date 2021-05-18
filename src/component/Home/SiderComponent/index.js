@@ -166,13 +166,13 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
         if (group.context === 'create' && create) {
             let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
             prevGroupSubscribed.push(group?._id)
-            group.currentParticipants++
+            group.currentParticipants = group.participants.length + 1
             props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
             props.history.push(`/group/${group?._id}`)
             return window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'join' });
         }
         if (group.protected && !tchat?.data?.groupeSubscribed.includes(group._id)) {
-            if (group.currentParticipants + 1 <= group.maxParticipants) {
+            if (group.participants.length + 1 <= group.maxParticipants) {
                 return swal({
                     title: 'Protection du groupe',
                     icon: 'warning',
@@ -186,7 +186,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                             if (status === 'OK') {
                                 let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
                                 prevGroupSubscribed.push(group?._id)
-                                group.currentParticipants++
+                                group.currentParticipants = group.participants.length + 1
                                 props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
                                 props.history.push(`/group/${group?._id}`)
                                 window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'join' });
@@ -210,7 +210,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
             }
         }
         if (create) {
-            if (group.currentParticipants + 1 <= group.maxParticipants) {
+            if (group.participants.length + 1 <= group.maxParticipants) {
                 swal({
                     title: `Rejoindre un groupe`,
                     text: `Souhaitez-vous vraiment rejoindre le groupe : ${group?.name} ?`,
@@ -221,7 +221,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                     if (choice) {
                         let prevGroupSubscribed = tchat?.data?.groupeSubscribed || [];
                         prevGroupSubscribed.push(group?._id)
-                        group.currentParticipants++
+                        group.currentParticipants = group.participants.length + 1
                         props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
                         props.history.push(`/group/${group?._id}`)
                         window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'join' });
@@ -255,7 +255,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
         }).then(choice => {
             if (choice) {
                 let prevGroupSubscribed = tchat?.data?.groupeSubscribed;
-                group.currentParticipants--;
+                group.currentParticipants = group.participants.length - 1;
                 props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: prevGroupSubscribed.filter(e => e !== group._id) }))
                 props.history.push(`/global`)
                 window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'left' });
@@ -317,7 +317,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                             </div>
                                             <div className="groupe-available-space">
                                                 <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?._id) ? handleJoinGroup({ ...groupe?.dataGroupe, _id: groupe?._id }, true) : handleLeftGroup({ ...groupe?.dataGroupe, _id: groupe?._id })}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?._id) ? 'Sortir du groupe' : 'Rejoindre le groupe'}</Button>
-                                                <div><TeamOutlined />{' '}{groupe?.dataGroupe?.currentParticipants}/{groupe?.dataGroupe?.maxParticipants}</div>
+                                                <div><TeamOutlined />{' '}{groupe?.dataGroupe?.participants.length}/{groupe?.dataGroupe?.maxParticipants}</div>
                                             </div>
                                         </div>
                                     </li>))}
@@ -374,7 +374,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                         </div>
                                         <div className="groupe-available-space">
                                             <Button size="small" icon={<LoginOutlined />} onClick={() => !tchat?.data?.groupeSubscribed || !tchat?.data?.groupeSubscribed.includes(groupe?._id) ? handleJoinGroup({ ...groupe?.dataGroupe, _id: groupe?._id }, true) : handleLeftGroup({ ...groupe?.dataGroupe, _id: groupe?._id })}>{tchat?.data?.groupeSubscribed && tchat?.data?.groupeSubscribed.includes(groupe?._id) ? 'Sortir du groupe' : 'Rejoindre le groupe'}</Button>
-                                            <div><TeamOutlined />{' '}{groupe?.dataGroupe?.currentParticipants}/{groupe?.dataGroupe?.maxParticipants}</div>
+                                            <div><TeamOutlined />{' '}{groupe?.dataGroupe?.participants.length}/{groupe?.dataGroupe?.maxParticipants}</div>
                                         </div>
                                     </div>
                                 </li>))}
