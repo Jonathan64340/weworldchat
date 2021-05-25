@@ -138,8 +138,6 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
                     uploadImage(res);
                 } else {
                     setUploadImage('done')
-                    handleSubmit(null, reader.result)
-                    setOpenEmoji(false)
                     reader.readAsDataURL(res)
                 }
                 sizeOfImage = (res.size / 1024).toFixed(0);
