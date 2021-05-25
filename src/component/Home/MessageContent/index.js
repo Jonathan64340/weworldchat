@@ -48,6 +48,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
                 }
             }
         })
+        // eslint-disable-next-line
     }, [_tchat])
 
     const pagination = (num, global, privateId) => {
