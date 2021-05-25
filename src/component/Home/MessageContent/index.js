@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Layout, Avatar, Tooltip, Button } from 'antd';
 import { connect } from 'react-redux';
-import { getGlobalTchat, getGroupeTchat, getPrivateTchat } from '../../../endpoints';
+import { getGlobalTchat, getGroupeTchat, getPrivateTchat, getUserAvatar } from '../../../endpoints';
 import { withRouter } from 'react-router-dom';
 import _ from 'underscore';
 import moment from 'moment';
@@ -20,6 +20,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
     const [listenListTchatGroup, setListenListTchatGroup] = useState([]);
     const [reloadPagination, setReloadPagination] = useState(false);
     const [openedPicture, setOpenedPicture] = useState({});
+    const [userAvatar, setUserAvatar] = useState({});
     const messages = useRef();
     const tchatHeight = useRef();
     useEffect(() => {
@@ -32,6 +33,21 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
         for (let video of videoCustom) {
             video.parentNode.parentNode.style.background = 'transparent'
         }
+
+        let tmpUser = [];
+
+        _tchat.forEach(async t => {
+            if (typeof userAvatar[t.sender] === 'undefined' && t.sender !== 'SERVER' && t.sender !== user?.data?.id) {
+                if(!tmpUser.includes(t.sender)) {
+                    console.log(t.sender)
+                    await getUserAvatar(t.sender)
+                    .then(res => {
+                        setUserAvatar(u => ({ ...u, ...{ [t.sender]: res.avatar } }));
+                        tmpUser.push(t.sender);
+                    })
+                }
+            }
+        })
     }, [_tchat])
 
     const pagination = (num, global, privateId) => {
@@ -141,7 +157,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
                             <>
                                 {_tchat[index]?.sender !== _tchat[index + 1]?.sender &&
                                     <div className="content-avatar">
-                                        <Avatar size="small" src={el?.avatarUrl ? el?.avatarUrl[0] : ""} style={{ background: el?.defaultColor ? 'rgba(' + el?.defaultColor + ')' : 'rgb(0, 21, 41)', textTransform: "uppercase" }}>
+                                        <Avatar size="small" src={userAvatar[el?.sender] ? userAvatar[el?.sender] : ""} style={{ background: el?.defaultColor ? 'rgba(' + el?.defaultColor + ')' : 'rgb(0, 21, 41)', textTransform: "uppercase" }}>
                                             {el?.pseudo.length > 1 ? el?.pseudo.substring(0, el?.pseudo.length - (el?.pseudo.length - 1)) : el?.pseudo}
                                         </Avatar>
                                     </div>

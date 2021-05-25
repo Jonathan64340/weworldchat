@@ -62,3 +62,10 @@ export function updateGroupSid(data) {
         .then(({ data }) => data)
         .catch(err => new Error(err))
 }
+
+export function getUserAvatar(id) {
+    return axios
+        .get(`${process.env.REACT_APP_HOSTNAME || process.env.REACT_APP_ENDPOINT}/userAvatar/${id}`)
+        .then(({ data }) => data)
+        .catch(err => new Error(err))
+}
