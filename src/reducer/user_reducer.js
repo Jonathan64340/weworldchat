@@ -12,7 +12,8 @@ const user = (state = { isAdmin: false }, action) => {
                     defaultColor: action.payload.defaultColor,
                     isLogged: true,
                     email: action.payload.email,
-                    registerDate: action.payload.registerDate
+                    registerDate: action.payload.registerDate,
+                    ...(action.payload.avatar && { avatar: action.payload.avatar })
                 }
             }
 
@@ -21,7 +22,8 @@ const user = (state = { isAdmin: false }, action) => {
                 ...state,
                 data: {
                     ...state.data,
-                    statusOnline: action.payload.statusOnline
+                    ...(action.payload.statusOnline && { statusOnline: action.payload.statusOnline }),
+                    ...(action.payload.avatar && { avatar: action.payload.avatar })
                 }
             }
         }

@@ -61,7 +61,6 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
     }, [user.data.id, tchat])
 
     const handleTyping = () => {
-        console.log(store.getState().tchat?.data?.userConversation)
         if (!messageTyping) {
             const tmpValues = {
                 ...((!props?.match?.url === "/group" || !props?.match?.url === "/global") && { usersContaints: `${props.privateId}:${user.data.id}` }),
@@ -139,6 +138,8 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
                     uploadImage(res);
                 } else {
                     setUploadImage('done')
+                    handleSubmit(null, reader.result)
+                    setOpenEmoji(false)
                     reader.readAsDataURL(res)
                 }
                 sizeOfImage = (res.size / 1024).toFixed(0);

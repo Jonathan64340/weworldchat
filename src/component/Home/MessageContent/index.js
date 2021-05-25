@@ -141,7 +141,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
                             <>
                                 {_tchat[index]?.sender !== _tchat[index + 1]?.sender &&
                                     <div className="content-avatar">
-                                        <Avatar size="small" style={{ background: el?.defaultColor ? 'rgba(' + el?.defaultColor + ')' : 'rgb(0, 21, 41)', textTransform: "uppercase" }}>
+                                        <Avatar size="small" src={el?.avatarUrl ? el?.avatarUrl[0] : ""} style={{ background: el?.defaultColor ? 'rgba(' + el?.defaultColor + ')' : 'rgb(0, 21, 41)', textTransform: "uppercase" }}>
                                             {el?.pseudo.length > 1 ? el?.pseudo.substring(0, el?.pseudo.length - (el?.pseudo.length - 1)) : el?.pseudo}
                                         </Avatar>
                                     </div>

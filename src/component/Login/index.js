@@ -47,7 +47,8 @@ const Login = ({ user, ...props }) => {
                             socketId: window.socket.id,
                             defaultColor: `${data?.defaultColor?.r},${data?.defaultColor?.g},${data?.defaultColor.b},${data?.defaultColor?.a}`,
                             email: data?.email,
-                            registerDate: data?.registerDate
+                            registerDate: data?.registerDate,
+                            ...(data.avatar && { avatar: data.avatar })
                         }));
                         await window.socket.emit('users', {
                             pseudo: values.pseudo,

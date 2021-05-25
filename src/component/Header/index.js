@@ -82,7 +82,7 @@ const HeaderLayout = ({ user, ...props }) => {
             <Link to="/global"><img src={`${process.env.PUBLIC_URL}/home-logo.png`} alt="logo" style={{ width: 45, position: 'absolute', top: '11px' }} /></Link>
             {user?.data?.isLogged && <div className="user-action">
                 <Dropdown overlay={menu} arrow trigger={['click']}>
-                    <Avatar size="large" style={{ background: 'rgba(' + user?.data?.defaultColor + ')', textTransform: 'uppercase' }}>
+                    <Avatar size="large" src={user?.data?.avatar || ""} style={{ background: 'rgba(' + user?.data?.defaultColor + ')', textTransform: 'uppercase' }}>
                         {user?.data?.name?.length > 1 ? user.data.name.substring(0, user.data.name.length - (user.data.name.length - 1)) : user.data.name}
                     </Avatar>
                 </Dropdown>
