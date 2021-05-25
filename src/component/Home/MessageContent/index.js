@@ -39,7 +39,6 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
         _tchat.forEach(async t => {
             if (typeof userAvatar[t.sender] === 'undefined' && t.sender !== 'SERVER' && t.sender !== user?.data?.id) {
                 if(!tmpUser.includes(t.sender)) {
-                    console.log(t.sender)
                     await getUserAvatar(t.sender)
                     .then(res => {
                         setUserAvatar(u => ({ ...u, ...{ [t.sender]: res.avatar } }));
