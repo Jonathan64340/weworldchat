@@ -13,7 +13,7 @@ import imageCompression from 'browser-image-compression';
 const Profile = ({ user, ...props }) => {
     const [_uploadImage, setUploadImage] = useState(undefined);
     let sizeOfImage = 99999999999999;
-    console.log(user)
+
     const handleDeleteAccount = () => {
         swal({
             title: 'Attention',
@@ -38,8 +38,10 @@ const Profile = ({ user, ...props }) => {
             }
         }).then(async confirm => {
             if (confirm) {
-                await deleteAccount({ id: user?.data?.id });
+                await window.socket.emit('user-disconnect')
+                await window.socket.disconnect()
                 await props.dispatch(setLogout());
+                await deleteAccount({ id: user?.data?.id });
                 await props.history.push('/login', { remerciement: true });
             }
         })
@@ -67,7 +69,7 @@ const Profile = ({ user, ...props }) => {
     }, [_uploadImage])
 
     const handleSubmit = (values, imageBase64) => {
-        props.dispatch(setUserUpdate({ id: user?.data?.id, avatar: imageBase64}));
+        props.dispatch(setUserUpdate({ id: user?.data?.id, avatar: imageBase64 }));
         window.socket.emit('user-change-profile', { id: user?.data?.id, avatar: imageBase64 })
     }
 
