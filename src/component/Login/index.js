@@ -18,6 +18,7 @@ const Login = ({ user, ...props }) => {
 
     useEffect(() => {
         setSocket(true);
+        typeof window.socket.id === 'undefined' && window.socket.connect()
     }, [])
 
     const onFinish = values => {

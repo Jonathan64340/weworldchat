@@ -18,7 +18,6 @@ const HeaderLayout = ({ user, ...props }) => {
     const [status, setStatus] = useState(user.data?.statusOnline)
 
     const handleLogout = () => {
-        window.socket.emit('user-disconnect')
         props.dispatch(setLogout())
         props.dispatch(setEnterPrivateTchat({ userConversation: undefined }))
         props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: undefined }))
