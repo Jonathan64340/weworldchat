@@ -18,8 +18,6 @@ const Login = ({ user, ...props }) => {
 
     useEffect(() => {
         setSocket(true);
-        // eslint-disable-next-line
-        typeof window.socket.id === 'undefined' && window.socket.connect()
     }, [])
 
     const onFinish = values => {
