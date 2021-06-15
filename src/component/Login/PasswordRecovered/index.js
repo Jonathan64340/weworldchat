@@ -1,18 +1,61 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import _ from 'underscore';
-import { Form, Button, Input } from 'antd';
+import { Form, Button, Input, notification } from 'antd';
 import { Helmet } from "react-helmet";
 import Footer from '../../Footer'
-import { UserOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { requestResetPassword, resetPassword } from '../../../endpoints';
 
 const PasswordRecovered = ({ user, ...props }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
+    const [token, setToken] = useState(null);
+
+    useEffect(() => {
+        if (props.location.search.split('?token=')) {
+            return setToken(props.location.search.split('?token=')[1])
+        }
+    }, [props.location.search])
 
     const onFinish = values => {
         setIsLoading(true)
+
+        if (token) {
+            return resetPassword({ ...values, token })
+                .then(() => {
+                    notification.success({
+                        message: 'Félicitation ! Votre mot de passe à bien été mis à jour',
+                        onClose: () => props.history.push('/login'),
+                        duration: 3000
+                    })
+                    setIsLoading(false)
+                })
+                .catch(() => {
+                    notification.error({
+                        message: 'Ooops ! Une erreur s\'est produite lors de la mise à jour de votre mot de passe.',
+                        duration: 3000
+                    })
+                    setIsLoading(false)
+                })
+        }
+
+        return requestResetPassword(values)
+            .then(() => {
+                notification.success({
+                    message: 'Félicitation ! Votre mot lien de réinitialisation arrive sur votre boîte mail !',
+                    duration: 3000
+                })
+                setIsLoading(false);
+            })
+            .catch(() => {
+                notification.error({
+                    message: 'Ooops ! Il semblerait que cet email n\'est pas enregistré sur le chat...',
+                    duration: 3000
+                })
+                setIsLoading(false);
+            })
     }
 
     return (<>
@@ -28,9 +71,11 @@ const PasswordRecovered = ({ user, ...props }) => {
                 <span className="title-form">WE WORLD TCHAT</span>
                 <small className="title-form">Discutez avec vos amis, et le monde</small>
                 <Form className="layout-login-form" onFinish={onFinish} form={form} style={{ display: 'flex' }}>
-                    <Form.Item name="pseudo" rules={[{ required: true, message: "Le pseudo n'est pas valide" }]} >
+                    {props.location.search.substring(1, 6) === 'token' ? <Form.Item name="password" rules={[{ required: true, message: 'Veuillez saisir un mot de passe' }]}>
+                        <Input type="password" prefix={<LockOutlined />} autoFocus placeholder="Saisissez votre nouveau mot de passe" allowClear={true} />
+                    </Form.Item> : <Form.Item name="email" rules={[{ required: true, message: "Le pseudo n'est pas valide" }]} >
                         <Input prefix={<UserOutlined />} type="text" autoFocus placeholder="Entrez votre email" allowClear={true} />
-                    </Form.Item>
+                    </Form.Item>}
                     <Button htmlType="submit" loading={isLoading} type="primary">Réinitialiser</Button>
                     <div>
                         {/* eslint-disable-next-line */}
