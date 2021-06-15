@@ -23,7 +23,7 @@ const user = (state = { isAdmin: false }, action) => {
                 data: {
                     ...state.data,
                     ...(action.payload.statusOnline && { statusOnline: action.payload.statusOnline }),
-                    ...(action.payload.avatar && { avatar: action.payload.avatar })
+                    avatar: action.payload.avatar
                 }
             }
         }

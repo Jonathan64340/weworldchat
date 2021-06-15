@@ -31,6 +31,19 @@
     align-items: center;
 }
 
+.profile-container .avatar-container .btn-change-image {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-container .avatar-container .btn-change-image .ant-btn-danger {
+    margin-top: 5px;
+}
+
+.profile-container .avatar-container .upload-image .ant-upload-list {
+    display: none;
+}
+
 .profile-container .avatar-container .avatar-preview {
     width: 100px;
     height: 100px;

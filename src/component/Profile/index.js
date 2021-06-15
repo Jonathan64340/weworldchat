@@ -106,6 +106,10 @@ const Profile = ({ user, ...props }) => {
         return Upload.LIST_IGNORE;
     }
 
+    const deleteProfilePicture = () => {
+        handleSubmit(null);
+    }
+
     return <div className="profile-container">
         <div className="information">
             <h2>Mon profil</h2>
@@ -113,9 +117,12 @@ const Profile = ({ user, ...props }) => {
                 <Avatar size="large" src={user?.data?.avatar || ""} style={{ background: 'rgba(' + user?.data?.defaultColor + ')', textTransform: 'uppercase' }} className="avatar-preview">
                     {user?.data?.name?.length > 1 ? user.data.name.substring(0, user.data.name.length - (user.data.name.length - 1)) : user.data.name}
                 </Avatar>
-                <Upload className="upload-image" beforeUpload={uploadImage} accept="image/png, image/jpeg, image/webp">
-                    <Button type="primary">Changer photo de profil</Button>
-                </Upload>
+                <div className="btn-change-image">
+                    <Upload className="upload-image" beforeUpload={uploadImage} accept="image/png, image/jpeg, image/webp">
+                        <Button type="primary">Changer photo de profil</Button>
+                    </Upload>
+                    {user?.data?.avatar && <Button type="danger" onClick={() => deleteProfilePicture()}>Supprimer photo de profil</Button>}
+                </div>
             </div>
             <div className="info-list">
                 <div>
