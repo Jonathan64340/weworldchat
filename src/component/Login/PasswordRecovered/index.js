@@ -24,7 +24,14 @@ const PasswordRecovered = ({ user, ...props }) => {
 
         if (token) {
             return resetPassword({ ...values, token })
-                .then(() => {
+                .then((e) => {
+                    if (e === 'error') {
+                        notification.error({
+                            message: 'Ooops ! Une erreur s\'est produite lors de la mise à jour de votre mot de passe.',
+                            duration: 3000
+                        })
+                        return setIsLoading(false)
+                    }
                     notification.success({
                         message: 'Félicitation ! Votre mot de passe à bien été mis à jour',
                         onClose: () => props.history.push('/login'),
@@ -42,16 +49,16 @@ const PasswordRecovered = ({ user, ...props }) => {
         }
 
         return requestResetPassword(values)
-            .then(() => {
+            .then((e) => {
+                if (e === 'error') {
+                    notification.error({
+                        message: 'Ooops ! Il semblerait que cet email n\'est pas enregistré sur le chat...',
+                        duration: 3000
+                    })
+                    return setIsLoading(false);
+                }
                 notification.success({
                     message: 'Félicitation ! Votre mot lien de réinitialisation arrive sur votre boîte mail !',
-                    duration: 3000
-                })
-                setIsLoading(false);
-            })
-            .catch(() => {
-                notification.error({
-                    message: 'Ooops ! Il semblerait que cet email n\'est pas enregistré sur le chat...',
                     duration: 3000
                 })
                 setIsLoading(false);
