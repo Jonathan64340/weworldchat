@@ -22,8 +22,8 @@ const user = (state = { isAdmin: false }, action) => {
                 ...state,
                 data: {
                     ...state.data,
-                    ...(action.payload.statusOnline && { statusOnline: action.payload.statusOnline }),
-                    avatar: action.payload.avatar
+                    avatar: action.payload.avatar,
+                    ...(action.payload.statusOnline && { statusOnline: action.payload.statusOnline, ...(state.data.avatar && { avatar: state.data.avatar }) })
                 }
             }
         }
