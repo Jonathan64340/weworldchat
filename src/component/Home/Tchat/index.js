@@ -92,7 +92,13 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
         form.resetFields()
         inputElement.current.focus()
         setOpenEmoji(false)
-        return window.socket.emit(props?.match?.url?.match('group') !== null ? props?.match?.params?.id : props.privateId ? 'send-message' : 'send-message-global', tmpValues);
+        if (props?.match?.url?.match('group')) {
+            console.log('envoyé sur groupe')
+            return window.socket.emit('group', { data: { ...tmpValues, title: tchat?.data?.currentGroupDiscussion?.name }, groupId: props?.match?.params?.id })
+        } else {
+            console.log('envoyé sur privé')
+            return window.socket.emit(props.privateId ? 'send-message' : 'send-message-global', tmpValues);
+        }
     }
 
     const addEmojiOnField = emoji => {
@@ -105,7 +111,6 @@ const Tchat = ({ user, tchat, viewTchat, isMobile, currentInterlocUser, ...props
             let prevGroupSubscribed = tchat?.data?.groupeSubscribed;
             props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: prevGroupSubscribed }))
             props.history.push('/global');
-            window.socket.off(props.match.params.id);
         } else {
             props.dispatch(setEnterPrivateTchat({ ...tchat, userConversation: undefined }));
             props.history.push('/global');

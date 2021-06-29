@@ -58,7 +58,7 @@ const PasswordRecovered = ({ user, ...props }) => {
                     return setIsLoading(false);
                 }
                 notification.success({
-                    message: 'Félicitation ! Votre mot lien de réinitialisation arrive sur votre boîte mail !',
+                    message: 'Félicitation ! Votre lien de réinitialisation arrive sur votre boîte mail !',
                     duration: 3000
                 })
                 setIsLoading(false);

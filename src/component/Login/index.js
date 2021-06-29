@@ -10,6 +10,7 @@ import { setLogin } from '../../action/authentication/authentication_actions';
 import { doLogin, getSubscribedGroups, updateGroupSid } from '../../endpoints';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { setEnterGroupDiscussion } from '../../action/tchat/tchat_actions';
+import { Notification } from '../Notification';
 
 const Login = ({ user, ...props }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -56,6 +57,25 @@ const Login = ({ user, ...props }) => {
                             socketId: window.socket.id,
                         });
                         setIsLoading(false);
+                        if (subs.length > 0) {
+                            const goToPrivate = (id) => {
+                                props.history.push(`/group/${id}`)
+                            }
+                            subs.forEach(sub => {
+                                window.socket.on(sub, (data) => {
+                                    const url = window.location.href.split('/group');
+                                    if (url) {
+                                        if (url[1]) {
+                                            if (url[1].substring(1) !== data?.destination) {
+                                                Notification(data, goToPrivate, user, 'group');
+                                            }
+                                        } else {
+                                            Notification(data, goToPrivate, user, 'group');
+                                        }
+                                    }
+                                })
+                            })
+                        }
                         await props.history.push('/global')
                     })
                 }

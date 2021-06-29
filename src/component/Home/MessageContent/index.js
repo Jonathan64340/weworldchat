@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Layout, Avatar, Tooltip, Button } from 'antd';
 import { connect } from 'react-redux';
-import { getGlobalTchat, getGroupeTchat, getPrivateTchat, getUserAvatar } from '../../../endpoints';
+import { getGlobalTchat, getPrivateTchat, getUserAvatar } from '../../../endpoints';
 import { withRouter } from 'react-router-dom';
 import _ from 'underscore';
 import moment from 'moment';
@@ -38,12 +38,12 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
 
         _tchat.forEach(async t => {
             if (typeof userAvatar[t.sender] === 'undefined' && t.sender !== 'SERVER' && t.sender !== user?.data?.id) {
-                if(!tmpUser.includes(t.sender)) {
+                if (!tmpUser.includes(t.sender)) {
                     await getUserAvatar(t.sender)
-                    .then(res => {
-                        setUserAvatar(u => ({ ...u, ...{ [t.sender]: res.avatar } }));
-                        tmpUser.push(t.sender);
-                    })
+                        .then(res => {
+                            setUserAvatar(u => ({ ...u, ...{ [t.sender]: res.avatar } }));
+                            tmpUser.push(t.sender);
+                        })
                 }
             }
         })
@@ -54,7 +54,19 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
         setReloadPagination(true)
         if (global) {
             return getGlobalTchat({
-                skipNumber: num
+                skipNumber: num,
+                channel: 'globalChats'
+            }).then(data => {
+                setReloadPagination(false)
+                setTchat(p => [...p, ...data.tchat].sort((a, b) => a.timestamp > b.timestamp ? 1 : -1))
+            })
+        }
+
+        if (props.history.location.pathname.match('group')) {
+            return getGlobalTchat({
+                skipNumber: num,
+                channel: 'groupChats',
+                groupId: props?.match?.params?.id
             }).then(data => {
                 setReloadPagination(false)
                 setTchat(p => [...p, ...data.tchat].sort((a, b) => a.timestamp > b.timestamp ? 1 : -1))
@@ -71,11 +83,12 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
             })
         }
 
+
     }
 
     useEffect(() => {
         if (props.history.location.pathname.match('group')) {
-            getGroupeTchat({ groupId: props?.match?.params?.id }).then(data => setTchat(data.tchat.filter(el => el.type === 'string'))).catch(() => setTchat([]))
+            getGlobalTchat({ groupId: props?.match?.params?.id, channel: 'groupChats' }).then(data => setTchat(data.tchat)).catch(() => setTchat([]))
         } else {
             usersMatch ? getPrivateTchat({ userOneId: usersMatch.split(':')[0], userTwoId: usersMatch.split(':')[1] })
                 .then(data => {
@@ -83,7 +96,7 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
                     messages.current && messages.current.scrollIntoView({ block: "end", inline: "nearest" });
                 })
                 .catch(err => console.log(err))
-                : getGlobalTchat()
+                : getGlobalTchat({ channel: 'globalChats' })
                     .then(data => {
                         setTchat(data.tchat)
                         messages.current && messages.current.scrollIntoView({ block: "end", inline: "nearest" });
@@ -129,7 +142,14 @@ const MessageContent = ({ sendMessage, usersMatch, user, tchat, viewTchat, ...pr
         }
         if (props?.match?.params?.id && !listenListTchatGroup.includes(props?.match?.params?.id)) {
             window.socket.on(props?.match?.params?.id, data => {
-                props.history.location.pathname.match('group') && setTchat(t => [...t, { ...data }])
+                const url = window.location.href.split('/group');
+                if (url) {
+                    if (url[1]) {
+                        if (url[1].substring(1) === data?.destination) {
+                            props.history.location.pathname.match('group') && setTchat(t => [...t, { ...data }])
+                        }
+                    }
+                }
             })
             setListenListTchatGroup(prev => [...prev, props?.match?.params?.id]);
         }

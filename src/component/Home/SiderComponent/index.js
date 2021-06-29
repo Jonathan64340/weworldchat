@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { Layout, Button, Tooltip, notification, Input, Drawer, Menu } from 'antd'
+import { Layout, Button, Tooltip, Input, Drawer, Menu } from 'antd'
 import _ from 'underscore'
 import './SiderComponent.css'
 import './SiderComponentMobile.css'
 import swal from 'sweetalert';
 import { doLoginOnTchatGroup, getCountUsersConnected, getListeGroupe, getParticipantsFromGroup } from '../../../endpoints';
-import { MessageOutlined, WechatOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { MessageOutlined, TeamOutlined, LoginOutlined, UsergroupAddOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { setEnterGroupDiscussion, setEnterPrivateTchat, setOpenMenu, setQuitGroupDiscussion } from '../../../action/tchat/tchat_actions';
 import { store } from '../../../index'
 import CreateNewGroupeModal from './Modal/CreateNewGroupeModal';
 import DetailGroupeModal from './Modal/DetailGroupeModal';
 import Footer from './Footer/Footer';
+import { Notification } from '../../Notification';
 
 const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...props }) => {
     const [users, setUsers] = useState([{}])
@@ -27,8 +28,6 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
     const [visibleCreateGroupe, setVisibleCreateGroupe] = useState(false);
     const [visibleDetailGroupe, setVisibleDetailGroupe] = useState(false);
     const [currentGroup, setCurrentGroup] = useState({});
-    let src = `${process.env.PUBLIC_URL}/sound/notif3.mp3`;
-    const audio = new Audio(src);
 
     const goToPrivate = (id, e) => {
         const getUserElement = document.getElementById(id);
@@ -37,6 +36,10 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
         document.title = `tchatez - ${user.data?.name}`
         onSelectUser(e.data?.pseudo)
         props.history.push(`/conversation/${e?.data?.id}`, { socketId: id })
+    }
+
+    const goToPrivateGroup = (id) => {
+        props.history.push(`/group/${id}`)
     }
 
     useEffect(() => {
@@ -68,7 +71,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
         !listGroupes && window.socket.on('receive-user-add-groupe', data => {
             setListenGroupes(true)
             console.log('socket data', data)
-            setGroupes(g => [...g,  { ...data }].sort((a, b) => a.timestamp > b.timestamp ? -1 : 1))
+            setGroupes(g => [...g, { ...data }].sort((a, b) => a.timestamp > b.timestamp ? -1 : 1))
         })
 
         !listGroupesUpdate && window.socket.on('receive-user-update-groupe', data => {
@@ -101,22 +104,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                 if (tchat.data.userConversation !== data.socketIdDestination) {
                     const getUserElement = document.getElementById(data?.socketIdDestination);
                     getUserElement && getUserElement.classList.add('incomming-message')
-                    const key = `open${Date.now()}`;
-                    const btn = (
-                        <Button size="middle" onClick={() => { notification.close(key); goToPrivate(data.socketIdDestination || data?.socketId, { data: { id: data?.sender, socketId: data?.socketIdDestination || data?.socketId }, id: data.sender }); document.title = `tchatez - ${user.data?.name}` }} icon={<WechatOutlined />}>
-                            Ouvrir la conversation
-                        </Button>
-                    );
-                    notification.open({
-                        message: `Nouveau message de ${data.pseudo}`,
-                        description:
-                            data?.type === 'string' ? (data.message.length > 30) ? `${data.message.substring(0, 30)}...` : data.message : 'Vous a envoyé un fichier',
-                        btn,
-                        key,
-                        className: "notification-handle-receive"
-                    });
-                    audio.play();
-                    return document.title = `Nouveau message - ${data.pseudo}`
+                    return Notification(data, goToPrivate, user)                 
                 }
             }
         })
@@ -225,6 +213,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                         props.dispatch(setEnterGroupDiscussion({ currentGroupDiscussion: group, groupeSubscribed: prevGroupSubscribed }))
                         props.history.push(`/group/${group?._id}`)
                         window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'join' });
+                        window.socket.on(group._id, (data) => { data.groupId !== props?.match?.params?.id && Notification(data, goToPrivateGroup, user, 'group'); })
                     }
                 })
             } else {
@@ -256,6 +245,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
             if (choice) {
                 let prevGroupSubscribed = tchat?.data?.groupeSubscribed;
                 group.currentParticipants = group.participants.length - 1;
+                window.socket.off(group._id)
                 props.dispatch(setQuitGroupDiscussion({ currentGroupDiscussion: undefined, groupeSubscribed: prevGroupSubscribed.filter(e => e !== group._id) }))
                 props.history.push(`/global`)
                 window.socket.emit('send-user-update-groupe', { cibleGroupe: group._id, _id: user?.data?.id, name: user?.data?.name, type: 'left' });
@@ -292,8 +282,8 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                                 <Tooltip title={`${el.data?.pseudo} - ${el.data?.statusOnline === 'busy' ? 'occupé' : 'en ligne'}`} placement={el.data?.pseudo.length < 8 ? 'topRight' : 'top'}>
                                                     <div className="info-user">
                                                         <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
-                                            &nbsp;
-                                            <span onClick={() => goToPrivate(el?.id, el)}>{el.data?.pseudo}</span>
+                                                        &nbsp;
+                                                        <span onClick={() => goToPrivate(el?.id, el)}>{el.data?.pseudo}</span>
                                                     </div>
                                                 </Tooltip>
                                                 {el?.data?.id !== user.data?.id && <Button size="small" disabled={el.id === tchat.data?.userConversation} onClick={() => goToPrivate(el.id, el)}><MessageOutlined /></Button>}
@@ -335,7 +325,7 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                             <Menu mode="horizontal" onClick={handleChange} selectedKeys={choicePopover} className="search-container-selectable">
                                 <Menu.Item key="clients">
                                     Conversation
-                                    </Menu.Item>
+                                </Menu.Item>
                                 <Menu.Item key="groupes">
                                     Groupe
                                 </Menu.Item>
@@ -349,8 +339,8 @@ const SiderComponent = ({ user, tchat, viewTchat, isMobile, onSelectUser, ...pro
                                             <Tooltip title={`${el.data?.pseudo} - ${el.data?.statusOnline === 'busy' ? 'occupé' : 'en ligne'}`} placement={el.data?.pseudo.length < 8 ? 'topRight' : 'top'}>
                                                 <div className="info-user">
                                                     <div className={`status__online__${el.data?.statusOnline === 'online' ? 'online' : 'busy'}`} />
-                                            &nbsp;
-                                            <span onClick={() => goToPrivate(el?.id, el)}>{el.data?.pseudo}</span>
+                                                    &nbsp;
+                                                    <span onClick={() => goToPrivate(el?.id, el)}>{el.data?.pseudo}</span>
                                                 </div>
                                             </Tooltip>
                                             {el?.data?.id !== user.data?.id && <Button size="small" disabled={el?.id === tchat.data?.userConversation} onClick={() => goToPrivate(el?.id, el)}><MessageOutlined /></Button>}
